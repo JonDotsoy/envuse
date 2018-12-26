@@ -1,0 +1,22 @@
+{
+  "name": "envuse",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": "bin/cli",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "/Users/jonathandelgadozamorano/cloud-repos/jondotsoy-envuse"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^6.2.1",
+    "inquirer-autocomplete-prompt": "^1.0.1",
+    "inquirer-select-line": "^1.1.1"
+  }
+}

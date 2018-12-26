@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const path = require('path');
+const inquirer = require('inquirer');
+inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'));
+
+async function run() {
+    const cwd = process.cwd();
+    const files = readConfigs(cwd);
+    const envFile = path.resolve(`${cwd}/.env`);
+
+    if (files.length === 0) {
+        return console.log(`No found configs`);
+    }
+
+    // console.log(files)
+
+    console.log(`# ${cwd}`);
+
+    const configs = files.map(e => e.groups.config);
+
+    const response = await inquirer.prompt({
+        type: 'autocomplete',
+        message: 'Select config',
+        name: 'configSelected',
+        source: async (_, _input) => {
+            return configs;
+        },
+    });
+
+    const config = files.find(f => f.groups.config === response.configSelected);
+
+    console.log(`# copy ${config.fullpath} to`)
+    console.log(`# ${envFile}`)
+    fs.writeFileSync(envFile, fs.readFileSync(config.fullpath));
+}
+
+run()
+.catch(error => {
+    console.error(error);
+    process.exit(1);
+});
+
+function readConfigs(cwd) {
+    return fs.readdirSync(`${cwd}`)
+        .map(fileName => {
+            const result = /^\.(?<config>.*)\.env$/i.exec(fileName);
+            if (result) {
+                result.fullpath = path.resolve(`${cwd}/${result.input}`);
+                return result;
+            }
+        }).filter(Boolean);
+}
+
