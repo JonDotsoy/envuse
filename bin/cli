@@ -33,7 +33,12 @@ async function run() {
 
     console.log(`# copy ${config.fullpath} to`)
     console.log(`# ${envFile}`)
-    fs.writeFileSync(envFile, fs.readFileSync(config.fullpath));
+    fs.writeFileSync(envFile,
+        Buffer.concat([
+            Buffer.from(`# Copy from ${config.fullpath}\n`, 'utf8'),
+            fs.readFileSync(config.fullpath),
+        ])
+    );
 }
 
 run()
