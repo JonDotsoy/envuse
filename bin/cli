@@ -2,13 +2,26 @@
 
 const fs = require('fs');
 const path = require('path');
+const yargs = require('yargs');
+const chalk = require('chalk');
 const inquirer = require('inquirer');
+const ConfigStore = require('../ConfigStore');
 inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'));
 
-async function run() {
+async function copyFileEnv(args) {
+    if (args.editor) {
+        return require('../editor/server');
+    }
+
     const cwd = process.cwd();
-    const files = readConfigs(cwd);
-    const envFile = path.resolve(`${cwd}/.env`);
+
+    const configStore = new ConfigStore({
+        cwd,
+    });
+
+    // const files = readConfigs(cwd);
+    const files = configStore.getConfigs();
+    const outEnvFile = path.resolve(`${cwd}/.env`);
 
     if (files.length === 0) {
         return console.log(`No found configs`);
@@ -19,21 +32,12 @@ async function run() {
     console.log(`# ${cwd}`);
 
     const configs = files.map(e => e.groups.config);
-
-    const response = await inquirer.prompt({
-        type: 'autocomplete',
-        message: 'Select config',
-        name: 'configSelected',
-        source: async (_, _input) => {
-            return configs;
-        },
-    });
-
-    const config = files.find(f => f.groups.config === response.configSelected);
+    const configSelected = args.CONFIGFILE ? args.CONFIGFILE : await loadTheConfigSelected(configs);
+    const config = loadConfigs(files, configSelected);
 
     console.log(`# copy ${config.fullpath} to`)
-    console.log(`# ${envFile}`)
-    fs.writeFileSync(envFile,
+    console.log(`# ${outEnvFile}`)
+    fs.writeFileSync(outEnvFile,
         Buffer.concat([
             Buffer.from(`# Copy from ${config.fullpath}\n`, 'utf8'),
             fs.readFileSync(config.fullpath),
@@ -41,11 +45,28 @@ async function run() {
     );
 }
 
-run()
-.catch(error => {
-    console.error(error);
-    process.exit(1);
-});
+async function loadTheConfigSelected(configs) {
+    const cav = await inquirer.prompt({
+        type: 'autocomplete',
+        message: 'Select config',
+        name: 'configSelected',
+        source: async (_, _input) => {
+            return configs;
+        },
+    });
+    const configSelected = cav.configSelected;
+    return configSelected;
+}
+
+function loadConfigs(files, configSelected) {
+    const configFound = files.find(f => f.groups.config === configSelected);
+
+    if (!configFound) {
+        throw new Error(chalk`Config {blue ${configSelected}} is not found`);
+    }
+
+    return configFound;
+}
 
 function readConfigs(cwd) {
     return fs.readdirSync(`${cwd}`)
@@ -58,3 +79,15 @@ function readConfigs(cwd) {
         }).filter(Boolean);
 }
 
+yargs.command({
+    command: '$0 [CONFIGFILE]',
+    builder: {
+        editor: {
+            describe: 'Edit the config file',
+            boolean: true,
+        },
+    },
+    handler: copyFileEnv,
+});
+
+yargs.argv;
