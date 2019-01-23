@@ -29,6 +29,12 @@
         inputElm.value = inputElm.value.toUpperCase();
       }
 
+      handleRemoveElement(event) {
+        event.preventDefault();
+
+        this.props.onClickRemoveElement && this.props.onClickRemoveElement(event);
+      }
+
       render() {
         const {name, value} = this.props;
 
@@ -36,7 +42,8 @@
           r('div', {className: 'form-group pb-3'},
             r('div', {className: 'input-group mb-3'},
               r('div', {className: 'input-group-prepend'},
-                r('button', {className: 'btn btn-outline-secondary', type: "button", name: 'action-uppercase', value: name, onClick: this.handleActionUpper.bind(this)}, 'UPPERCASE')
+                r('button', {className: 'btn btn-outline-secondary', type: "button", name: 'action-uppercase', value: name, onClick: this.handleRemoveElement.bind(this), dangerouslySetInnerHTML: {__html: '&times;'}}),
+                r('button', {className: 'btn btn-outline-secondary', type: "button", name: 'action-uppercase', value: name, onClick: this.handleActionUpper.bind(this)}, 'UPPERCASE'),
               ),
               r('input', {'data-complex-join': 'true', name: JSON.stringify({r:name,t:'key'}), type: 'text', className: 'form-control', defaultValue: name}),
             ),
@@ -121,6 +128,7 @@
         super(props);
         this.state = {
           loading: true,
+          alertVisible: false,
           shouIngressNameConfig: false,
           config: {},
         };
@@ -163,7 +171,27 @@
         this.setState({ shouIngressNameConfig: true });
       }
 
-      async shouldUpdateValue(event) {
+      onClickRemoveElement(event) {
+        event.preventDefault();
+        const nameProp = event.target.value;
+
+        this.setState((state) => {
+          const nextConfigs = {...state.config.configs};
+          delete nextConfigs[nameProp];
+
+          const newState = {
+            ...state,
+            config: {
+              ...state.config,
+              configs: nextConfigs,
+            }
+          };
+
+          return newState;
+        });
+      }
+
+      async shouldUpdateValues(event) {
         const { configName } = this.props.exec.groups;
   
         event.preventDefault();
@@ -188,8 +216,6 @@
 
         const newConfig = Object.values(elements).reduce((acum, v) => ({...acum, [v.key]: v.value}), {});
 
-        console.log(newConfig);
-
         const reqUpdateConfig = await fetch(`/api/config/${configName}`, {
           method: 'POST',
           headers: {
@@ -197,7 +223,30 @@
           },
           body: JSON.stringify(newConfig),
         });
-        const resultUpdateConfig = await reqUpdateConfig.json();
+
+        this.setState((state) => {
+          if (state.alertVisible === false) {
+            return {
+              ...state,
+              alertVisible: true,
+            }
+          }
+          return state;
+        });
+
+        clearTimeout(this.__t);
+
+        this.__t = setTimeout(() => {
+          this.setState((state) => {
+            if (state.alertVisible === true) {
+              return {
+                ...state,
+                alertVisible: false,
+              }
+            }
+            return state;
+          });
+        }, 5 * 1000);
       }
 
       render() {
@@ -205,16 +254,30 @@
 
         return (
           r('div', { className: 'container' },
+
+            // Alert
+            // <div class="myAlert-bottom alert alert-danger">
+            //   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            //   <strong>Danger!</strong> This alert box could indicate a dangerous or potentially negative action.
+            // </div>
+            this.state.alertVisible && r('div', {className: 'fixed-top pt-4 pl-4 pr-4'},
+              r('div', {className: 'alert alert-success mb-0'},
+                // r('a', {className: 'close', dangerouslySetInnerHTML: {__html: '&times;'}}),
+                r('strong', {}, 'Saved!'),
+                ` The ${this.state.config.regex.groups.configName} configuration was saved successfully`
+              ),
+            ),
+
             r('h1', {},
-              r('a', { className: 'btn btn-link', href: '#/' }, 'Volver'),
+              r('a', { className: 'btn btn-link', href: '#/' }, 'Back'),
               ' ',
-              r('span', {}, 'Edit ', this.state.config.regex.groups.configName, ' config'),
+              r('span', {}, 'Config: ', r('span', {}, this.state.config.regex.groups.configName)),
             ),
             r('div', {},
-              r('form', {onSubmit: this.shouldUpdateValue.bind(this)},
+              r('form', {onSubmit: this.shouldUpdateValues.bind(this)},
 
                 Object.entries(this.state.config.configs).map(([ name, value ]) => {
-                  return r(FieldEdit, { name, value, key: name })
+                  return r(FieldEdit, { name, value, key: name, onClickRemoveElement: this.onClickRemoveElement.bind(this) });
                 }),
 
                 r('div', {},
