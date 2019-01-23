@@ -19,7 +19,6 @@ async function copyFileEnv(args) {
         cwd,
     });
 
-    // const files = readConfigs(cwd);
     const files = configStore.getConfigs();
     const outEnvFile = path.resolve(`${cwd}/.env`);
 
@@ -66,17 +65,6 @@ function loadConfigs(files, configSelected) {
     }
 
     return configFound;
-}
-
-function readConfigs(cwd) {
-    return fs.readdirSync(`${cwd}`)
-        .map(fileName => {
-            const result = /^\.(?<config>.*)\.env$/i.exec(fileName);
-            if (result) {
-                result.fullpath = path.resolve(`${cwd}/${result.input}`);
-                return result;
-            }
-        }).filter(Boolean);
 }
 
 yargs.command({

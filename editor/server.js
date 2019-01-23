@@ -125,7 +125,7 @@ const server = http.createServer((req, res) => {
     console.log(chalk`[${res.statusCode}] {green ${req.method}} {green ${req.url}}`);
 });
 
-server.listen(60094, function () {
+server.listen(function () {
     const port = server.address().port;
     const address = server.address().address;
 
@@ -138,5 +138,5 @@ server.listen(60094, function () {
 
     console.log(chalk`Open {green ${link}} to edit`);
     console.log('Press Ctrl+C to close')
-    // opn(link);
+    opn(link);
 });
