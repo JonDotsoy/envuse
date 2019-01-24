@@ -1,8 +1,8 @@
-# `envuse`
+# `envuse`
 
 The `envuse` is a client to choose a environment into your project.
 
-## how to use
+## how to use
 Please install with `npm i -g envuse`
 
 ```shell
