@@ -14,6 +14,7 @@ export class EnvConfig {
   type?: TypeEnvConfig;
   name: string = 'default';
   config: { [env: string]: string; } = {};
+  createdAt: Date = new Date();
 
   static from(i: EnvConfig | object): EnvConfig {
     return Object.assign(new EnvConfig(), i);
