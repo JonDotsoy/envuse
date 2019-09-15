@@ -66,6 +66,7 @@
         super(props);
         this.state = {
           loading: true,
+          cardNewConfigOpen: !false,
           configs: [],
         };
       }
@@ -74,6 +75,22 @@
         const configRequest = await fetch('/api/config');
         const configs = await configRequest.json();
         this.setState({loading: false, configs});
+      }
+
+      async handleCreateConfig(event) {
+        event.preventDefault();
+      }
+
+      handleOpenCardNewConfig(event) {
+        event.preventDefault();
+
+        this.setState({ cardNewConfigOpen: true });
+      }
+
+      handleCloseCardNewConfig(event) {
+        event.preventDefault();
+
+        this.setState({ cardNewConfigOpen: false });
       }
 
       render() {
@@ -90,8 +107,25 @@
                     config.input,
                     ')',
                   ),
+                    
+                  r('button', {type: 'button', className: 'btn btn-link btn-sm'}, 'Rename'),
                 )
               )),
+            ),
+
+            !this.state.cardNewConfigOpen && r('button', {type: 'button', className: 'btn btn-outline-secondary', onClick: this.handleOpenCardNewConfig.bind(this)}, 'Add a config'),
+
+            this.state.cardNewConfigOpen && r('div', {className: 'card mt-3'},
+              r('div', {className: 'card-body'},
+                r('form', { onSubmit: this.handleCreateConfig.bind(this) },
+                  r('div', { className: 'form-group' },
+                    r('label', {}, 'Name Config'),
+                    r('input', { className: 'form-control', type: 'text' })
+                  ),
+                  r('button', { className: 'btn btn-outline-primary', type: 'submit'}, 'Create'),
+                  r('button', { className: 'btn btn-outline-secondary ml-1', type: 'button', onClick: this.handleCloseCardNewConfig.bind(this) }, 'Cancel'),
+                ),
+              ),
             ),
           )
         );

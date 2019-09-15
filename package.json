@@ -1,10 +1,13 @@
 {
   "name": "envuse",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "The `envuse` is a client to choose a environment into your project.",
   "main": "index.js",
   "bin": "bin/cli",
-  "scripts": {},
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w"
+  },
   "repository": {
     "type": "git",
     "url": "/Users/jonathandelgadozamorano/cloud-repos/jondotsoy-envuse"
@@ -17,13 +20,24 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/yargs": "^13.0.2",
     "chalk": "^2.4.2",
     "dotenv": "^6.2.0",
-    "http-errors": "^1.7.1",
-    "inquirer": "^6.2.1",
+    "http-errors": "^1.7.3",
+    "inquirer": "^6.5.2",
     "inquirer-autocomplete-prompt": "^1.0.1",
     "inquirer-select-line": "^1.1.1",
-    "opn": "^5.4.0",
-    "yargs": "^12.0.5"
+    "lodash": "^4.17.15",
+    "opn": "^5.5.0",
+    "ts-node": "^8.3.0",
+    "yargs": "^14.1.0"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^6.1.1",
+    "@types/inquirer": "^6.5.0",
+    "@types/node": "^12.7.5",
+    "typescript": "^3.6.3",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.8"
   }
 }
