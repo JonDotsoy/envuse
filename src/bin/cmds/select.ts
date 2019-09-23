@@ -6,6 +6,7 @@ import chalk from "chalk";
 import { writeFileSync } from "fs";
 import { EOL } from "os";
 import { formatingEnvConfig } from "../../lib/format";
+import querystring from 'querystring';
 
 type c = CommandModule<{}, {
   cwd: string;
@@ -47,7 +48,14 @@ export = <c>{
 
     writeFileSync(
       envfiletoWrite,
-      formatingEnvConfig(Object.entries(env.config).map(([key, value]) => `${key}=${value}`).join(EOL), `${env.type} ${env.name}`),
+      [
+        `# `,
+        querystring.stringify({ type: env.type, name: env.name, createdAt: new Date(env.createdAt).toLocaleString() }, ', ', ': ', {
+          encodeURIComponent: e => e
+        }),
+        EOL,
+        formatingEnvConfig(Object.entries(env.config).map(([key, value]) => `${key}=${value}`).join(EOL), `${env.type} ${env.name}`),
+      ].join(''),
       'utf8',
     );
   }

@@ -5,6 +5,8 @@ import { execSync } from 'child_process';
 import { TypeEnvConfig } from '../../../lib/EnvConfigStore';
 import dotenv from 'dotenv';
 import { getConfigStore } from "../../getConfigStore";
+import { HerokuEngine } from '../../../lib/engines/HerokuEngine';
+import ow from 'ow';
 
 type c = CommandModule<{}, {
   app?: string;
@@ -29,22 +31,21 @@ export = <c>{
   },
   async handler(args) {
     const { configStore, saveConfigStore } = getConfigStore(args.cwd);
+    const heroku = new HerokuEngine();
 
-    const { herokuApp } = args.app ? { herokuApp: args.app } : await inquirer.prompt({
+    const {
+      herokuApp = args.app as string,
+    } = await inquirer.prompt({
       name: 'herokuApp',
       message: 'Heroku App',
       type: 'input',
       default: args.app,
+      when: !args.app,
     });
 
-    const cmd = `heroku config -a "${herokuApp}" --shell`;
+    ow(herokuApp, 'p', ow.string);
 
-    const defaultconfig = dotenv.parse(execSync(cmd).toString());
-    configStore.setOriginResource({
-      type: TypeEnvConfig.heroku,
-      name: herokuApp,
-      config: defaultconfig,
-    });
+    await heroku.insert(configStore, herokuApp);
 
     console.log(chalk`env heroku {green ${herokuApp}} added ☑`);
 
