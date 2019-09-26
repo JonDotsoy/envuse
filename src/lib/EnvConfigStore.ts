@@ -4,6 +4,8 @@ import { EOL } from "os";
 import querystring from 'querystring';
 import { HerokuEngine } from "./engines/HerokuEngine";
 import { formatingEnvConfig } from "./format";
+import JSON5 from 'json5';
+import { LocalEngine } from "./engines/LocalEngine";
 
 interface envconfig {
   config: {
@@ -13,6 +15,7 @@ interface envconfig {
 
 export enum TypeEnvConfig {
   heroku = 'heroku',
+  local = 'local',
 }
 
 export class EnvConfig {
@@ -43,6 +46,7 @@ interface OriginResource {
   config: {
     [env: string]: string;
   };
+  [attr: string]: any;
 }
 
 export class EnvuseConfigStore {
@@ -57,6 +61,17 @@ export class EnvuseConfigStore {
       const heroku = new HerokuEngine();
       await heroku.insert(this, name);
     }
+    if (type === TypeEnvConfig.local) {
+      const local = new LocalEngine();
+      await local.insert(this, name);
+    }
+  }
+
+  async defaultSelect(type: TypeEnvConfig | undefined, name: string) {
+    const envpath = `${process.cwd()}/.env`;
+    if (!existsSync(envpath)) {
+      this.selectConfig(type, name);
+    }
   }
 
   async selectConfig(type: TypeEnvConfig | undefined, name: string) {
@@ -64,6 +79,8 @@ export class EnvuseConfigStore {
     const envs = this.listEnvs();
 
     const env = envs.find(env => env.name === name && env.type === type);
+
+    console.log(type, name);
 
     if (!env) {
       throw new Error(`Not found config ${type} ${name}`);
@@ -77,7 +94,7 @@ export class EnvuseConfigStore {
           encodeURIComponent: e => e
         }),
         EOL,
-        formatingEnvConfig(Object.entries(env.config).map(([key, value]) => `${key}=${value}`).join(EOL), `${env.type} ${env.name}`),
+        formatingEnvConfig(Object.entries(env.config).map(([key, value]) => `${key}=${JSON5.stringify(value)}`).join(EOL), `${env.type} ${env.name}`),
       ].join(''),
       'utf8',
     );
@@ -146,6 +163,13 @@ export class EnvuseConfigStore {
         id,
         ...env,
       }));
+  }
+
+  removeEnv(id: string) {
+    const { [id]: envRemoved, ...nextEnvs } = this.getProject().envs;
+
+    this.getProject().envs = nextEnvs;
+    return envRemoved;
   }
 
   toJSON() {

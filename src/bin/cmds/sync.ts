@@ -3,6 +3,7 @@ import { getConfigStore } from "../getConfigStore";
 import chalk from "chalk";
 import { TypeEnvConfig } from "../../lib/EnvConfigStore";
 import { HerokuEngine } from "../../lib/engines/HerokuEngine";
+import { LocalEngine } from "../../lib/engines/LocalEngine";
 
 type c = CommandModule<{}, {
   cwd: string,
@@ -21,6 +22,7 @@ export = <c>{
     const { configStore, saveConfigStore } = getConfigStore(args.cwd);
 
     const heroku = new HerokuEngine();
+    const local = new LocalEngine();
 
     const envs = configStore.listEnvs();
 
@@ -29,6 +31,9 @@ export = <c>{
 
       if (env.type === TypeEnvConfig.heroku) {
         heroku.insert(configStore, env.name);
+      }
+      if (env.type === TypeEnvConfig.local) {
+        local.insert(configStore, env.name);
       }
     }
 

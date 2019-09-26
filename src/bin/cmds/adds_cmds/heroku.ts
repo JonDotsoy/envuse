@@ -1,22 +1,20 @@
-import yargs, { CommandModule } from 'yargs';
+import { CommandModule } from 'yargs';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
-import { execSync } from 'child_process';
-import { TypeEnvConfig } from '../../../lib/EnvConfigStore';
-import dotenv from 'dotenv';
-import { getConfigStore } from "../../getConfigStore";
-import { HerokuEngine } from '../../../lib/engines/HerokuEngine';
 import ow from 'ow';
+import { getConfigStore } from '../../getConfigStore';
+import { HerokuEngine } from '../../../lib/engines/HerokuEngine';
+import { TypeEnvConfig } from '../../../lib/EnvConfigStore';
 
 type c = CommandModule<{}, {
   app?: string;
   cwd: string;
+  'heroku-app'?: string;
 }>;
 
 export = <c>{
-  command: 'add',
+  command: 'heroku [heroku-app]',
   describe: 'Added ennviroment from heroku',
-  aliases: 'a',
   builder: {
     cwd: {
       type: 'string',
@@ -30,25 +28,29 @@ export = <c>{
     },
   },
   async handler(args) {
+    const defaultHerokuApp = args.app || args["heroku-app"];
+
     const { configStore, saveConfigStore } = getConfigStore(args.cwd);
     const heroku = new HerokuEngine();
 
     const {
-      herokuApp = args.app as string,
+      herokuApp = defaultHerokuApp as string,
     } = await inquirer.prompt({
       name: 'herokuApp',
       message: 'Heroku App',
       type: 'input',
-      default: args.app,
-      when: !args.app,
+      default: defaultHerokuApp,
+      when: !defaultHerokuApp,
     });
 
-    ow(herokuApp, 'p', ow.string);
+    ow(herokuApp, 'heroku app name', ow.string.nonEmpty);
 
-    await heroku.insert(configStore, herokuApp);
+    const resource = await heroku.insert(configStore, herokuApp);
 
     console.log(chalk`env heroku {green ${herokuApp}} added ☑`);
 
     saveConfigStore();
+
+    configStore.defaultSelect(TypeEnvConfig.heroku, resource.name);
   },
 };

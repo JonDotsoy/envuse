@@ -1,6 +1,6 @@
 {
   "name": "envuse",
-  "version": "1.3.2",
+  "version": "1.3.7",
   "description": "The `envuse` is a client to choose a environment into your project.",
   "main": "index.js",
   "bin": "bin/cli",
@@ -21,6 +21,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/json5": "0.0.30",
     "@types/yargs": "^13.0.2",
     "chalk": "^2.4.2",
     "dotenv": "^6.2.0",
@@ -28,6 +29,7 @@
     "inquirer": "^6.5.2",
     "inquirer-autocomplete-prompt": "^1.0.1",
     "inquirer-select-line": "^1.1.1",
+    "json5": "^2.1.0",
     "lodash": "^4.17.15",
     "np": "^5.1.0",
     "opn": "^5.5.0",

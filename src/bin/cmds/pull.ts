@@ -24,7 +24,7 @@ export = <c>{
     },
   },
   async handler(args) {
-    const { configStore, saveConfigStore } = getConfigStore(args.cwd);
+    const { configStore } = getConfigStore(args.cwd);
 
     const { type, name } = configStore.getInfoCurrentEnvConfig();
 

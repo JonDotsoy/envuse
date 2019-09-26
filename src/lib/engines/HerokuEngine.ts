@@ -13,12 +13,16 @@ export class HerokuEngine implements Engine {
   }
 
   insert(configStore: EnvuseConfigStore, herokuApp: string) {
-    const defaultconfig = dotenv.parse(this.cmd(`config -a "${herokuApp}" --shell`, true).toString());
+    const defaultconfig = JSON.parse(this.cmd(`config -a "${herokuApp}" --json`, true).toString());
 
-    configStore.setOriginResource({
+    const resource = {
       type: TypeEnvConfig.heroku,
       name: herokuApp,
       config: defaultconfig,
-    });
+    };
+
+    configStore.setOriginResource(resource);
+
+    return resource;
   }
 }
