@@ -1,4 +1,9 @@
 import { createHash } from "crypto";
+import { existsSync, statSync, readFileSync, writeFileSync } from "fs";
+import { EOL } from "os";
+import querystring from 'querystring';
+import { HerokuEngine } from "./engines/HerokuEngine";
+import { formatingEnvConfig } from "./format";
 
 interface envconfig {
   config: {
@@ -45,6 +50,66 @@ export class EnvuseConfigStore {
 
   constructor(private cwd: string, initialConfig = {} as envuseConfigStore) {
     this.config = initialConfig;
+  }
+
+  async pullConfig(type: TypeEnvConfig, name: string) {
+    if (type === TypeEnvConfig.heroku) {
+      const heroku = new HerokuEngine();
+      await heroku.insert(this, name);
+    }
+  }
+
+  async selectConfig(type: TypeEnvConfig | undefined, name: string) {
+    const envpath = `${process.cwd()}/.env`;
+    const envs = this.listEnvs();
+
+    const env = envs.find(env => env.name === name && env.type === type);
+
+    if (!env) {
+      throw new Error(`Not found config ${type} ${name}`);
+    }
+
+    writeFileSync(
+      envpath,
+      [
+        `# `,
+        querystring.stringify({ type: env.type, name: env.name, createdAt: new Date(env.createdAt).toLocaleString() }, ', ', ': ', {
+          encodeURIComponent: e => e
+        }),
+        EOL,
+        formatingEnvConfig(Object.entries(env.config).map(([key, value]) => `${key}=${value}`).join(EOL), `${env.type} ${env.name}`),
+      ].join(''),
+      'utf8',
+    );
+  }
+
+  getInfoCurrentEnvConfig() {
+    const envpath = `${process.cwd()}/.env`;
+
+    if (!existsSync(envpath) || !statSync(envpath).isFile()) {
+      throw new Error(`Cannot found .env file`);
+    }
+
+    const body = readFileSync(envpath, 'utf8');
+
+    const [linetype] = body.split(EOL).filter(e => e.startsWith('# type:'));
+
+    if (!linetype) {
+      throw new Error(`It is not recognized as a valid file`);
+    }
+
+    const { type, name } = querystring.parse(linetype.replace('# ', ''), ', ', ': ') as { type: TypeEnvConfig, name: string };
+
+    if (!type || !name) {
+      throw new Error(`It is not recognized as a valid file`);
+    }
+
+    return {
+      envpath,
+      body,
+      type,
+      name,
+    };
   }
 
   getProject(cwd: string = this.cwd) {
