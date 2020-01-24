@@ -1,6 +1,6 @@
 {
   "name": "envuse",
-  "version": "1.3.9",
+  "version": "1.3.10",
   "description": "The `envuse` is a client to choose a environment into your project.",
   "main": "index.js",
   "bin": "bin/cli",
