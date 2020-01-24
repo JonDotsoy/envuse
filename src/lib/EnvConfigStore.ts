@@ -1,11 +1,12 @@
 import { createHash } from "crypto";
-import { existsSync, statSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, statSync, readFileSync, writeFileSync, fstat } from "fs";
 import { EOL } from "os";
 import querystring from 'querystring';
 import { HerokuEngine } from "./engines/HerokuEngine";
 import { formatingEnvConfig } from "./format";
 import JSON5 from 'json5';
 import { LocalEngine } from "./engines/LocalEngine";
+import dotenv from 'dotenv';
 
 interface envconfig {
   config: {
@@ -75,6 +76,14 @@ export class EnvuseConfigStore {
   }
 
   async selectConfig(type: TypeEnvConfig | undefined, name: string) {
+    const envFileRemplaceForced = `${process.cwd()}/.env-replace`;
+    let configToReplace = {};
+
+    if (existsSync(envFileRemplaceForced) && statSync(envFileRemplaceForced).isFile()) {
+      console.warn(`Warning: the use of .env-replace is experimental.`);
+      configToReplace = dotenv.parse(readFileSync(envFileRemplaceForced, 'utf8'), { debug: true });
+    }
+
     const envpath = `${process.cwd()}/.env`;
     const envs = this.listEnvs();
 
@@ -86,15 +95,16 @@ export class EnvuseConfigStore {
       throw new Error(`Not found config ${type} ${name}`);
     }
 
+    const headersFile = querystring.stringify({ type: env.type, name: env.name, createdAt: new Date(env.createdAt).toLocaleString() }, ', ', ': ', {
+      encodeURIComponent: e => e
+    });
+
+    const envConfig = { ...env.config, ...configToReplace };
     writeFileSync(
       envpath,
       [
-        `# `,
-        querystring.stringify({ type: env.type, name: env.name, createdAt: new Date(env.createdAt).toLocaleString() }, ', ', ': ', {
-          encodeURIComponent: e => e
-        }),
-        EOL,
-        formatingEnvConfig(Object.entries(env.config).map(([key, value]) => `${key}=${JSON5.stringify(value)}`).join(EOL), `${env.type} ${env.name}`),
+        `# `, headersFile, EOL,
+        formatingEnvConfig(Object.entries(envConfig).map(([key, value]) => `${key}=${JSON5.stringify(value)}`).join(EOL), `${env.type} ${env.name}`),
       ].join(''),
       'utf8',
     );
