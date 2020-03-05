@@ -1,7 +1,7 @@
 import { readFileSync, existsSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 import { homedir } from 'os';
-import { EnvuseConfigStore as EnvuseConfigStore } from '../lib/EnvConfigStore';
+import { EnvuseConfigStore as EnvuseConfigStore } from './EnvConfigStore';
 
 // async function copyFileEnv(args: { editor: any; CONFIGFILE: any; }) {
 //     if (args.editor) {

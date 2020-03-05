@@ -1,6 +1,6 @@
 import { CommandModule } from "yargs";
 import inquirer = require("inquirer");
-import { getConfigStore } from "../getConfigStore";
+import { getConfigStore } from "../../lib/getConfigStore";
 import { resolve } from "path";
 import chalk from "chalk";
 import { writeFileSync } from "fs";

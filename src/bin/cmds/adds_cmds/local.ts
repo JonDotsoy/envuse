@@ -2,7 +2,7 @@ import { CommandModule } from 'yargs';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import ow from 'ow';
-import { getConfigStore } from '../../getConfigStore';
+import { getConfigStore } from '../../../lib/getConfigStore';
 import { LocalEngine } from '../../../lib/engines/LocalEngine';
 import { TypeEnvConfig } from '../../../lib/EnvConfigStore';
 

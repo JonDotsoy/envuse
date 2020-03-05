@@ -1,5 +1,5 @@
 import { CommandModule } from "yargs";
-import { getConfigStore } from "../getConfigStore";
+import { getConfigStore } from "../../lib/getConfigStore";
 import chalk from "chalk";
 import { TypeEnvConfig } from "../../lib/EnvConfigStore";
 import { HerokuEngine } from "../../lib/engines/HerokuEngine";

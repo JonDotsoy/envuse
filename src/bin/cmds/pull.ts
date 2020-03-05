@@ -4,7 +4,7 @@ import { relative } from "path";
 import dotenv from 'dotenv';
 import { EOL } from "os";
 import querystring from 'querystring';
-import { getConfigStore } from "../getConfigStore";
+import { getConfigStore } from "../../lib/getConfigStore";
 import { HerokuEngine } from "../../lib/engines/HerokuEngine";
 import { TypeEnvConfig } from "../../lib/EnvConfigStore";
 import chalk from "chalk";

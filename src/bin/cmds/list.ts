@@ -1,5 +1,5 @@
 
-import { getConfigStore } from "../getConfigStore";
+import { getConfigStore } from "../../lib/getConfigStore";
 import { EOL } from "os";
 import chalk from "chalk";
 import { CommandModule } from "yargs";
