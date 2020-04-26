@@ -18,7 +18,7 @@
     "env",
     "environment"
   ],
-  "author": "",
+  "author": "Jonathan Delgado <hi@jon.soy> (https://jon.soy)",
   "license": "ISC",
   "dependencies": {
     "@types/json5": "0.0.30",
