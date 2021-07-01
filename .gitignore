@@ -156,3 +156,4 @@ $RECYCLE.BIN/
 
 src/**/*.js
 src/**/*.js.map
+!.editorconfig
