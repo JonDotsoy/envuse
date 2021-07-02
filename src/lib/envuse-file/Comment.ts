@@ -1,4 +1,6 @@
-import { Base, BCharType, BufferCursor } from "./Base";
+import { Base } from "./Base";
+import { BufferCursor } from "./BufferCursor";
+import { BCharType } from "./BCharType";
 import { Iter } from "./Iter";
 
 

@@ -1,45 +1,6 @@
+import { BufferCursor } from "./BufferCursor";
 import { Iter } from "./Iter";
-import { range } from "./range";
-
-export type BCharType = number | undefined;
-
-const isBCharType = (v: any): v is BCharType => typeof v === 'undefined' || typeof v === 'number';
-
-export class BufferCursor<T extends BCharType = BCharType> {
-  position = 0;
-
-  constructor(
-    private body: Buffer
-  ) { }
-
-  has(): this is BufferCursor<Exclude<T, undefined>> {
-    return this.current() !== undefined;
-  }
-
-  current() {
-    return this.body[this.position] as unknown as T;
-  }
-
-  forward() {
-    this.position += 1;
-
-    return this.current();
-  }
-
-  backward() {
-    this.position += 1;
-
-    return this.current();
-  }
-
-  prev(len: number) {
-    return Array.from(range(this.position - len, this.position - 1)).map(i => this.body[i])
-  }
-
-  next(len: number) {
-    return Array.from(range(this.position + 1, this.position + len)).map(i => this.body[i])
-  }
-}
+import { UnexpectedTokenError } from "./UnexpectedTokenError";
 
 export abstract class Base {
   end!: number;
@@ -112,5 +73,13 @@ export abstract class Base {
 
       index += 1;
     }
+  }
+
+  rejectUnexpectedTokenError(): never {
+    const err = new UnexpectedTokenError(this.body, this.bufferCursor.position)
+
+    Error.captureStackTrace(err, Base.prototype.rejectUnexpectedTokenError)
+
+    throw err;
   }
 }

@@ -1,5 +1,6 @@
 import { EnvuseFileParser } from "./envuse-file-parser";
 import { takeDemoFile } from "./takeDemoFile";
+import util from 'util'
 
 describe('EnvuseFileParser2', () => {
 
@@ -9,7 +10,7 @@ describe('EnvuseFileParser2', () => {
 
     const envuseFileParser = new EnvuseFileParser(body1);
     console.log(
-      envuseFileParser.toAstBody()
+      util.formatWithOptions({ depth: Infinity, colors: true }, '', envuseFileParser.toAstBody())
     )
   })
 

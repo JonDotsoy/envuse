@@ -1,10 +1,11 @@
-import { Base, BufferCursor } from "./Base";
+import { Base } from "./Base";
+import { BufferCursor } from "./BufferCursor";
 import { Iter } from "./Iter";
 import { Comment } from "./Comment";
 import { Code } from "./Code";
 import util from 'util'
 import { Variable } from "./Variable";
-import { Space } from "./Space";
+import { SpaceNewLine } from "./Space";
 
 class None extends Base {
   prepare(bufferCursor: BufferCursor<number | undefined>): void {
@@ -19,7 +20,7 @@ export class Root extends Base {
   prepare(bufferCursor: BufferCursor) {
     while (bufferCursor.has()) {
       if ([0x20, 0x0a].includes(bufferCursor.current())) {
-        this.children.push(this.createElement(Space))
+        this.children.push(this.createElement(SpaceNewLine))
         continue
       }
 
@@ -34,11 +35,13 @@ export class Root extends Base {
       }
 
       // this.children.push(this.createElement(None))
-      bufferCursor.forward();
-      continue;
+      // bufferCursor.forward();
+      // continue;
 
-      throw new TypeError(`Unknown token ${this.bufferCursor.current()} on possition ${this.bufferCursor.position}`)
+      this.rejectUnexpectedTokenError()
     }
+
+    this.end = bufferCursor.position
 
     // if (this.bufferCursor.position === 0 && this.bufferCursor.next)
 
