@@ -9,7 +9,9 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc -w",
-    "prepare": "tsc"
+    "prepare": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "keywords": [
     "client",

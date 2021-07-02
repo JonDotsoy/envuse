@@ -1,7 +1,7 @@
 import { EnvuseFileParser } from "./envuse-file-parser";
 import { takeDemoFile } from "./takeDemoFile";
 
-describe('EnvuseFileParser', () => {
+describe('EnvuseFileParser2', () => {
 
   it('shoud make a ast out', () => {
     const body1 = takeDemoFile('.env');

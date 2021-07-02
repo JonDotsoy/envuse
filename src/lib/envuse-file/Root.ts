@@ -1,29 +1,79 @@
-import { Base } from "./Base";
+import { Base, BufferCursor } from "./Base";
 import { Iter } from "./Iter";
 import { Comment } from "./Comment";
 import { Code } from "./Code";
+import util from 'util'
+import { Variable } from "./Variable";
+import { Space } from "./Space";
+
+class None extends Base {
+  prepare(bufferCursor: BufferCursor<number | undefined>): void {
+    while (bufferCursor.has()) {
+      this.appendRaw(bufferCursor.current())
+      bufferCursor.forward()
+    }
+  }
+}
 
 export class Root extends Base {
-  prepare(gen: Iter) {
-    while (true) {
-      const { done, value } = gen.next();
-      if (done || !value) return;
-      const [index, , { prev, next }] = value;
-
-
-      if (
-        (prev(2).equals(Buffer.from([0x23])) && next(2).equals(Buffer.from([0x23, 0x3b]))) ||
-        (prev(2).equals(Buffer.from([0x0a, 0x23])) && next(2).equals(Buffer.from([0x23, 0x3b])))
-      ) {
-        gen.next();
-        this.children.push(new Code(this.body, index, gen).load());
+  prepare(bufferCursor: BufferCursor) {
+    while (bufferCursor.has()) {
+      if ([0x20, 0x0a].includes(bufferCursor.current())) {
+        this.children.push(this.createElement(Space))
+        continue
       }
 
-
-      if (prev(2).equals(Buffer.from([0x23])) ||
-        prev(2).equals(Buffer.from([0x0a, 0x23]))) {
-        this.children.push(new Comment(this.body, index, gen).load());
+      if (Variable.charactersKey.includes(bufferCursor.current())) {
+        this.children.push(this.createElement(Variable))
+        continue
       }
+
+      if (bufferCursor.current() === 0x23) {
+        this.children.push(this.createElement(Comment))
+        continue
+      }
+
+      // this.children.push(this.createElement(None))
+      bufferCursor.forward();
+      continue;
+
+      throw new TypeError(`Unknown token ${this.bufferCursor.current()} on possition ${this.bufferCursor.position}`)
     }
+
+    // if (this.bufferCursor.position === 0 && this.bufferCursor.next)
+
+    // while (true) {
+    //   const { done, value } = gen.next();
+    //   if (done || !value) return;
+    //   const [index, current_char, { prev, next }] = value;
+
+    //   if (
+    //     (prev(2).equals(Buffer.from([0x23])) && next(2).equals(Buffer.from([0x23, 0x3b]))) ||
+    //     (prev(2).equals(Buffer.from([0x0a, 0x23])) && next(2).equals(Buffer.from([0x23, 0x3b])))
+    //   ) {
+    //     gen.next();
+    //     this.children.push(new Code(this.body, index, gen).load());
+    //   }
+
+
+    //   if (prev(2).equals(Buffer.from([0x23])) ||
+    //     prev(2).equals(Buffer.from([0x0a, 0x23]))) {
+    //     this.children.push(new Comment(this.body, index, gen).load());
+    //   }
+
+    //   if (
+    //     (
+    //       prev(2).length === 1 &&
+    //       KeyValue.charactersKey.includes(current_char)
+    //     ) ||
+    //     (
+    //       prev(2).length === 2 &&
+    //       prev(2).slice(0, 1).equals(Buffer.from([0x0a])) &&
+    //       KeyValue.charactersKey.includes(current_char)
+    //     )
+    //   ) {
+    //     this.children.push(new KeyValue(this.body, index, gen).load());
+    //   }
+    // }
   }
 }

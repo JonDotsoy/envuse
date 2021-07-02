@@ -1,3 +1,4 @@
+import { Base } from "./Base";
 import { Root } from "./Root";
 
 /** AST Parser */
@@ -7,6 +8,6 @@ export class EnvuseFileParser {
   ) { }
 
   toAstBody() {
-    return new Root(this.body, 0).load();
+    return Base.createElement(new Root(this.body, 0));
   }
 }

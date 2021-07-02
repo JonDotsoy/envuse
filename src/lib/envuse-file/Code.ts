@@ -3,23 +3,33 @@ import { Iter } from "./Iter";
 
 
 export class Code extends Base {
-  prepare(gen: Iter) {
-    while (true) {
-      const { done, value } = gen.next();
-      if (done || !value)
-        return;
-      const [, current_char, { next }] = value;
-      this.appendRaw(current_char);
+  prepare() {
+    // let initialized = false
 
-      if (
-        current_char.equals(Buffer.from([0x0a]))
-      ) {
-        if (next(2).equals(Buffer.from([0x0a, 0x23]))) {
-          gen.next()
-          continue;
-        }
-        return;
-      }
-    }
+    // while (true) {
+    //   const { done, value } = gen.next();
+    //   if (done || !value)
+    //     return;
+    //   const [index, current_char, { next }] = value;
+
+    //   if (!initialized && current_char.equals(Buffer.from([0x20]))) {
+    //     if (next(2).equals(Buffer.from([0x20, 0x20]))) continue;
+    //     initialized = true;
+    //     this.pos = index;
+    //     continue;
+    //   }
+
+    //   if (
+    //     current_char.equals(Buffer.from([0x0a]))
+    //   ) {
+    //     if (next(2).equals(Buffer.from([0x0a, 0x23]))) {
+    //       gen.next()
+    //       continue;
+    //     }
+    //     return;
+    //   }
+
+    //   this.appendRaw(current_char);
+    // }
   }
 }
