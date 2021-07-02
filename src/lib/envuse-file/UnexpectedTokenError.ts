@@ -34,7 +34,7 @@ export class UnexpectedTokenError extends Error {
   name = 'UnexpectedTokenError'
 
   constructor(body: Buffer, readonly position: number) {
-    super(`Unexpected token ${position}\n${getLineStyled(body, position)}`);
+    super(`Unexpected token position ${position}:\n${getLineStyled(body, position)}`);
   }
 
   static isUnexpectedTokenError(err: any): err is UnexpectedTokenError {
