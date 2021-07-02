@@ -28,7 +28,7 @@ const charactersKey = Buffer.from([
 ]);
 
 
-export class KeyVariable extends Base {
+export class VariableKey extends Base {
   prepare(bufferCursor: BufferCursor): void {
     while (bufferCursor.has()) {
       if (charactersKey.includes(bufferCursor.current())) {
@@ -43,28 +43,47 @@ export class KeyVariable extends Base {
   }
 }
 
-export class ValueVariable extends Base {
+export class VariableValue extends Base {
   prepare(bufferCursor: BufferCursor): void {
+    const firsCharacter = bufferCursor.current()
+    const valueWithQuotationMark = firsCharacter === 0x22 ? 0x22 : firsCharacter === 0x27 ? 0x27 : null
+
+    if (valueWithQuotationMark) {
+      bufferCursor.forward()
+    }
+
     while (bufferCursor.has()) {
-      if (charactersKey.includes(bufferCursor.current())) {
-        this.appendRaw(bufferCursor.current())
-        bufferCursor.forward()
-        continue
-      } else {
+      if (bufferCursor.current() === 0x23 && valueWithQuotationMark === undefined) {
         this.end = bufferCursor.position
         return
       }
+
+      if (bufferCursor.current() === 0x0a) {
+        this.end = bufferCursor.position
+        bufferCursor.forward()
+        return
+      }
+
+      if (bufferCursor.current() === valueWithQuotationMark && bufferCursor.prev(1)[0] !== 0x5c) {
+        this.end = bufferCursor.position
+        bufferCursor.forward()
+        return
+      }
+
+      this.appendRaw(bufferCursor.current())
+      bufferCursor.forward()
+      continue
     }
   }
 }
 
 
 export class Variable extends Base {
-  keyVariable!: KeyVariable;
-  valueVariable!: ValueVariable;
+  keyVariable!: VariableKey;
+  valueVariable!: VariableValue;
 
   prepare(bufferCursor: BufferCursor): void {
-    const keyVariable = this.createElement(KeyVariable);
+    const keyVariable = this.createElement(VariableKey);
     this.keyVariable = keyVariable;
     this.children.push(keyVariable)
 
@@ -78,7 +97,7 @@ export class Variable extends Base {
       this.children.push(this.createElement(Space))
     }
 
-    const valueVariable = this.createElement(ValueVariable)
+    const valueVariable = this.createElement(VariableValue)
     this.valueVariable = valueVariable;
     this.children.push(valueVariable);
 

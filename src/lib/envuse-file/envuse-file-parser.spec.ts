@@ -5,10 +5,10 @@ import util from 'util'
 describe('EnvuseFileParser2', () => {
 
   it('shoud make a ast out', () => {
-    const body1 = takeDemoFile('.env');
-    const body2 = takeDemoFile('.env');
+    const [filename1, body1] = takeDemoFile('.env');
+    const [filename2, body2] = takeDemoFile('.env');
 
-    const envuseFileParser = new EnvuseFileParser(body1);
+    const envuseFileParser = new EnvuseFileParser(filename1, body1);
     console.log(
       util.formatWithOptions({ depth: Infinity, colors: true }, '', envuseFileParser.toAstBody())
     )

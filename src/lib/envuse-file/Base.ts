@@ -10,6 +10,7 @@ export abstract class Base {
   _raw: string = '';
 
   constructor(
+    readonly filename: string | null,
     readonly body: Buffer,
     public pos: number,
     readonly bufferCursor = new BufferCursor(body),
@@ -20,8 +21,8 @@ export abstract class Base {
     return this;
   }
 
-  createElement<T extends Base>(Comp: { new(body: Buffer, pos: number, bufferCursor?: BufferCursor): T }) {
-    return new Comp(this.body, this.bufferCursor.position, this.bufferCursor).load();
+  createElement<T extends Base>(Comp: { new(filename: string | null, body: Buffer, pos: number, bufferCursor?: BufferCursor): T }) {
+    return new Comp(this.filename, this.body, this.bufferCursor.position, this.bufferCursor).load();
   }
 
   static createElement<T extends Base>(comp: T) {
@@ -76,7 +77,7 @@ export abstract class Base {
   }
 
   rejectUnexpectedTokenError(): never {
-    const err = new UnexpectedTokenError(this.body, this.bufferCursor.position)
+    const err = new UnexpectedTokenError(this.filename, this.body, this.bufferCursor.position)
 
     Error.captureStackTrace(err, Base.prototype.rejectUnexpectedTokenError)
 
