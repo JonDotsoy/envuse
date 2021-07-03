@@ -17,14 +17,14 @@ export class BufferCursor<T extends BCharType = BCharType> {
     return this.body[this.position] as unknown as T;
   }
 
-  forward() {
-    this.position += 1;
+  forward(steps: number = 1) {
+    this.position += steps;
 
     return this.current();
   }
 
-  backward() {
-    this.position += 1;
+  backward(steps: number = 1) {
+    this.position -= steps;
 
     return this.current();
   }

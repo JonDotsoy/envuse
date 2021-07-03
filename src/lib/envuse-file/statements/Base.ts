@@ -2,27 +2,46 @@ import { BufferCursor } from "./BufferCursor";
 import { Iter } from "./Iter";
 import { UnexpectedTokenError } from "./UnexpectedTokenError";
 
+type B<T> = T extends { propsMutable: infer R } ? R extends keyof T ? Partial<Pick<T, R>> : {} : {}
+
 export abstract class Base {
   end!: number;
   children: Base[] = [];
 
   raw = Buffer.from([]);
   _raw: string = '';
+  #filename: string | null;
+  #bufferCursor: BufferCursor
+  #body: Buffer
 
   constructor(
-    readonly filename: string | null,
-    readonly body: Buffer,
+    filename: string | null,
+    body: Buffer,
     public pos: number,
-    readonly bufferCursor = new BufferCursor(body),
-  ) { }
+    bufferCursor = new BufferCursor(body),
+  ) {
+    this.#filename = filename;
+    this.#bufferCursor = bufferCursor
+    this.#body = body
+  }
+
+  get filename() { return this.#filename; }
+  get bufferCursor() { return this.#bufferCursor; }
+  get body() { return this.#body; }
 
   private load() {
     this.prepare(this.bufferCursor);
     return this;
   }
 
-  createElement<T extends Base>(Comp: { new(filename: string | null, body: Buffer, pos: number, bufferCursor?: BufferCursor): T }) {
-    return new Comp(this.filename, this.body, this.bufferCursor.position, this.bufferCursor).load();
+  createElement<T extends Base>(Comp: { new(filename: string | null, body: Buffer, pos: number, bufferCursor?: BufferCursor): T }, assign?: B<T>) {
+    const comp = new Comp(this.filename, this.body, this.bufferCursor.position, this.bufferCursor);
+
+    if (assign) {
+      Object.assign(comp, assign)
+    }
+
+    return comp.load();
   }
 
   static createElement<T extends Base>(comp: T) {
@@ -32,7 +51,7 @@ export abstract class Base {
   abstract prepare(bufferCursor: BufferCursor): void;
 
   // f(cb: (gen: Iter, ) => void) {
-  //   const gen = this.ngen();
+  //   const gen = this.ngen();envuseFileParser.toAstBody()
   //   while (true) {
   //     const { done, value } = gen.next();
   //     if (done || !value) return;
@@ -82,5 +101,9 @@ export abstract class Base {
     Error.captureStackTrace(err, Base.prototype.rejectUnexpectedTokenError)
 
     throw err;
+  }
+
+  toJSON() {
+    return {}
   }
 }

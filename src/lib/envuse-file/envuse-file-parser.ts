@@ -1,6 +1,6 @@
-import { Base } from "./Base";
-import { Root } from "./Root";
-import { UnexpectedTokenError } from "./UnexpectedTokenError";
+import { Base } from "./statements/Base";
+import { Block } from "./statements/Root";
+import { UnexpectedTokenError } from "./statements/UnexpectedTokenError";
 
 /** AST Parser */
 export class EnvuseFileParser {
@@ -11,7 +11,7 @@ export class EnvuseFileParser {
 
   toAstBody() {
     try {
-      return Base.createElement(new Root(this.filename, this.body, 0));
+      return Base.createElement(new Block(this.filename, this.body, 0));
     } catch (err) {
       if (UnexpectedTokenError.isUnexpectedTokenError(err)) {
         // Error.captureStackTrace(err, EnvuseFileParser.prototype.toAstBody);
