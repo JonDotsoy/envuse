@@ -33,7 +33,15 @@ export class BufferCursor<T extends BCharType = BCharType> {
     return Array.from(range(this.position - len, this.position - 1)).map(i => this.body[i]);
   }
 
+  currentAndPrev(len: number) {
+    return [...this.prev(len - 1), this.current()]
+  }
+
   next(len: number) {
     return Array.from(range(this.position + 1, this.position + len)).map(i => this.body[i]);
+  }
+
+  currentAndNext(len: number) {
+    return [this.current(), ...this.next(len - 1)]
   }
 }

@@ -1,8 +1,8 @@
 import { Base } from "./Base";
 import { BufferCursor } from "./BufferCursor";
 import { BCharType } from "./BCharType";
-import { range } from "./range";
 import { Space, SpaceNewLine } from "./Space";
+import { CharactersKey } from "./CharactersKey";
 
 class SymboEqual extends Base {
   prepare(bufferCursor: BufferCursor<BCharType>): void {
@@ -19,19 +19,18 @@ class SymboEqual extends Base {
   }
 }
 
-
-const charactersKey = Buffer.from([
-  0x5f,
-  0x2d,
-  ...Array.from(range(0x61, 0x7a)),
-  ...Array.from(range(0x41, 0x5a)),
+const charactersKeys = Buffer.from([
+  CharactersKey.underscore,
+  CharactersKey.hyphenMinus,
+  ...CharactersKey.english_alphabet_lower,
+  ...CharactersKey.english_alphabet_upper,
 ]);
 
 
 export class VariableKey extends Base {
   prepare(bufferCursor: BufferCursor): void {
     while (bufferCursor.has()) {
-      if (charactersKey.includes(bufferCursor.current())) {
+      if (charactersKeys.includes(bufferCursor.current())) {
         this.appendRaw(bufferCursor.current())
         bufferCursor.forward()
         continue
@@ -138,5 +137,5 @@ export class Variable extends Base {
     // }
   }
 
-  static charactersKey = charactersKey;
+  static charactersKey = charactersKeys;
 }

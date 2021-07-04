@@ -37,14 +37,14 @@ export abstract class Base {
   createElement<T extends Base>(Comp: { new(filename: string | null, body: Buffer, pos: number, bufferCursor?: BufferCursor): T }, assign?: B<T>) {
     const comp = new Comp(this.filename, this.body, this.bufferCursor.position, this.bufferCursor);
 
+    return Base.createElement(comp, assign)
+  }
+
+  static createElement<T extends Base>(comp: T, assign?: B<T>) {
     if (assign) {
       Object.assign(comp, assign)
     }
 
-    return comp.load();
-  }
-
-  static createElement<T extends Base>(comp: T) {
     return comp.load()
   }
 
