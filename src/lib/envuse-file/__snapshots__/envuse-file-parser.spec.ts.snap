@@ -2,6 +2,8 @@
 
 exports[`EnvuseFileParser2 parse statement parse statement operation 1`] = `Object {}`;
 
+exports[`EnvuseFileParser2 parse statement should parse statement with numbers 1`] = `Object {}`;
+
 exports[`EnvuseFileParser2 shoud make a ast out 1`] = `
 " Block {
   pos: 0,
@@ -234,9 +236,19 @@ exports[`EnvuseFileParser2 shoud make a ast with multiple blocks 1`] = `
       },
       statement: CommentOperatorStatement {
         pos: 9,
-        children: [],
-        raw: <Buffer 74 72 75 65>,
-        _raw: 'true',
+        children: [
+          StatementObject {
+            pos: 9,
+            children: [],
+            raw: <Buffer >,
+            _raw: '',
+            type: 'Boolean',
+            value: true,
+            end: 13
+          }
+        ],
+        raw: <Buffer >,
+        _raw: '',
         end: 13
       },
       block: Block {
@@ -298,9 +310,19 @@ exports[`EnvuseFileParser2 shoud make a ast with multiple blocks 1`] = `
             },
             statement: CommentOperatorStatement {
               pos: 23,
-              children: [],
-              raw: <Buffer 66 61 6c 73 65>,
-              _raw: 'false',
+              children: [
+                StatementObject {
+                  pos: 23,
+                  children: [],
+                  raw: <Buffer >,
+                  _raw: '',
+                  type: 'Boolean',
+                  value: false,
+                  end: 28
+                }
+              ],
+              raw: <Buffer >,
+              _raw: '',
               end: 28
             },
             block: Block {
@@ -461,9 +483,19 @@ exports[`EnvuseFileParser2 shoud make a ast with operators 1`] = `
       },
       statement: CommentOperatorStatement {
         pos: 14,
-        children: [],
-        raw: <Buffer 74 72 75 65>,
-        _raw: 'true',
+        children: [
+          StatementObject {
+            pos: 14,
+            children: [],
+            raw: <Buffer >,
+            _raw: '',
+            type: 'Boolean',
+            value: true,
+            end: 18
+          }
+        ],
+        raw: <Buffer >,
+        _raw: '',
         end: 18
       },
       block: Block {

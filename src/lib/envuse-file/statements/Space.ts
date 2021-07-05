@@ -9,7 +9,6 @@ export class Space extends Base {
         bufferCursor.forward();
         continue;
       } else {
-        this.end = bufferCursor.position
         return;
       }
     }
@@ -24,7 +23,6 @@ export class SpaceNewLine extends Base {
         bufferCursor.forward();
         continue;
       } else {
-        this.end = bufferCursor.position
         return;
       }
     }

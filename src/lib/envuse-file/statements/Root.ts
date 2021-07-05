@@ -32,8 +32,6 @@ export class Block extends Base {
 
       this.rejectUnexpectedTokenError()
     }
-
-    this.end = bufferCursor.position
   }
 
   intent(bufferCursor: BufferCursor<number>) {

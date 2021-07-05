@@ -30,7 +30,11 @@ export abstract class Base {
   get body() { return this.#body; }
 
   private load() {
+    const unSubscribe = this.bufferCursor.on('forward', () => {
+      this.end = this.bufferCursor.position
+    })
     this.prepare(this.bufferCursor);
+    unSubscribe()
     return this;
   }
 

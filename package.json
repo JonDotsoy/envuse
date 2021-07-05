@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "build:watch": "tsc --watch",
     "dev": "tsc -w",
     "prepare": "tsc",
     "test": "jest",

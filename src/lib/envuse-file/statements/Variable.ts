@@ -10,7 +10,6 @@ class SymboEqual extends Base {
       if (bufferCursor.current() === 0x3d) {
         this.appendRaw(bufferCursor.current())
         bufferCursor.forward()
-        this.end = bufferCursor.position
         return
       } else {
         this.rejectUnexpectedTokenError()
@@ -35,7 +34,6 @@ export class VariableKey extends Base {
         bufferCursor.forward()
         continue
       } else {
-        this.end = bufferCursor.position
         return
       }
     }
@@ -53,18 +51,15 @@ export class VariableValue extends Base {
 
     while (bufferCursor.has()) {
       if (bufferCursor.current() === 0x23 && valueWithQuotationMark === undefined) {
-        this.end = bufferCursor.position
         return
       }
 
       if (bufferCursor.current() === 0x0a) {
-        this.end = bufferCursor.position
         bufferCursor.forward()
         return
       }
 
       if (bufferCursor.current() === valueWithQuotationMark && bufferCursor.prev(1)[0] !== 0x5c) {
-        this.end = bufferCursor.position
         bufferCursor.forward()
         return
       }

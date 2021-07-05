@@ -7,7 +7,6 @@ export class Comment extends Base {
   prepare(bufferCursor: BufferCursor<BCharType>): void {
     while (bufferCursor.has()) {
       if (bufferCursor.current() === 0x0a) {
-        this.end = bufferCursor.position
         bufferCursor.forward();
         return;
       }
