@@ -114,7 +114,7 @@ describe('EnvuseFileParser2', () => {
       console.log(cmp)
     })
 
-    it.only('should parse end parsing comment code', () => {
+    it('should parse end parsing comment code', () => {
       const body = b('#! if true\nFOO=bar')
 
       const cmp = Base.createElement(new CommentOperator('a', body, 0))
@@ -122,6 +122,14 @@ describe('EnvuseFileParser2', () => {
       // expect(cmp).toMatchInlineSnapshot(`Object {}`)
       expect(cmp.operator.raw.toString()).toEqual('if')
       console.log(cmp)
+    })
+
+    it.only('should read property list children', () => {
+      const [fl, body] = takeDemoFile('.env')
+
+      const envuseFileParser = new EnvuseFileParser(fl, body);
+
+      console.log(envuseFileParser.toAstBody().elementList)
     })
 
   })

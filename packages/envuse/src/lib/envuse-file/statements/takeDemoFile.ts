@@ -21,7 +21,7 @@ export function takeDemoFile(ext?: string) {
 
   if (!fs.existsSync(filedemo)) {
     fs.writeFileSync(filedemo, '')
-    console.log('+ file demo created')
+    console.log(`+ file demo created ${filedemo}`)
     return [filedemo, Buffer.from([])] as const
   } else {
     return [filedemo, fs.readFileSync(filedemo)] as const

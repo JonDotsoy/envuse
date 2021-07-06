@@ -7,6 +7,7 @@ type B<T> = T extends { propsMutable: infer R } ? R extends keyof T ? Partial<Pi
 export abstract class Base {
   end!: number;
   children: Base[] = [];
+  elementList: Base[] = []
 
   raw = Buffer.from([]);
   _raw: string = '';
