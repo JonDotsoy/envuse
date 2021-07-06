@@ -1,0 +1,8 @@
+**/*.ts
+!**/*.d.ts
+!**/*.js
+__demo__
+__snapshots__
+*.tgz
+.editorconfig
+tsconfig.json
