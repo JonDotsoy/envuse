@@ -1,13 +1,22 @@
 import { BufferCursor } from "./BufferCursor";
 import { Iter } from "./Iter";
 import { UnexpectedTokenError } from "./UnexpectedTokenError";
+import { EventEmitter } from 'events'
 
 type B<T> = T extends { propsMutable: infer R } ? R extends keyof T ? Partial<Pick<T, R>> : {} : {}
 
+type BaseEvents = {
+  create_element: (element: Base) => void
+}
+
+type ArgsType<T> = T extends (...args: infer R) => void ? R : []
+
 export abstract class Base {
+  #events = new EventEmitter()
+
   end!: number;
   children: Base[] = [];
-  elementList: Base[] = []
+  #elementList: Base[] = []
 
   raw = Buffer.from([]);
   _raw: string = '';
@@ -26,23 +35,48 @@ export abstract class Base {
     this.#body = body
   }
 
+  on<T extends keyof BaseEvents>(event: T, listener: BaseEvents[T]) {
+    this.#events.on(event, listener)
+    return () => {
+      this.removeListener(event, listener)
+    }
+  }
+
+  removeListener<T extends keyof BaseEvents>(event: T, listener: BaseEvents[T]) {
+    this.#events.removeListener(event, listener)
+  }
+
+  private emit<T extends keyof BaseEvents>(event: T, ...args: ArgsType<BaseEvents[T]>) {
+    this.#events.emit(event, ...args)
+  }
+
   get filename() { return this.#filename; }
   get bufferCursor() { return this.#bufferCursor; }
   get body() { return this.#body; }
+  get elementList() { return this.#elementList; }
 
   private load() {
-    const unSubscribe = this.bufferCursor.on('forward', () => {
+    const unsubscribeForward = this.bufferCursor.on('forward', () => {
       this.end = this.bufferCursor.position
     })
+    const unsubscribeCreateElement = this.on('create_element', (element) => {
+      this.#elementList.push(element)
+    })
     this.prepare(this.bufferCursor);
-    unSubscribe()
+    unsubscribeForward()
+    unsubscribeCreateElement()
     return this;
   }
 
   createElement<T extends Base>(Comp: { new(filename: string | null, body: Buffer, pos: number, bufferCursor?: BufferCursor): T }, assign?: B<T>) {
     const comp = new Comp(this.filename, this.body, this.bufferCursor.position, this.bufferCursor);
 
-    return Base.createElement(comp, assign)
+    this.emit('create_element', comp)
+    Base.createElement(comp, assign)
+
+    this.elementList.push(...comp.elementList)
+
+    return comp
   }
 
   static createElement<T extends Base>(comp: T, assign?: B<T>) {

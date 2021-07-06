@@ -129,7 +129,39 @@ describe('EnvuseFileParser2', () => {
 
       const envuseFileParser = new EnvuseFileParser(fl, body);
 
-      console.log(envuseFileParser.toAstBody().elementList)
+      const b = envuseFileParser.toAstBody()
+
+      for (const elem of b.elementList) {
+        expect(elem).toBeInstanceOf(Base)
+      }
+
+      // console.log(util.inspect(b, false, Infinity))
+      // console.log(b.elementList.map(e => `${e.constructor.name} <${e.pos}, ${e.end}> (${e._raw})`))
+      expect(b.elementList.map((e) => `${e.constructor.name} <${e.pos}, ${e.end}>`)).toMatchInlineSnapshot(`
+        Array [
+          "Variable <0, 8>",
+          "VariableKey <0, 3>",
+          "SymbolEqual <3, 4>",
+          "VariableValue <4, 8>",
+          "CommentOperator <8, 34>",
+          "Space <10, 11>",
+          "VariableKey <11, 13>",
+          "Space <13, 14>",
+          "CommentOperatorStatement <14, 19>",
+          "StatementObject <14, 18>",
+          "Block <19, 34>",
+          "SpaceNewLine <19, 20>",
+          "Variable <20, 28>",
+          "VariableKey <20, 23>",
+          "SymbolEqual <23, 24>",
+          "VariableValue <24, 28>",
+          "SpaceNewLine <28, 29>",
+          "CommentOperator <29, 34>",
+          "Space <31, 32>",
+          "VariableKey <32, 34>",
+          "SpaceNewLine <34, 35>",
+        ]
+      `);
     })
 
   })

@@ -4,7 +4,7 @@ import { BCharType } from "./BCharType";
 import { Space, SpaceNewLine } from "./Space";
 import { CharactersKey } from "./CharactersKey";
 
-class SymboEqual extends Base {
+class SymbolEqual extends Base {
   prepare(bufferCursor: BufferCursor<BCharType>): void {
     while (bufferCursor.has()) {
       if (bufferCursor.current() === 0x3d) {
@@ -85,7 +85,7 @@ export class Variable extends Base {
       this.children.push(this.createElement(Space))
     }
 
-    this.children.push(this.createElement(SymboEqual))
+    this.children.push(this.createElement(SymbolEqual))
 
     if (bufferCursor.current() === 0x20) {
       this.children.push(this.createElement(Space))
