@@ -75,5 +75,12 @@ With EnvUse project, Allow integrations with another platform as Heroku.
 
 This integration uses the [Heroku client](https://github.com/heroku/cli "Heroku CLI") to obtain the configuration from a project hosted in Heroku.
 
+## Contribution
 
-
+> Before you must not have files compile (`.d.ts`, `.js` and `.js.map`). You can clean the source with the command below.
+>
+> ```shell
+> $ rm src/**/*.{js,js.map,d.ts}
+> ```
+>
+> This command remove only files with extensions `.d.ts`, `.js` and `.js.map`.
