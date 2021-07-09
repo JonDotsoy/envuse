@@ -2,624 +2,183 @@
 
 exports[`EnvuseFileParser2 parse statement parse statement operation 1`] = `Object {}`;
 
+exports[`EnvuseFileParser2 parse statement should parse comment operator correctly 1`] = `
+Array [
+  "Block (0, 32): #;if a.b.c.d ===
+foo=\\"bar\\"
+#;fi
+",
+  "CommentOperator (0, 31): #;if a.b.c.d ===
+foo=\\"bar\\"
+#;fi",
+  "VariableKey (2, 4): if",
+  "Space (4, 5):  ",
+  "CommentOperatorStatement (5, 17): a.b.c.d ===
+",
+  "StatementObject<NameInstance> (5, 12): a.b.c.d",
+  "Space (12, 13):  ",
+  "StatementObject<StrictEquality> (13, 16): ===",
+  "Block (17, 31): foo=\\"bar\\"
+#;fi",
+  "Variable (17, 26): foo=\\"bar\\"",
+  "VariableKey (17, 20): foo",
+  "SymbolEqual (20, 21): =",
+  "VariableValue (21, 26): \\"bar\\"",
+  "SpaceNewLine (26, 27): 
+",
+  "CommentOperator (27, 31): #;fi",
+  "VariableKey (29, 31): fi",
+  "SpaceNewLine (31, 32): 
+",
+]
+`;
+
+exports[`EnvuseFileParser2 parse statement should parse comment operator correctly 2`] = `
+Array [
+  "Block (0, 25): #;if true
+foo=\\"bar\\"
+#;fi
+",
+  "CommentOperator (0, 24): #;if true
+foo=\\"bar\\"
+#;fi",
+  "VariableKey (2, 4): if",
+  "Space (4, 5):  ",
+  "CommentOperatorStatement (5, 10): true
+",
+  "StatementObject<Boolean> (5, 9): true",
+  "Block (10, 24): foo=\\"bar\\"
+#;fi",
+  "Variable (10, 19): foo=\\"bar\\"",
+  "VariableKey (10, 13): foo",
+  "SymbolEqual (13, 14): =",
+  "VariableValue (14, 19): \\"bar\\"",
+  "SpaceNewLine (19, 20): 
+",
+  "CommentOperator (20, 24): #;fi",
+  "VariableKey (22, 24): fi",
+  "SpaceNewLine (24, 25): 
+",
+]
+`;
+
+exports[`EnvuseFileParser2 parse statement should parse comment operator correctly 3`] = `
+Array [
+  "Block (0, 24): #;if 123
+foo=\\"bar\\"
+#;fi
+",
+  "CommentOperator (0, 23): #;if 123
+foo=\\"bar\\"
+#;fi",
+  "VariableKey (2, 4): if",
+  "Space (4, 5):  ",
+  "CommentOperatorStatement (5, 9): 123
+",
+  "StatementObject<Number> (5, 8): 123",
+  "Block (9, 23): foo=\\"bar\\"
+#;fi",
+  "Variable (9, 18): foo=\\"bar\\"",
+  "VariableKey (9, 12): foo",
+  "SymbolEqual (12, 13): =",
+  "VariableValue (13, 18): \\"bar\\"",
+  "SpaceNewLine (18, 19): 
+",
+  "CommentOperator (19, 23): #;fi",
+  "VariableKey (21, 23): fi",
+  "SpaceNewLine (23, 24): 
+",
+]
+`;
+
+exports[`EnvuseFileParser2 parse statement should parse comment operator correctly 4`] = `
+Array [
+  "Block (0, 24): #;if var
+foo=\\"bar\\"
+#;fi
+",
+  "CommentOperator (0, 23): #;if var
+foo=\\"bar\\"
+#;fi",
+  "VariableKey (2, 4): if",
+  "Space (4, 5):  ",
+  "CommentOperatorStatement (5, 9): var
+",
+  "StatementObject<NameInstance> (5, 8): var",
+  "Block (9, 23): foo=\\"bar\\"
+#;fi",
+  "Variable (9, 18): foo=\\"bar\\"",
+  "VariableKey (9, 12): foo",
+  "SymbolEqual (12, 13): =",
+  "VariableValue (13, 18): \\"bar\\"",
+  "SpaceNewLine (18, 19): 
+",
+  "CommentOperator (19, 23): #;fi",
+  "VariableKey (21, 23): fi",
+  "SpaceNewLine (23, 24): 
+",
+]
+`;
+
+exports[`EnvuseFileParser2 parse statement should parse comment operator correctly 5`] = `
+Array [
+  "Block (0, 32): #;if foo === bar
+foo=\\"bar\\"
+#;fi
+",
+  "CommentOperator (0, 31): #;if foo === bar
+foo=\\"bar\\"
+#;fi",
+  "VariableKey (2, 4): if",
+  "Space (4, 5):  ",
+  "CommentOperatorStatement (5, 17): foo === bar
+",
+  "StatementObject<NameInstance> (5, 8): foo",
+  "Space (8, 9):  ",
+  "StatementObject<StrictEquality> (9, 12): ===",
+  "Space (12, 13):  ",
+  "StatementObject<NameInstance> (13, 16): bar",
+  "Block (17, 31): foo=\\"bar\\"
+#;fi",
+  "Variable (17, 26): foo=\\"bar\\"",
+  "VariableKey (17, 20): foo",
+  "SymbolEqual (20, 21): =",
+  "VariableValue (21, 26): \\"bar\\"",
+  "SpaceNewLine (26, 27): 
+",
+  "CommentOperator (27, 31): #;fi",
+  "VariableKey (29, 31): fi",
+  "SpaceNewLine (31, 32): 
+",
+]
+`;
+
 exports[`EnvuseFileParser2 parse statement should parse statement with numbers 1`] = `Object {}`;
 
 exports[`EnvuseFileParser2 shoud make a ast out 1`] = `
-" Block {
-  pos: 0,
-  children: [
-    SpaceNewLine {
-      pos: 0,
-      children: [],
-      raw: <Buffer 20>,
-      _raw: ' ',
-      end: 1
-    },
-    Variable {
-      pos: 1,
-      children: [
-        VariableKey {
-          pos: 1,
-          children: [],
-          raw: <Buffer 61 62 63>,
-          _raw: 'abc',
-          end: 4
-        },
-        SymboEqual {
-          pos: 4,
-          children: [],
-          raw: <Buffer 3d>,
-          _raw: '=',
-          end: 5
-        },
-        VariableValue {
-          pos: 5,
-          children: [],
-          raw: <Buffer 64 65 66 20 23 20 61 20 63 6f 6d 6d 65 6e 74>,
-          _raw: 'def # a comment',
-          end: 20
-        }
-      ],
-      raw: <Buffer >,
-      _raw: '',
-      keyVariable: VariableKey {
-        pos: 1,
-        children: [],
-        raw: <Buffer 61 62 63>,
-        _raw: 'abc',
-        end: 4
-      },
-      valueVariable: VariableValue {
-        pos: 5,
-        children: [],
-        raw: <Buffer 64 65 66 20 23 20 61 20 63 6f 6d 6d 65 6e 74>,
-        _raw: 'def # a comment',
-        end: 20
-      }
-    },
-    Variable {
-      pos: 21,
-      children: [
-        VariableKey {
-          pos: 21,
-          children: [],
-          raw: <Buffer 66 6f 6f>,
-          _raw: 'foo',
-          end: 24
-        },
-        SymboEqual {
-          pos: 24,
-          children: [],
-          raw: <Buffer 3d>,
-          _raw: '=',
-          end: 25
-        },
-        VariableValue {
-          pos: 25,
-          children: [],
-          raw: <Buffer 62 61 72>,
-          _raw: 'bar',
-          end: 28
-        }
-      ],
-      raw: <Buffer >,
-      _raw: '',
-      keyVariable: VariableKey {
-        pos: 21,
-        children: [],
-        raw: <Buffer 66 6f 6f>,
-        _raw: 'foo',
-        end: 24
-      },
-      valueVariable: VariableValue {
-        pos: 25,
-        children: [],
-        raw: <Buffer 62 61 72>,
-        _raw: 'bar',
-        end: 28
-      }
-    },
-    SpaceNewLine {
-      pos: 29,
-      children: [],
-      raw: <Buffer 0a 20 20 20 20 0a>,
-      _raw: '\\\\n    \\\\n',
-      end: 35
-    },
-    Variable {
-      pos: 35,
-      children: [
-        VariableKey {
-          pos: 35,
-          children: [],
-          raw: <Buffer 61 62 63>,
-          _raw: 'abc',
-          end: 38
-        },
-        Space {
-          pos: 38,
-          children: [],
-          raw: <Buffer 20 20 20 20>,
-          _raw: '    ',
-          end: 42
-        },
-        SymboEqual {
-          pos: 42,
-          children: [],
-          raw: <Buffer 3d>,
-          _raw: '=',
-          end: 43
-        },
-        VariableValue {
-          pos: 43,
-          children: [],
-          raw: <Buffer 64 5c 22 65 66>,
-          _raw: 'd\\\\\\\\\\"ef',
-          end: 49
-        }
-      ],
-      raw: <Buffer >,
-      _raw: '',
-      keyVariable: VariableKey {
-        pos: 35,
-        children: [],
-        raw: <Buffer 61 62 63>,
-        _raw: 'abc',
-        end: 38
-      },
-      valueVariable: VariableValue {
-        pos: 43,
-        children: [],
-        raw: <Buffer 64 5c 22 65 66>,
-        _raw: 'd\\\\\\\\\\"ef',
-        end: 49
-      }
-    },
-    SpaceNewLine {
-      pos: 50,
-      children: [],
-      raw: <Buffer 20>,
-      _raw: ' ',
-      end: 51
-    },
-    Comment {
-      pos: 51,
-      children: [],
-      raw: <Buffer 23 20 63 6f 6d 65 6e 74 65 64>,
-      _raw: '# comented',
-      end: 61
-    }
-  ],
-  raw: <Buffer >,
-  _raw: '',
-  end: 62
-}"
+" Block (0, 62):  abc=def # a comment
+foo=bar
+
+    
+abc    =\\"d\\\\\\"ef\\" # comented
+"
 `;
 
 exports[`EnvuseFileParser2 shoud make a ast with multiple blocks 1`] = `
-" Block {
-  pos: 0,
-  children: [
-    Variable {
-      pos: 0,
-      children: [
-        VariableKey {
-          pos: 0,
-          children: [],
-          raw: <Buffer 43>,
-          _raw: 'C',
-          end: 1
-        },
-        SymboEqual {
-          pos: 1,
-          children: [],
-          raw: <Buffer 3d>,
-          _raw: '=',
-          end: 2
-        },
-        VariableValue {
-          pos: 2,
-          children: [],
-          raw: <Buffer 43>,
-          _raw: 'C',
-          end: 3
-        }
-      ],
-      raw: <Buffer >,
-      _raw: '',
-      keyVariable: VariableKey {
-        pos: 0,
-        children: [],
-        raw: <Buffer 43>,
-        _raw: 'C',
-        end: 1
-      },
-      valueVariable: VariableValue {
-        pos: 2,
-        children: [],
-        raw: <Buffer 43>,
-        _raw: 'C',
-        end: 3
-      }
-    },
-    CommentOperator {
-      pos: 4,
-      children: [],
-      raw: <Buffer >,
-      _raw: '',
-      operator: VariableKey {
-        pos: 6,
-        children: [],
-        raw: <Buffer 69 66>,
-        _raw: 'if',
-        end: 8
-      },
-      statement: CommentOperatorStatement {
-        pos: 9,
-        children: [
-          StatementObject {
-            pos: 9,
-            children: [],
-            raw: <Buffer >,
-            _raw: '',
-            type: 'Boolean',
-            value: true,
-            end: 13
-          }
-        ],
-        raw: <Buffer >,
-        _raw: '',
-        end: 13
-      },
-      block: Block {
-        pos: 14,
-        children: [
-          Variable {
-            pos: 14,
-            children: [
-              VariableKey {
-                pos: 14,
-                children: [],
-                raw: <Buffer 61>,
-                _raw: 'a',
-                end: 15
-              },
-              SymboEqual {
-                pos: 15,
-                children: [],
-                raw: <Buffer 3d>,
-                _raw: '=',
-                end: 16
-              },
-              VariableValue {
-                pos: 16,
-                children: [],
-                raw: <Buffer 61>,
-                _raw: 'a',
-                end: 17
-              }
-            ],
-            raw: <Buffer >,
-            _raw: '',
-            keyVariable: VariableKey {
-              pos: 14,
-              children: [],
-              raw: <Buffer 61>,
-              _raw: 'a',
-              end: 15
-            },
-            valueVariable: VariableValue {
-              pos: 16,
-              children: [],
-              raw: <Buffer 61>,
-              _raw: 'a',
-              end: 17
-            }
-          },
-          CommentOperator {
-            pos: 18,
-            children: [],
-            raw: <Buffer >,
-            _raw: '',
-            operator: VariableKey {
-              pos: 20,
-              children: [],
-              raw: <Buffer 69 66>,
-              _raw: 'if',
-              end: 22
-            },
-            statement: CommentOperatorStatement {
-              pos: 23,
-              children: [
-                StatementObject {
-                  pos: 23,
-                  children: [],
-                  raw: <Buffer >,
-                  _raw: '',
-                  type: 'Boolean',
-                  value: false,
-                  end: 28
-                }
-              ],
-              raw: <Buffer >,
-              _raw: '',
-              end: 28
-            },
-            block: Block {
-              pos: 29,
-              children: [
-                Variable {
-                  pos: 29,
-                  children: [
-                    VariableKey {
-                      pos: 29,
-                      children: [],
-                      raw: <Buffer 62>,
-                      _raw: 'b',
-                      end: 30
-                    },
-                    SymboEqual {
-                      pos: 30,
-                      children: [],
-                      raw: <Buffer 3d>,
-                      _raw: '=',
-                      end: 31
-                    },
-                    VariableValue {
-                      pos: 31,
-                      children: [],
-                      raw: <Buffer 62>,
-                      _raw: 'b',
-                      end: 32
-                    }
-                  ],
-                  raw: <Buffer >,
-                  _raw: '',
-                  keyVariable: VariableKey {
-                    pos: 29,
-                    children: [],
-                    raw: <Buffer 62>,
-                    _raw: 'b',
-                    end: 30
-                  },
-                  valueVariable: VariableValue {
-                    pos: 31,
-                    children: [],
-                    raw: <Buffer 62>,
-                    _raw: 'b',
-                    end: 32
-                  }
-                },
-                CommentOperator {
-                  pos: 33,
-                  children: [],
-                  raw: <Buffer >,
-                  _raw: '',
-                  operator: VariableKey {
-                    pos: 35,
-                    children: [],
-                    raw: <Buffer 66 69>,
-                    _raw: 'fi',
-                    end: 37
-                  }
-                }
-              ],
-              raw: <Buffer >,
-              _raw: '',
-              handleCheckCloseBlock: [Function: handleCheckCloseBlock],
-              end: 37
-            }
-          },
-          SpaceNewLine {
-            pos: 37,
-            children: [],
-            raw: <Buffer 0a>,
-            _raw: '\\\\n',
-            end: 38
-          },
-          CommentOperator {
-            pos: 38,
-            children: [],
-            raw: <Buffer >,
-            _raw: '',
-            operator: VariableKey {
-              pos: 40,
-              children: [],
-              raw: <Buffer 66 69>,
-              _raw: 'fi'
-            }
-          }
-        ],
-        raw: <Buffer >,
-        _raw: '',
-        handleCheckCloseBlock: [Function: handleCheckCloseBlock],
-        end: 42
-      }
-    }
-  ],
-  raw: <Buffer >,
-  _raw: '',
-  end: 42
-}"
+" Block (0, 42): C=C
+#;if true
+a=a
+#;if false
+b=b
+#;fi
+#;fi"
 `;
 
 exports[`EnvuseFileParser2 shoud make a ast with operators 1`] = `
-" Block {
-  pos: 0,
-  children: [
-    Variable {
-      pos: 0,
-      children: [
-        VariableKey {
-          pos: 0,
-          children: [],
-          raw: <Buffer 46 4f 4f>,
-          _raw: 'FOO',
-          end: 3
-        },
-        SymboEqual {
-          pos: 3,
-          children: [],
-          raw: <Buffer 3d>,
-          _raw: '=',
-          end: 4
-        },
-        VariableValue {
-          pos: 4,
-          children: [],
-          raw: <Buffer 42 41 52>,
-          _raw: 'BAR',
-          end: 7
-        }
-      ],
-      raw: <Buffer >,
-      _raw: '',
-      keyVariable: VariableKey {
-        pos: 0,
-        children: [],
-        raw: <Buffer 46 4f 4f>,
-        _raw: 'FOO',
-        end: 3
-      },
-      valueVariable: VariableValue {
-        pos: 4,
-        children: [],
-        raw: <Buffer 42 41 52>,
-        _raw: 'BAR',
-        end: 7
-      }
-    },
-    CommentOperator {
-      pos: 8,
-      children: [],
-      raw: <Buffer >,
-      _raw: '',
-      operator: VariableKey {
-        pos: 11,
-        children: [],
-        raw: <Buffer 69 66>,
-        _raw: 'if',
-        end: 13
-      },
-      statement: CommentOperatorStatement {
-        pos: 14,
-        children: [
-          StatementObject {
-            pos: 14,
-            children: [],
-            raw: <Buffer >,
-            _raw: '',
-            type: 'Boolean',
-            value: true,
-            end: 18
-          }
-        ],
-        raw: <Buffer >,
-        _raw: '',
-        end: 18
-      },
-      block: Block {
-        pos: 19,
-        children: [
-          Variable {
-            pos: 19,
-            children: [
-              VariableKey {
-                pos: 19,
-                children: [],
-                raw: <Buffer 61 61 61>,
-                _raw: 'aaa',
-                end: 22
-              },
-              SymboEqual {
-                pos: 22,
-                children: [],
-                raw: <Buffer 3d>,
-                _raw: '=',
-                end: 23
-              },
-              VariableValue {
-                pos: 23,
-                children: [],
-                raw: <Buffer 62 62 62>,
-                _raw: 'bbb',
-                end: 27
-              }
-            ],
-            raw: <Buffer >,
-            _raw: '',
-            keyVariable: VariableKey {
-              pos: 19,
-              children: [],
-              raw: <Buffer 61 61 61>,
-              _raw: 'aaa',
-              end: 22
-            },
-            valueVariable: VariableValue {
-              pos: 23,
-              children: [],
-              raw: <Buffer 62 62 62>,
-              _raw: 'bbb',
-              end: 27
-            }
-          },
-          SpaceNewLine {
-            pos: 28,
-            children: [],
-            raw: <Buffer 0a>,
-            _raw: '\\\\n',
-            end: 29
-          },
-          CommentOperator {
-            pos: 29,
-            children: [],
-            raw: <Buffer >,
-            _raw: '',
-            operator: VariableKey {
-              pos: 32,
-              children: [],
-              raw: <Buffer 66 69>,
-              _raw: 'fi',
-              end: 34
-            }
-          }
-        ],
-        raw: <Buffer >,
-        _raw: '',
-        handleCheckCloseBlock: [Function: handleCheckCloseBlock],
-        end: 34
-      }
-    },
-    SpaceNewLine {
-      pos: 34,
-      children: [],
-      raw: <Buffer 0a 0a>,
-      _raw: '\\\\n\\\\n',
-      end: 36
-    },
-    Variable {
-      pos: 36,
-      children: [
-        VariableKey {
-          pos: 36,
-          children: [],
-          raw: <Buffer 63 63 63>,
-          _raw: 'ccc',
-          end: 39
-        },
-        SymboEqual {
-          pos: 39,
-          children: [],
-          raw: <Buffer 3d>,
-          _raw: '=',
-          end: 40
-        },
-        VariableValue {
-          pos: 40,
-          children: [],
-          raw: <Buffer 64 64 64>,
-          _raw: 'ddd'
-        }
-      ],
-      raw: <Buffer >,
-      _raw: '',
-      keyVariable: VariableKey {
-        pos: 36,
-        children: [],
-        raw: <Buffer 63 63 63>,
-        _raw: 'ccc',
-        end: 39
-      },
-      valueVariable: VariableValue {
-        pos: 40,
-        children: [],
-        raw: <Buffer 64 64 64>,
-        _raw: 'ddd'
-      }
-    }
-  ],
-  raw: <Buffer >,
-  _raw: '',
-  end: 43
-}"
+" Block (0, 43): FOO=BAR
+#; if true
+aaa=\\"bbb\\"
+#; fi
+
+ccc=ddd"
 `;

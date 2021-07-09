@@ -1,6 +1,8 @@
 import { range } from "./range";
 
 export namespace CharactersKey {
+  /** symbol: = */
+  export const equalsSign = 0x3D;
   /** symbol: \ */
   export const backslash = 0x5c;
   /** symbol: " */

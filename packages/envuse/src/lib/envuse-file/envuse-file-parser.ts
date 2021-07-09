@@ -1,11 +1,16 @@
 import { Base } from "./statements/Base";
-import { Block } from "./statements/Root";
+import { Block } from "./statements/Block";
 import { UnexpectedTokenError } from "./statements/UnexpectedTokenError";
+
+type Option = {
+  filename: string | null
+  body: Buffer
+};
 
 /** AST Parser */
 export class EnvuseFileParser {
   constructor(
-    private filename: string,
+    private filename: string | null,
     private body: Buffer
   ) { }
 
@@ -22,5 +27,9 @@ export class EnvuseFileParser {
       }
       throw err;
     }
+  }
+
+  static parse(options: Option) {
+    return new EnvuseFileParser(options.filename, options.body).toAstBody()
   }
 }

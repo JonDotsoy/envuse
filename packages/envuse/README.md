@@ -66,7 +66,7 @@ Synchronize all environments' origin.
 
 ## Integrations
 
-With EnvUse project, Allow integrations with another platform as Heroku.
+With Envuse project, Allow integrations with another platform as Heroku.
 
 > This is an **experimental** feature, please if not work put an issue post with the problem.
 

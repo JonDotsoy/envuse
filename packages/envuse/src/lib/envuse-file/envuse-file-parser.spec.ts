@@ -1,8 +1,10 @@
 import { EnvuseFileParser } from "./envuse-file-parser";
 import { takeDemoFile } from "./statements/takeDemoFile";
 import util from 'util'
-import { CommentOperator, CommentOperatorStatement, StatementObject } from "./statements/CommentOperator";
-import { Base } from "./statements/Base";
+import { CommentOperator } from "./statements/CommentOperator";
+import { CommentOperatorStatement } from "./statements/CommentOperatorStatement";
+import { StatementObject } from "./statements/StatementObject";
+import { Base, printElement } from "./statements/Base";
 import { toBuffer as b } from "./statements/toBuffer";
 
 describe('EnvuseFileParser2', () => {
@@ -72,9 +74,7 @@ describe('EnvuseFileParser2', () => {
 
       const cmp = Base.createElement(new StatementObject(fl, body, 0))
 
-      // expect(cmp).toMatchSnapshot()
-      console.log(cmp)
-      expect(Array.from(cmp.raw)).toEqual([0x0a, 0x09])
+      expect(cmp.value).toEqual('\n\t')
     })
 
     it('should parse instance path', () => {
@@ -90,17 +90,13 @@ describe('EnvuseFileParser2', () => {
 
       const cmp = Base.createElement(new StatementObject('a', body, 0))
 
-      if (cmp.type === 'Number') {
-        cmp.value
-      }
-
       expect(cmp.value).toEqual(1_321.123)
     })
 
     it('should parse strings', () => {
       const body = b('"hi"');
 
-      const cmp = Base.createElement(new StatementObject('a', body, 0))
+      const cmp = Base.createElement(new StatementObject(null, body, 0))
 
       expect(cmp.value).toEqual("hi")
     })
@@ -110,8 +106,17 @@ describe('EnvuseFileParser2', () => {
 
       const cmp = Base.createElement(new CommentOperatorStatement('a', body, 0))
 
-      // expect(cmp).toMatchSnapshot()
-      console.log(cmp)
+      expect(cmp.elementList.map((e) => e.toString())).toMatchInlineSnapshot(`
+        Array [
+          "CommentOperatorStatement (0, 25): VAL1 ===   obj.a.b.VAL2 #",
+          "StatementObject<NameInstance> (0, 4): VAL1",
+          "Space (4, 5):  ",
+          "StatementObject<StrictEquality> (5, 8): ===",
+          "Space (8, 11):    ",
+          "StatementObject<NameInstance> (11, 23): obj.a.b.VAL2",
+          "Space (23, 24):  ",
+        ]
+      `)
     })
 
     it('should parse end parsing comment code', () => {
@@ -121,10 +126,10 @@ describe('EnvuseFileParser2', () => {
 
       // expect(cmp).toMatchInlineSnapshot(`Object {}`)
       expect(cmp.operator.raw.toString()).toEqual('if')
-      console.log(cmp)
+      // console.log(cmp)
     })
 
-    it.only('should read property list children', () => {
+    it('should read property list children', () => {
       const [fl, body] = takeDemoFile('.env')
 
       const envuseFileParser = new EnvuseFileParser(fl, body);
@@ -135,10 +140,9 @@ describe('EnvuseFileParser2', () => {
         expect(elem).toBeInstanceOf(Base)
       }
 
-      // console.log(util.inspect(b, false, Infinity))
-      // console.log(b.elementList.map(e => `${e.constructor.name} <${e.pos}, ${e.end}> (${e._raw})`))
       expect(b.elementList.map((e) => `${e.constructor.name} <${e.pos}, ${e.end}>`)).toMatchInlineSnapshot(`
         Array [
+          "Block <0, 35>",
           "Variable <0, 8>",
           "VariableKey <0, 3>",
           "SymbolEqual <3, 4>",
@@ -162,6 +166,14 @@ describe('EnvuseFileParser2', () => {
           "SpaceNewLine <34, 35>",
         ]
       `);
+    })
+
+    it('should parse comment operator correctly', () => {
+      expect(EnvuseFileParser.parse({ filename: null, body: Buffer.from(`#;if a.b.c.d ===\nfoo="bar"\n#;fi\n`) }).elementList.map(e => e.toString())).toMatchSnapshot()
+      expect(EnvuseFileParser.parse({ filename: null, body: Buffer.from(`#;if true\nfoo="bar"\n#;fi\n`) }).elementList.map(e => e.toString())).toMatchSnapshot()
+      expect(EnvuseFileParser.parse({ filename: null, body: Buffer.from(`#;if 123\nfoo="bar"\n#;fi\n`) }).elementList.map(e => e.toString())).toMatchSnapshot()
+      expect(EnvuseFileParser.parse({ filename: null, body: Buffer.from(`#;if var\nfoo="bar"\n#;fi\n`) }).elementList.map(e => e.toString())).toMatchSnapshot()
+      expect(EnvuseFileParser.parse({ filename: null, body: Buffer.from(`#;if foo === bar\nfoo="bar"\n#;fi\n`) }).elementList.map(e => e.toString())).toMatchSnapshot()
     })
 
   })

@@ -2,6 +2,10 @@ import { BufferCursor } from "./BufferCursor";
 import { Iter } from "./Iter";
 import { UnexpectedTokenError } from "./UnexpectedTokenError";
 import { EventEmitter } from 'events'
+import util from 'util'
+
+export const printElement = (element: Base, color: boolean = false) =>
+  `${element.toObjectName()} (${element.pos}, ${element.end}): ${element.body.slice(element.pos, element.end)}`
 
 type B<T> = T extends { propsMutable: infer R } ? R extends keyof T ? Partial<Pick<T, R>> : {} : {}
 
@@ -14,9 +18,9 @@ type ArgsType<T> = T extends (...args: infer R) => void ? R : []
 export abstract class Base {
   #events = new EventEmitter()
 
-  end!: number;
+  end: number = this.pos;
   children: Base[] = [];
-  #elementList: Base[] = []
+  #elementList: Base[] = [this]
 
   raw = Buffer.from([]);
   _raw: string = '';
@@ -33,6 +37,18 @@ export abstract class Base {
     this.#filename = filename;
     this.#bufferCursor = bufferCursor
     this.#body = body
+  }
+
+  toObjectName() {
+    return this.constructor.name
+  }
+
+  toString() {
+    return printElement(this)
+  }
+
+  [util.inspect.custom]() {
+    return printElement(this)
   }
 
   on<T extends keyof BaseEvents>(event: T, listener: BaseEvents[T]) {
@@ -74,7 +90,9 @@ export abstract class Base {
     this.emit('create_element', comp)
     Base.createElement(comp, assign)
 
-    this.elementList.push(...comp.elementList)
+    const [, ...elements] = comp.elementList
+
+    this.elementList.push(...elements)
 
     return comp
   }
@@ -107,6 +125,7 @@ export abstract class Base {
     return this;
   }
 
+  /** @deprecated */
   *iter() {
     let index = this.pos;
 
