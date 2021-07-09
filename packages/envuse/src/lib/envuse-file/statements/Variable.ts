@@ -26,10 +26,13 @@ const charactersKeys = Buffer.from([
 ]);
 
 export class VariableKey extends Base {
+  value!: string
+
   prepare(bufferCursor: BufferCursor): void {
     while (bufferCursor.has()) {
       if (charactersKeys.includes(bufferCursor.current())) {
         this.appendRaw(bufferCursor.current());
+        this.value = this.raw.toString()
         bufferCursor.forward();
         continue;
       } else {
@@ -40,6 +43,10 @@ export class VariableKey extends Base {
 }
 
 export class VariableValue extends Base {
+  get value() {
+    return this.raw.toString()
+  }
+
   prepare(bufferCursor: BufferCursor): void {
     const firsCharacter = bufferCursor.current();
     const valueWithQuotationMark =

@@ -38,12 +38,12 @@ export class Block extends Base {
   }
 
   intent(bufferCursor: BufferCursor<number>) {
-    if ([0x20, 0x0a].includes(bufferCursor.current())) {
+    if (bufferCursor.has() && [0x20, 0x0a].includes(bufferCursor.current())) {
       this.children.push(this.createElement(SpaceNewLine));
       return true;
     }
 
-    if (Variable.charactersKey.includes(bufferCursor.current())) {
+    if (bufferCursor.has() && Variable.charactersKey.includes(bufferCursor.current())) {
       this.children.push(this.createElement(Variable));
       return true;
     }

@@ -6,6 +6,8 @@ import { CharactersKey as K } from "./CharactersKey";
 import { StatementObject } from "./StatementObject";
 
 export class CommentOperatorStatement extends Base {
+  statements: StatementObject[] = []
+
   prepare(bufferCursor: BufferCursor<BCharType>): void {
     while (true) {
       if (
@@ -17,7 +19,7 @@ export class CommentOperatorStatement extends Base {
         return;
       }
 
-      this.children.push(this.createElement(StatementObject));
+      this.statements.push(this.createElement(StatementObject));
 
       if (bufferCursor.current() === K.newLineLF) {
         bufferCursor.forward();

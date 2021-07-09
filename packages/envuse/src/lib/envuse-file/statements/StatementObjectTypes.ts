@@ -3,5 +3,5 @@ export const StatementObjectTypes = {
   Number: "Number",
   String: "String",
   NameInstance: "NameInstance",
-  StrictEquality: "StrictEquality",
+  StrictEqualitySymbol: "StrictEqualitySymbol",
 } as const;

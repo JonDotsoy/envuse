@@ -226,3 +226,34 @@ describe("EnvuseFileParser2", () => {
     });
   });
 });
+
+describe.only('Envuse file parse', () => {
+  it('parse file', () => {
+    const res = EnvuseFileParser.parse({ body: b(`foo=var\nabc=def\naaa=32`) })
+
+    expect(res.parsed).toEqual({
+      foo: 'var',
+      abc: 'def',
+      aaa: '32'
+    })
+  })
+
+  it('parse file with conditionals', () => {
+    const res1 = EnvuseFileParser.parse({ body: b(`foo=var\nabc=def\naaa=32\n#; if true\nbbb=ccc\n#; fi`) })
+
+    expect(res1.parsed).toEqual({
+      foo: 'var',
+      abc: 'def',
+      aaa: '32',
+      bbb: 'ccc',
+    });
+
+    const res2 = EnvuseFileParser.parse({ body: b(`foo=var\nabc=def\naaa=32\n#; if false\nbbb=ccc\n#; fi`) })
+
+    expect(res2.parsed).toEqual({
+      foo: 'var',
+      abc: 'def',
+      aaa: '32'
+    })
+  })
+})

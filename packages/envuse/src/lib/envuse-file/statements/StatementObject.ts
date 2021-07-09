@@ -6,8 +6,10 @@ import { toBuffer as b, toBuffer } from "./toBuffer";
 import { StatementObjectTypes } from "./StatementObjectTypes";
 import util from "util";
 
+type typesValues = typeof StatementObjectTypes[keyof typeof StatementObjectTypes]
+
 abstract class StatementObjectDefinition {
-  type!: string;
+  type!: typesValues;
   value: any;
 
   constructor(readonly rejectUnexpectedTokenError: () => never) {}
@@ -40,7 +42,7 @@ class StatementFalseObject extends StatementObjectDefinition {
     bufferCursor: BufferCursor<BCharType>
   ): bufferCursor is BufferCursor<number> {
     return (
-      bufferCursor.has() && b("true").equals(b(bufferCursor.currentAndNext(4)))
+      bufferCursor.has() && b("false").equals(b(bufferCursor.currentAndNext(5)))
     );
   }
 
@@ -62,7 +64,7 @@ class StatementStrictEqualObject extends StatementObjectDefinition {
   }
 
   prepare(bufferCursor: BufferCursor<BCharType>): void {
-    this.type = StatementObjectTypes.StrictEquality;
+    this.type = StatementObjectTypes.StrictEqualitySymbol;
     bufferCursor.forward(3);
     return;
   }
@@ -82,7 +84,7 @@ class StatementNameInstanceObject extends StatementObjectDefinition {
     let partialPath: string[] = [];
     let charAccumulation: number[] = [];
 
-    while (true) {
+    while (bufferCursor.has()) {
       if (
         bufferCursor.isClosed() ||
         bufferCursor.current() === k.space ||
@@ -137,7 +139,7 @@ class StatementStringObject extends StatementObjectDefinition {
     const initialQuote = bufferCursor.current();
     bufferCursor.forward();
 
-    while (true) {
+    while (bufferCursor.has()) {
       const p = bufferCursor.prev(2);
       if (
         bufferCursor.isClosed() ||
@@ -190,7 +192,7 @@ class StatementNumberObject extends StatementObjectDefinition {
     };
 
     this.type = StatementObjectTypes.Number;
-    while (true) {
+    while (bufferCursor.has()) {
       if (
         bufferCursor.isClosed() ||
         k.space === bufferCursor.current() ||
@@ -220,17 +222,17 @@ class StatementNumberObject extends StatementObjectDefinition {
 export class StatementObject extends Base {
   static types = StatementObjectTypes;
 
-  type!: string;
+  type!: typesValues;
   value: any;
 
-  definitions: StatementObjectDefinition[] = [
+  readonly definitions = [
     new StatementTrueObject(() => this.rejectUnexpectedTokenError()),
     new StatementFalseObject(() => this.rejectUnexpectedTokenError()),
     new StatementStrictEqualObject(() => this.rejectUnexpectedTokenError()),
     new StatementNameInstanceObject(() => this.rejectUnexpectedTokenError()),
     new StatementStringObject(() => this.rejectUnexpectedTokenError()),
     new StatementNumberObject(() => this.rejectUnexpectedTokenError()),
-  ];
+  ] as const;
 
   toObjectName() {
     return `${this.constructor.name}<${this.type ?? "unknown"}>`;

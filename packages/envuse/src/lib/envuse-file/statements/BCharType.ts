@@ -1,1 +1,1 @@
-export type BCharType = number | undefined;
+export type BCharType = number;

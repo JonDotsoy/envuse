@@ -7,7 +7,7 @@ import util from "util";
 export const printElement = (element: Base, color: boolean = false) =>
   `${element.toObjectName()} (${element.pos}, ${
     element.end
-  }): ${element.body.slice(element.pos, element.end)}`;
+  }): ${JSON.stringify(element.body.slice(element.pos, element.end).toString())}`;
 
 type B<T> = T extends { propsMutable: infer R }
   ? R extends keyof T
