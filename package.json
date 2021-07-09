@@ -1,0 +1,28 @@
+{
+  "name": "envuse",
+  "private": true,
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JonDotsoy/envuse.git"
+  },
+  "keywords": [],
+  "author": "Jonathan Delgado <hi@jon.soy> (https://jon.soy)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JonDotsoy/envuse/issues"
+  },
+  "homepage": "https://github.com/JonDotsoy/envuse#readme",
+  "devDependencies": {
+    "husky": "^7.0.1",
+    "lint-staged": "^11.0.0",
+    "prettier": "^2.3.2"
+  },
+  "lint-staged": {
+    "*.{js,css,md}": "prettier --write"
+  }
+}

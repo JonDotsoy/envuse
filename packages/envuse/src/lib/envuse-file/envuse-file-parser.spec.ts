@@ -169,11 +169,11 @@ describe('EnvuseFileParser2', () => {
     })
 
     it('should parse comment operator correctly', () => {
-      expect(EnvuseFileParser.parse({ filename: null, body: Buffer.from(`#;if a.b.c.d ===\nfoo="bar"\n#;fi\n`) }).elementList.map(e => e.toString())).toMatchSnapshot()
-      expect(EnvuseFileParser.parse({ filename: null, body: Buffer.from(`#;if true\nfoo="bar"\n#;fi\n`) }).elementList.map(e => e.toString())).toMatchSnapshot()
-      expect(EnvuseFileParser.parse({ filename: null, body: Buffer.from(`#;if 123\nfoo="bar"\n#;fi\n`) }).elementList.map(e => e.toString())).toMatchSnapshot()
-      expect(EnvuseFileParser.parse({ filename: null, body: Buffer.from(`#;if var\nfoo="bar"\n#;fi\n`) }).elementList.map(e => e.toString())).toMatchSnapshot()
-      expect(EnvuseFileParser.parse({ filename: null, body: Buffer.from(`#;if foo === bar\nfoo="bar"\n#;fi\n`) }).elementList.map(e => e.toString())).toMatchSnapshot()
+      expect(EnvuseFileParser.parseToAst({ filename: null, body: Buffer.from(`#;if a.b.c.d ===\nfoo="bar"\n#;fi\n`) }).elementList.map(e => e.toString())).toMatchSnapshot()
+      expect(EnvuseFileParser.parseToAst({ filename: null, body: Buffer.from(`#;if true\nfoo="bar"\n#;fi\n`) }).elementList.map(e => e.toString())).toMatchSnapshot()
+      expect(EnvuseFileParser.parseToAst({ filename: null, body: Buffer.from(`#;if 123\nfoo="bar"\n#;fi\n`) }).elementList.map(e => e.toString())).toMatchSnapshot()
+      expect(EnvuseFileParser.parseToAst({ filename: null, body: Buffer.from(`#;if var\nfoo="bar"\n#;fi\n`) }).elementList.map(e => e.toString())).toMatchSnapshot()
+      expect(EnvuseFileParser.parseToAst({ filename: null, body: Buffer.from(`#;if foo === bar\nfoo="bar"\n#;fi\n`) }).elementList.map(e => e.toString())).toMatchSnapshot()
     })
 
   })

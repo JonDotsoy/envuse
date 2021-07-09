@@ -29,7 +29,7 @@ export class EnvuseFileParser {
     }
   }
 
-  static parse(options: Option) {
+  static parseToAst(options: Option) {
     return new EnvuseFileParser(options.filename, options.body).toAstBody()
   }
 }
