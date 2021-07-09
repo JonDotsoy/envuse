@@ -3,6 +3,9 @@
   "private": true,
   "description": "",
   "main": "index.js",
+  "workspaces": [
+    "packages/envuse"
+  ],
   "scripts": {
     "prepare": "husky install"
   },
