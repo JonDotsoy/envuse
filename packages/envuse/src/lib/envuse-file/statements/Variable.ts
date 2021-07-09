@@ -8,11 +8,11 @@ class SymbolEqual extends Base {
   prepare(bufferCursor: BufferCursor<BCharType>): void {
     while (bufferCursor.has()) {
       if (bufferCursor.current() === 0x3d) {
-        this.appendRaw(bufferCursor.current())
-        bufferCursor.forward()
-        return
+        this.appendRaw(bufferCursor.current());
+        bufferCursor.forward();
+        return;
       } else {
-        this.rejectUnexpectedTokenError()
+        this.rejectUnexpectedTokenError();
       }
     }
   }
@@ -25,16 +25,15 @@ const charactersKeys = Buffer.from([
   ...CharactersKey.english_alphabet_upper,
 ]);
 
-
 export class VariableKey extends Base {
   prepare(bufferCursor: BufferCursor): void {
     while (bufferCursor.has()) {
       if (charactersKeys.includes(bufferCursor.current())) {
-        this.appendRaw(bufferCursor.current())
-        bufferCursor.forward()
-        continue
+        this.appendRaw(bufferCursor.current());
+        bufferCursor.forward();
+        continue;
       } else {
-        return
+        return;
       }
     }
   }
@@ -42,35 +41,41 @@ export class VariableKey extends Base {
 
 export class VariableValue extends Base {
   prepare(bufferCursor: BufferCursor): void {
-    const firsCharacter = bufferCursor.current()
-    const valueWithQuotationMark = firsCharacter === 0x22 ? 0x22 : firsCharacter === 0x27 ? 0x27 : null
+    const firsCharacter = bufferCursor.current();
+    const valueWithQuotationMark =
+      firsCharacter === 0x22 ? 0x22 : firsCharacter === 0x27 ? 0x27 : null;
 
     if (valueWithQuotationMark) {
-      bufferCursor.forward()
+      bufferCursor.forward();
     }
 
     while (bufferCursor.has()) {
-      if (bufferCursor.current() === 0x23 && valueWithQuotationMark === undefined) {
-        return
+      if (
+        bufferCursor.current() === 0x23 &&
+        valueWithQuotationMark === undefined
+      ) {
+        return;
       }
 
       if (bufferCursor.current() === 0x0a) {
-        bufferCursor.forward()
-        return
+        bufferCursor.forward();
+        return;
       }
 
-      if (bufferCursor.current() === valueWithQuotationMark && bufferCursor.prev(1)[0] !== 0x5c) {
-        bufferCursor.forward()
-        return
+      if (
+        bufferCursor.current() === valueWithQuotationMark &&
+        bufferCursor.prev(1)[0] !== 0x5c
+      ) {
+        bufferCursor.forward();
+        return;
       }
 
-      this.appendRaw(bufferCursor.current())
-      bufferCursor.forward()
-      continue
+      this.appendRaw(bufferCursor.current());
+      bufferCursor.forward();
+      continue;
     }
   }
 }
-
 
 export class Variable extends Base {
   keyVariable!: VariableKey;
@@ -79,19 +84,19 @@ export class Variable extends Base {
   prepare(bufferCursor: BufferCursor): void {
     const keyVariable = this.createElement(VariableKey);
     this.keyVariable = keyVariable;
-    this.children.push(keyVariable)
+    this.children.push(keyVariable);
 
     if (bufferCursor.current() === 0x20) {
-      this.children.push(this.createElement(Space))
+      this.children.push(this.createElement(Space));
     }
 
-    this.children.push(this.createElement(SymbolEqual))
+    this.children.push(this.createElement(SymbolEqual));
 
     if (bufferCursor.current() === 0x20) {
-      this.children.push(this.createElement(Space))
+      this.children.push(this.createElement(Space));
     }
 
-    const valueVariable = this.createElement(VariableValue)
+    const valueVariable = this.createElement(VariableValue);
     this.valueVariable = valueVariable;
     this.children.push(valueVariable);
 

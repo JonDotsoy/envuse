@@ -1,32 +1,35 @@
-import { CommandModule } from 'yargs';
-import chalk from 'chalk';
-import inquirer from 'inquirer';
-import ow from 'ow';
-import { getConfigStore } from '../../../lib/getConfigStore';
-import { LocalEngine } from '../../../lib/engines/LocalEngine';
-import { TypeEnvConfig } from '../../../lib/EnvConfigStore';
+import { CommandModule } from "yargs";
+import chalk from "chalk";
+import inquirer from "inquirer";
+import ow from "ow";
+import { getConfigStore } from "../../../lib/getConfigStore";
+import { LocalEngine } from "../../../lib/engines/LocalEngine";
+import { TypeEnvConfig } from "../../../lib/EnvConfigStore";
 
-type c = CommandModule<{}, {
-  cwd: string;
-  fileEnv: string;
-}>;
+type c = CommandModule<
+  {},
+  {
+    cwd: string;
+    fileEnv: string;
+  }
+>;
 
 export = <c>{
-  command: 'local <fileEnv>',
-  describe: 'Added ennviroment from heroku',
+  command: "local <fileEnv>",
+  describe: "Added ennviroment from heroku",
   builder: {
     cwd: {
-      type: 'string',
+      type: "string",
       default: process.cwd(),
     },
     fileEnv: {
-      type: 'string',
+      type: "string",
       required: true,
     },
   },
   async handler(args) {
     const { configStore, saveConfigStore } = getConfigStore(args.cwd);
-    const local = new LocalEngine();    
+    const local = new LocalEngine();
 
     const resource = await local.insert(configStore, args.fileEnv);
 

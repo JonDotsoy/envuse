@@ -6,7 +6,7 @@ import { VariableKey } from "./Variable";
 export class Space extends Base {
   prepare(bufferCursor: BufferCursor<number | undefined>): void {
     if (K.space !== bufferCursor.current()) {
-      this.rejectUnexpectedTokenError()
+      this.rejectUnexpectedTokenError();
     }
     while (bufferCursor.has()) {
       if ([0x20].includes(bufferCursor.current())) {

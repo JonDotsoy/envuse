@@ -1,28 +1,26 @@
 import { createHash } from "crypto";
 import { existsSync, statSync, readFileSync, writeFileSync, fstat } from "fs";
 import { EOL } from "os";
-import querystring from 'querystring';
+import querystring from "querystring";
 import { HerokuEngine } from "./engines/HerokuEngine";
 import { formatingEnvConfig } from "./format";
-import JSON5 from 'json5';
+import JSON5 from "json5";
 import { LocalEngine } from "./engines/LocalEngine";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
 interface envconfig {
-  config: {
-
-  };
+  config: {};
 }
 
 export enum TypeEnvConfig {
-  heroku = 'heroku',
-  local = 'local',
+  heroku = "heroku",
+  local = "local",
 }
 
 export class EnvConfig {
   type?: TypeEnvConfig;
-  name: string = 'default';
-  config: { [env: string]: string; } = {};
+  name: string = "default";
+  config: { [env: string]: string } = {};
   createdAt: Date = new Date();
 
   static from(i: EnvConfig | object): EnvConfig {
@@ -79,15 +77,21 @@ export class EnvuseConfigStore {
     const envFileRemplaceForced = `${process.cwd()}/.env-replace`;
     let configToReplace = {};
 
-    if (existsSync(envFileRemplaceForced) && statSync(envFileRemplaceForced).isFile()) {
+    if (
+      existsSync(envFileRemplaceForced) &&
+      statSync(envFileRemplaceForced).isFile()
+    ) {
       console.warn(`Warning: the use of .env-replace is experimental.`);
-      configToReplace = dotenv.parse(readFileSync(envFileRemplaceForced, 'utf8'), { debug: true });
+      configToReplace = dotenv.parse(
+        readFileSync(envFileRemplaceForced, "utf8"),
+        { debug: true }
+      );
     }
 
     const envpath = `${process.cwd()}/.env`;
     const envs = this.listEnvs();
 
-    const env = envs.find(env => env.name === name && env.type === type);
+    const env = envs.find((env) => env.name === name && env.type === type);
 
     console.log(type, name);
 
@@ -95,18 +99,34 @@ export class EnvuseConfigStore {
       throw new Error(`Not found config ${type} ${name}`);
     }
 
-    const headersFile = querystring.stringify({ type: env.type, name: env.name, createdAt: new Date(env.createdAt).toLocaleString() }, ', ', ': ', {
-      encodeURIComponent: e => e
-    });
+    const headersFile = querystring.stringify(
+      {
+        type: env.type,
+        name: env.name,
+        createdAt: new Date(env.createdAt).toLocaleString(),
+      },
+      ", ",
+      ": ",
+      {
+        encodeURIComponent: (e) => e,
+      }
+    );
 
     const envConfig = { ...env.config, ...configToReplace };
     writeFileSync(
       envpath,
       [
-        `# `, headersFile, EOL,
-        formatingEnvConfig(Object.entries(envConfig).map(([key, value]) => `${key}=${JSON5.stringify(value)}`).join(EOL), `${env.type} ${env.name}`),
-      ].join(''),
-      'utf8',
+        `# `,
+        headersFile,
+        EOL,
+        formatingEnvConfig(
+          Object.entries(envConfig)
+            .map(([key, value]) => `${key}=${JSON5.stringify(value)}`)
+            .join(EOL),
+          `${env.type} ${env.name}`
+        ),
+      ].join(""),
+      "utf8"
     );
   }
 
@@ -117,15 +137,19 @@ export class EnvuseConfigStore {
       throw new Error(`Cannot found .env file`);
     }
 
-    const body = readFileSync(envpath, 'utf8');
+    const body = readFileSync(envpath, "utf8");
 
-    const [linetype] = body.split(EOL).filter(e => e.startsWith('# type:'));
+    const [linetype] = body.split(EOL).filter((e) => e.startsWith("# type:"));
 
     if (!linetype) {
       throw new Error(`It is not recognized as a valid file`);
     }
 
-    const { type, name } = querystring.parse(linetype.replace('# ', ''), ', ', ': ') as { type: TypeEnvConfig, name: string };
+    const { type, name } = querystring.parse(
+      linetype.replace("# ", ""),
+      ", ",
+      ": "
+    ) as { type: TypeEnvConfig; name: string };
 
     if (!type || !name) {
       throw new Error(`It is not recognized as a valid file`);
@@ -151,7 +175,9 @@ export class EnvuseConfigStore {
   getEnvConfig(envname: string, cwd?: string) {
     const project = this.getProject(cwd);
     project.envs = project.envs || {};
-    project.envs[envname] = project.envs[envname] ? EnvConfig.from(project.envs[envname]) : new EnvConfig();
+    project.envs[envname] = project.envs[envname]
+      ? EnvConfig.from(project.envs[envname])
+      : new EnvConfig();
     return project.envs[envname];
   }
 
@@ -163,16 +189,17 @@ export class EnvuseConfigStore {
   }
 
   setOriginResource(originResource: OriginResource) {
-    const hash = createHash('sha512').update(`${originResource.type}-${originResource.name}`).digest('hex');
+    const hash = createHash("sha512")
+      .update(`${originResource.type}-${originResource.name}`)
+      .digest("hex");
     this.setEnv(hash, originResource);
   }
 
   listEnvs() {
-    return Object.entries(this.getProject().envs)
-      .map(([id, env]) => ({
-        id,
-        ...env,
-      }));
+    return Object.entries(this.getProject().envs).map(([id, env]) => ({
+      id,
+      ...env,
+    }));
   }
 
   removeEnv(id: string) {

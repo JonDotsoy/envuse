@@ -4,21 +4,27 @@ import { BCharType } from "./BCharType";
 import { CharactersKey as k } from "./CharactersKey";
 import { toBuffer as b, toBuffer } from "./toBuffer";
 import { StatementObjectTypes } from "./StatementObjectTypes";
-import util from 'util'
+import util from "util";
 
 abstract class StatementObjectDefinition {
   type!: string;
   value: any;
 
-  constructor(readonly rejectUnexpectedTokenError: () => never) { }
+  constructor(readonly rejectUnexpectedTokenError: () => never) {}
 
-  abstract assert(bufferCursor: BufferCursor<BCharType>): bufferCursor is BufferCursor<number>
-  abstract prepare(bufferCursor: BufferCursor<BCharType>): void
+  abstract assert(
+    bufferCursor: BufferCursor<BCharType>
+  ): bufferCursor is BufferCursor<number>;
+  abstract prepare(bufferCursor: BufferCursor<BCharType>): void;
 }
 
 class StatementTrueObject extends StatementObjectDefinition {
-  assert(bufferCursor: BufferCursor<BCharType>): bufferCursor is BufferCursor<number> {
-    return bufferCursor.has() && b('true').equals(b(bufferCursor.currentAndNext(4)))
+  assert(
+    bufferCursor: BufferCursor<BCharType>
+  ): bufferCursor is BufferCursor<number> {
+    return (
+      bufferCursor.has() && b("true").equals(b(bufferCursor.currentAndNext(4)))
+    );
   }
 
   prepare(bufferCursor: BufferCursor<BCharType>): void {
@@ -30,8 +36,12 @@ class StatementTrueObject extends StatementObjectDefinition {
 }
 
 class StatementFalseObject extends StatementObjectDefinition {
-  assert(bufferCursor: BufferCursor<BCharType>): bufferCursor is BufferCursor<number> {
-    return bufferCursor.has() && b('true').equals(b(bufferCursor.currentAndNext(4)))
+  assert(
+    bufferCursor: BufferCursor<BCharType>
+  ): bufferCursor is BufferCursor<number> {
+    return (
+      bufferCursor.has() && b("true").equals(b(bufferCursor.currentAndNext(4)))
+    );
   }
 
   prepare(bufferCursor: BufferCursor<BCharType>): void {
@@ -43,8 +53,12 @@ class StatementFalseObject extends StatementObjectDefinition {
 }
 
 class StatementStrictEqualObject extends StatementObjectDefinition {
-  assert(bufferCursor: BufferCursor<BCharType>): bufferCursor is BufferCursor<number> {
-    return bufferCursor.has() && b('===').equals(b(bufferCursor.currentAndNext(3)))
+  assert(
+    bufferCursor: BufferCursor<BCharType>
+  ): bufferCursor is BufferCursor<number> {
+    return (
+      bufferCursor.has() && b("===").equals(b(bufferCursor.currentAndNext(3)))
+    );
   }
 
   prepare(bufferCursor: BufferCursor<BCharType>): void {
@@ -55,8 +69,12 @@ class StatementStrictEqualObject extends StatementObjectDefinition {
 }
 
 class StatementNameInstanceObject extends StatementObjectDefinition {
-  assert(bufferCursor: BufferCursor<BCharType>): bufferCursor is BufferCursor<number> {
-    return bufferCursor.has() && k.english_alphabet.includes(bufferCursor.current())
+  assert(
+    bufferCursor: BufferCursor<BCharType>
+  ): bufferCursor is BufferCursor<number> {
+    return (
+      bufferCursor.has() && k.english_alphabet.includes(bufferCursor.current())
+    );
   }
 
   prepare(bufferCursor: BufferCursor<number>): void {
@@ -65,7 +83,11 @@ class StatementNameInstanceObject extends StatementObjectDefinition {
     let charAccumulation: number[] = [];
 
     while (true) {
-      if (bufferCursor.isClosed() || bufferCursor.current() === k.space || bufferCursor.current() === k.newLineLF) {
+      if (
+        bufferCursor.isClosed() ||
+        bufferCursor.current() === k.space ||
+        bufferCursor.current() === k.newLineLF
+      ) {
         partialPath.push(toBuffer(charAccumulation).toString());
         this.value = partialPath;
         // bufferCursor.forward();
@@ -79,9 +101,11 @@ class StatementNameInstanceObject extends StatementObjectDefinition {
         continue;
       }
 
-      if (k.english_alphabet.includes(bufferCursor.current()) ||
+      if (
+        k.english_alphabet.includes(bufferCursor.current()) ||
         k.underscore === bufferCursor.current() ||
-        k.numbers.includes(bufferCursor.current())) {
+        k.numbers.includes(bufferCursor.current())
+      ) {
         charAccumulation.push(bufferCursor.current());
         bufferCursor.forward();
         continue;
@@ -93,16 +117,21 @@ class StatementNameInstanceObject extends StatementObjectDefinition {
 }
 
 class StatementStringObject extends StatementObjectDefinition {
-  assert(bufferCursor: BufferCursor<BCharType>): bufferCursor is BufferCursor<number> {
-    return bufferCursor.has() && (k.doubleQuotes === bufferCursor.current() ||
-      k.singleQuote === bufferCursor.current())
+  assert(
+    bufferCursor: BufferCursor<BCharType>
+  ): bufferCursor is BufferCursor<number> {
+    return (
+      bufferCursor.has() &&
+      (k.doubleQuotes === bufferCursor.current() ||
+        k.singleQuote === bufferCursor.current())
+    );
   }
 
   prepare(bufferCursor: BufferCursor<number>): void {
-    const raw: number[] = []
+    const raw: number[] = [];
     const appendRaw = (...chars: number[]) => {
-      raw.push(...chars)
-    }
+      raw.push(...chars);
+    };
 
     this.type = StatementObjectTypes.String;
     const initialQuote = bufferCursor.current();
@@ -110,7 +139,11 @@ class StatementStringObject extends StatementObjectDefinition {
 
     while (true) {
       const p = bufferCursor.prev(2);
-      if (bufferCursor.isClosed() || initialQuote === bufferCursor.current() || bufferCursor.current() === k.newLineLF) {
+      if (
+        bufferCursor.isClosed() ||
+        initialQuote === bufferCursor.current() ||
+        bufferCursor.current() === k.newLineLF
+      ) {
         bufferCursor.forward();
         this.value = String(b(raw));
         return;
@@ -140,28 +173,37 @@ class StatementStringObject extends StatementObjectDefinition {
       appendRaw(bufferCursor.current());
       bufferCursor.forward();
     }
-
   }
 }
 
 class StatementNumberObject extends StatementObjectDefinition {
-  assert(bufferCursor: BufferCursor<BCharType>): bufferCursor is BufferCursor<number> {
-    return bufferCursor.has() && k.numbers.includes(bufferCursor.current())
+  assert(
+    bufferCursor: BufferCursor<BCharType>
+  ): bufferCursor is BufferCursor<number> {
+    return bufferCursor.has() && k.numbers.includes(bufferCursor.current());
   }
 
   prepare(bufferCursor: BufferCursor<number>): void {
-    const raw: number[] = []
+    const raw: number[] = [];
     const appendRaw = (...chars: number[]) => {
-      raw.push(...chars)
-    }
+      raw.push(...chars);
+    };
 
     this.type = StatementObjectTypes.Number;
     while (true) {
-      if (bufferCursor.isClosed() || k.space === bufferCursor.current() || bufferCursor.current() === k.newLineLF || bufferCursor.current() === k.equalsSign) {
+      if (
+        bufferCursor.isClosed() ||
+        k.space === bufferCursor.current() ||
+        bufferCursor.current() === k.newLineLF ||
+        bufferCursor.current() === k.equalsSign
+      ) {
         this.value = Number(b(raw));
         return;
       }
-      if (k.numbers.includes(bufferCursor.current()) || bufferCursor.current() === k.dot) {
+      if (
+        k.numbers.includes(bufferCursor.current()) ||
+        bufferCursor.current() === k.dot
+      ) {
         appendRaw(bufferCursor.current());
         bufferCursor.forward();
         continue;
@@ -172,7 +214,6 @@ class StatementNumberObject extends StatementObjectDefinition {
       }
       this.rejectUnexpectedTokenError();
     }
-
   }
 }
 
@@ -189,20 +230,20 @@ export class StatementObject extends Base {
     new StatementNameInstanceObject(() => this.rejectUnexpectedTokenError()),
     new StatementStringObject(() => this.rejectUnexpectedTokenError()),
     new StatementNumberObject(() => this.rejectUnexpectedTokenError()),
-  ]
+  ];
 
   toObjectName() {
-    return `${this.constructor.name}<${this.type ?? 'unknown'}>`
+    return `${this.constructor.name}<${this.type ?? "unknown"}>`;
   }
 
   prepare(bufferCursor: BufferCursor<BCharType>): void {
     if (bufferCursor.has()) {
       for (const definition of this.definitions) {
         if (definition.assert(bufferCursor)) {
-          definition.prepare(bufferCursor)
-          this.type = definition.type
-          this.value = definition.value
-          return
+          definition.prepare(bufferCursor);
+          this.type = definition.type;
+          this.value = definition.value;
+          return;
         }
       }
     }

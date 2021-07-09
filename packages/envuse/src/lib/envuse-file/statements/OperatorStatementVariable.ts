@@ -2,7 +2,6 @@ import { Base } from "./Base";
 import { BufferCursor } from "./BufferCursor";
 import { BCharType } from "./BCharType";
 
-
 export class OperatorStatementVariable extends Base {
   prepare(bufferCursor: BufferCursor<BCharType>): void {
     while (bufferCursor.has()) {

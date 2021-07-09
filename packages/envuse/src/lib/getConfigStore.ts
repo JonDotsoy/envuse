@@ -1,7 +1,7 @@
-import { readFileSync, existsSync, writeFileSync } from 'fs';
-import { resolve } from 'path';
-import { homedir } from 'os';
-import { EnvuseConfigStore as EnvuseConfigStore } from './EnvConfigStore';
+import { readFileSync, existsSync, writeFileSync } from "fs";
+import { resolve } from "path";
+import { homedir } from "os";
+import { EnvuseConfigStore as EnvuseConfigStore } from "./EnvConfigStore";
 
 // async function copyFileEnv(args: { editor: any; CONFIGFILE: any; }) {
 //     if (args.editor) {
@@ -52,12 +52,15 @@ import { EnvuseConfigStore as EnvuseConfigStore } from './EnvConfigStore';
 // }
 
 export const getConfigStore = (cwd: string) => {
-    const pathconfig = resolve(homedir(), '.envuse');
-    const bodyConfig = existsSync(pathconfig) ? JSON.parse(readFileSync(pathconfig, 'utf8')) : {};
-    const configStore = new EnvuseConfigStore(cwd, bodyConfig);
-    return {
-        pathconfig,
-        configStore,
-        saveConfigStore: () => writeFileSync(pathconfig, JSON.stringify(configStore.toJSON(), null, 2)),
-    };
+  const pathconfig = resolve(homedir(), ".envuse");
+  const bodyConfig = existsSync(pathconfig)
+    ? JSON.parse(readFileSync(pathconfig, "utf8"))
+    : {};
+  const configStore = new EnvuseConfigStore(cwd, bodyConfig);
+  return {
+    pathconfig,
+    configStore,
+    saveConfigStore: () =>
+      writeFileSync(pathconfig, JSON.stringify(configStore.toJSON(), null, 2)),
+  };
 };

@@ -1,24 +1,27 @@
-import path from 'path';
+import path from "path";
 
-const getLineStyled = (filename: string | null, body: Buffer, position: number) => {
-
+const getLineStyled = (
+  filename: string | null,
+  body: Buffer,
+  position: number
+) => {
   let lineNumber = 1;
-  let column = 1
-  let posStartLine = 0
-  let posEndLine = body.length
+  let column = 1;
+  let posStartLine = 0;
+  let posEndLine = body.length;
   for (let index = 0; index < body.length; index += 1) {
     const char = body[index];
     if (index < position) {
-      column += 1
+      column += 1;
       if (char === 0x0a) {
-        posStartLine = index
-        lineNumber += 1
-        column = 1
+        posStartLine = index;
+        lineNumber += 1;
+        column = 1;
       }
     } else {
       if (char === 0x0a) {
-        posEndLine = index
-        break
+        posEndLine = index;
+        break;
       }
     }
   }
@@ -30,32 +33,38 @@ const getLineStyled = (filename: string | null, body: Buffer, position: number) 
   const lineStyled = [
     `${enumerator}${prefixLine}${charLocated}${sufixLine}`,
     `${" ".repeat(enumerator.length + prefixLine.length)}^`,
-  ].join('\n');
+  ].join("\n");
 
   return {
-    stackDescriptor: `${filename ? path.relative(process.cwd(), filename) : '<anonymous>'}:${lineNumber}:${column}`,
+    stackDescriptor: `${
+      filename ? path.relative(process.cwd(), filename) : "<anonymous>"
+    }:${lineNumber}:${column}`,
     lineNumber,
     columnNumber: column,
     position,
     lineStyled,
   };
-}
+};
 
 export class UnexpectedTokenError extends Error {
-  name = 'UnexpectedTokenError'
+  name = "UnexpectedTokenError";
   columnNumber: number;
   lineNumber: number;
   lineStyled: string;
 
-  constructor(readonly filename: string | null, body: Buffer, readonly position: number) {
+  constructor(
+    readonly filename: string | null,
+    body: Buffer,
+    readonly position: number
+  ) {
     super();
 
     const newLocal = getLineStyled(filename, body, position);
-    this.message = `Unexpected token position (${newLocal.stackDescriptor}) (position: ${position}):\n${newLocal.lineStyled}`
+    this.message = `Unexpected token position (${newLocal.stackDescriptor}) (position: ${position}):\n${newLocal.lineStyled}`;
 
-    this.columnNumber = newLocal.columnNumber
-    this.lineNumber = newLocal.lineNumber
-    this.lineStyled = newLocal.lineStyled
+    this.columnNumber = newLocal.columnNumber;
+    this.lineNumber = newLocal.lineNumber;
+    this.lineStyled = newLocal.lineStyled;
   }
 
   static isUnexpectedTokenError(err: any): err is UnexpectedTokenError {

@@ -2,7 +2,7 @@ import { range } from "./range";
 
 export namespace CharactersKey {
   /** symbol: = */
-  export const equalsSign = 0x3D;
+  export const equalsSign = 0x3d;
   /** symbol: \ */
   export const backslash = 0x5c;
   /** symbol: " */
@@ -20,7 +20,10 @@ export namespace CharactersKey {
   /** symbols: ABCDEFGHIJKLMNOPQRSTUVWXYZ */
   export const english_alphabet_upper = Array.from(range(0x41, 0x5a));
   /** symbols: abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ */
-  export const english_alphabet = [...english_alphabet_lower, ...english_alphabet_upper];
+  export const english_alphabet = [
+    ...english_alphabet_lower,
+    ...english_alphabet_upper,
+  ];
   /** symbol: _ */
   export const underscore = 0x5f;
   /** symbol: - */

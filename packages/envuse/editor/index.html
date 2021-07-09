@@ -1,344 +1,503 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+      integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+      crossorigin="anonymous"
+    />
     <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script> -->
-    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-</head>
-<body>
-  <div id="app"></div>
-  <script>
-    const r = React.createElement;
+    <script
+      crossorigin
+      src="https://unpkg.com/react@16/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+    ></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      const r = React.createElement;
 
-    class FieldEdit extends React.PureComponent {
-      handleActionUpper(event) {
-        event.preventDefault();
+      class FieldEdit extends React.PureComponent {
+        handleActionUpper(event) {
+          event.preventDefault();
 
-        const name = event.target.value;
-        const keyNameInputElement = JSON.stringify({r:name,t:'key'});
+          const name = event.target.value;
+          const keyNameInputElement = JSON.stringify({ r: name, t: "key" });
 
-        const inputElm = event.target.form.elements.namedItem(keyNameInputElement);
+          const inputElm =
+            event.target.form.elements.namedItem(keyNameInputElement);
 
-        inputElm.value = inputElm.value.toUpperCase();
-      }
+          inputElm.value = inputElm.value.toUpperCase();
+        }
 
-      handleRemoveElement(event) {
-        event.preventDefault();
+        handleRemoveElement(event) {
+          event.preventDefault();
 
-        this.props.onClickRemoveElement && this.props.onClickRemoveElement(event);
-      }
+          this.props.onClickRemoveElement &&
+            this.props.onClickRemoveElement(event);
+        }
 
-      render() {
-        const {name, value} = this.props;
+        render() {
+          const { name, value } = this.props;
 
-        return (
-          r('div', {className: 'form-group pb-3'},
-            r('div', {className: 'input-group mb-3'},
-              r('div', {className: 'input-group-prepend'},
-                r('button', {className: 'btn btn-outline-secondary', type: "button", name: 'action-uppercase', value: name, onClick: this.handleRemoveElement.bind(this), dangerouslySetInnerHTML: {__html: '&times;'}}),
-                r('button', {className: 'btn btn-outline-secondary', type: "button", name: 'action-uppercase', value: name, onClick: this.handleActionUpper.bind(this)}, 'UPPERCASE'),
-              ),
-              r('input', {'data-complex-join': 'true', name: JSON.stringify({r:name,t:'key'}), type: 'text', className: 'form-control', defaultValue: name}),
-            ),
-            r('div', {},
-              r('input', {'data-complex-join': 'true', name: JSON.stringify({r:name,t:'value'}), type: 'text', className: 'form-control', defaultValue: value}),
-            ),
-          )
-        );
-      }
-    }
-
-    const Loading = () => r('div', {className:'container'},
-      r('div', {className:'spinner-border', role: 'status'},
-        r('span', {className: 'sr-only'}, 'Loading...'),
-      ),
-    );
-
-    class ListConfigs extends React.Component {
-      constructor (props) {
-        super(props);
-        this.state = {
-          loading: true,
-          cardNewConfigOpen: !false,
-          configs: [],
-        };
-      }
-
-      async componentDidMount() {
-        const configRequest = await fetch('/api/config');
-        const configs = await configRequest.json();
-        this.setState({loading: false, configs});
-      }
-
-      async handleCreateConfig(event) {
-        event.preventDefault();
-      }
-
-      handleOpenCardNewConfig(event) {
-        event.preventDefault();
-
-        this.setState({ cardNewConfigOpen: true });
-      }
-
-      handleCloseCardNewConfig(event) {
-        event.preventDefault();
-
-        this.setState({ cardNewConfigOpen: false });
-      }
-
-      render() {
-        if (this.state.loading) return r(Loading)
-
-        return (
-          r('div', {className:'container'},
-            r('ul', {},
-              this.state.configs.map((config, key) => (
-                r('li', {key},
-                  r('a', {href: `#/edit/${config.groups.config}`},
-                    config.groups.config.toUpperCase(),
-                    ' (',
-                    config.input,
-                    ')',
-                  ),
-                    
-                  r('button', {type: 'button', className: 'btn btn-link btn-sm'}, 'Rename'),
+          return r(
+            "div",
+            { className: "form-group pb-3" },
+            r(
+              "div",
+              { className: "input-group mb-3" },
+              r(
+                "div",
+                { className: "input-group-prepend" },
+                r("button", {
+                  className: "btn btn-outline-secondary",
+                  type: "button",
+                  name: "action-uppercase",
+                  value: name,
+                  onClick: this.handleRemoveElement.bind(this),
+                  dangerouslySetInnerHTML: { __html: "&times;" },
+                }),
+                r(
+                  "button",
+                  {
+                    className: "btn btn-outline-secondary",
+                    type: "button",
+                    name: "action-uppercase",
+                    value: name,
+                    onClick: this.handleActionUpper.bind(this),
+                  },
+                  "UPPERCASE"
                 )
-              )),
-            ),
-
-            !this.state.cardNewConfigOpen && r('button', {type: 'button', className: 'btn btn-outline-secondary', onClick: this.handleOpenCardNewConfig.bind(this)}, 'Add a config'),
-
-            this.state.cardNewConfigOpen && r('div', {className: 'card mt-3'},
-              r('div', {className: 'card-body'},
-                r('form', { onSubmit: this.handleCreateConfig.bind(this) },
-                  r('div', { className: 'form-group' },
-                    r('label', {}, 'Name Config'),
-                    r('input', { className: 'form-control', type: 'text' })
-                  ),
-                  r('button', { className: 'btn btn-outline-primary', type: 'submit'}, 'Create'),
-                  r('button', { className: 'btn btn-outline-secondary ml-1', type: 'button', onClick: this.handleCloseCardNewConfig.bind(this) }, 'Cancel'),
-                ),
               ),
+              r("input", {
+                "data-complex-join": "true",
+                name: JSON.stringify({ r: name, t: "key" }),
+                type: "text",
+                className: "form-control",
+                defaultValue: name,
+              })
             ),
+            r(
+              "div",
+              {},
+              r("input", {
+                "data-complex-join": "true",
+                name: JSON.stringify({ r: name, t: "value" }),
+                type: "text",
+                className: "form-control",
+                defaultValue: value,
+              })
+            )
+          );
+        }
+      }
+
+      const Loading = () =>
+        r(
+          "div",
+          { className: "container" },
+          r(
+            "div",
+            { className: "spinner-border", role: "status" },
+            r("span", { className: "sr-only" }, "Loading...")
           )
         );
+
+      class ListConfigs extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            loading: true,
+            cardNewConfigOpen: !false,
+            configs: [],
+          };
+        }
+
+        async componentDidMount() {
+          const configRequest = await fetch("/api/config");
+          const configs = await configRequest.json();
+          this.setState({ loading: false, configs });
+        }
+
+        async handleCreateConfig(event) {
+          event.preventDefault();
+        }
+
+        handleOpenCardNewConfig(event) {
+          event.preventDefault();
+
+          this.setState({ cardNewConfigOpen: true });
+        }
+
+        handleCloseCardNewConfig(event) {
+          event.preventDefault();
+
+          this.setState({ cardNewConfigOpen: false });
+        }
+
+        render() {
+          if (this.state.loading) return r(Loading);
+
+          return r(
+            "div",
+            { className: "container" },
+            r(
+              "ul",
+              {},
+              this.state.configs.map((config, key) =>
+                r(
+                  "li",
+                  { key },
+                  r(
+                    "a",
+                    { href: `#/edit/${config.groups.config}` },
+                    config.groups.config.toUpperCase(),
+                    " (",
+                    config.input,
+                    ")"
+                  ),
+
+                  r(
+                    "button",
+                    { type: "button", className: "btn btn-link btn-sm" },
+                    "Rename"
+                  )
+                )
+              )
+            ),
+
+            !this.state.cardNewConfigOpen &&
+              r(
+                "button",
+                {
+                  type: "button",
+                  className: "btn btn-outline-secondary",
+                  onClick: this.handleOpenCardNewConfig.bind(this),
+                },
+                "Add a config"
+              ),
+
+            this.state.cardNewConfigOpen &&
+              r(
+                "div",
+                { className: "card mt-3" },
+                r(
+                  "div",
+                  { className: "card-body" },
+                  r(
+                    "form",
+                    { onSubmit: this.handleCreateConfig.bind(this) },
+                    r(
+                      "div",
+                      { className: "form-group" },
+                      r("label", {}, "Name Config"),
+                      r("input", { className: "form-control", type: "text" })
+                    ),
+                    r(
+                      "button",
+                      { className: "btn btn-outline-primary", type: "submit" },
+                      "Create"
+                    ),
+                    r(
+                      "button",
+                      {
+                        className: "btn btn-outline-secondary ml-1",
+                        type: "button",
+                        onClick: this.handleCloseCardNewConfig.bind(this),
+                      },
+                      "Cancel"
+                    )
+                  )
+                )
+              )
+          );
+        }
       }
-    }
 
-    class Router extends React.Component {
-      constructor(props){
-        super(props);
-        this.state = {
-          hash: location.hash,
-        };
-      }
+      class Router extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            hash: location.hash,
+          };
+        }
 
-      componentDidMount() {
-        window.addEventListener('hashchange', () => {
-          const hash = location.hash;
-          this.setState({ hash });
-        }, false);
-      }
-
-      render() {
-        const hash = this.state.hash;
-
-        if (/\#?\/edit\/(.+)/i.test(hash)) return r(EditConfig, { exec: /\#?\/edit\/(?<configName>.+)/i.exec(hash)} );
-        if (/\#?\/?/i.test(hash)) return r(ListConfigs);
-
-        return '404: Cannot found!';
-      }
-    }
-
-    class EditConfig extends React.Component {
-      constructor(props) {
-        super(props);
-        this.state = {
-          loading: true,
-          alertVisible: false,
-          shouIngressNameConfig: false,
-          config: {},
-        };
-      }
-
-      async componentDidMount() {
-        const { configName } = this.props.exec.groups;
-
-        const configRequest = await fetch(`/api/config/${configName}`);
-        const config = await configRequest.json();
-
-        this.setState({loading: false, config});
-      }
-
-      shouldAddConfig(event) {
-        event.preventDefault();
-
-        const namenewconfig = event.target.elements.namedItem('namenewconfig').value;
-
-        this.setState((preState) => {
-          const nextState = {
-            ...preState,
-            shouIngressNameConfig: false,
-            config: {
-              ...preState.config,
-              configs: {
-                ...preState.config.configs,
-                [namenewconfig]: '',
-              },
+        componentDidMount() {
+          window.addEventListener(
+            "hashchange",
+            () => {
+              const hash = location.hash;
+              this.setState({ hash });
             },
+            false
+          );
+        }
+
+        render() {
+          const hash = this.state.hash;
+
+          if (/\#?\/edit\/(.+)/i.test(hash))
+            return r(EditConfig, {
+              exec: /\#?\/edit\/(?<configName>.+)/i.exec(hash),
+            });
+          if (/\#?\/?/i.test(hash)) return r(ListConfigs);
+
+          return "404: Cannot found!";
+        }
+      }
+
+      class EditConfig extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            loading: true,
+            alertVisible: false,
+            shouIngressNameConfig: false,
+            config: {},
           };
+        }
 
-          return nextState;
-        });
-      }
+        async componentDidMount() {
+          const { configName } = this.props.exec.groups;
 
-      shouldAddRow(event) {
-        event.preventDefault();
+          const configRequest = await fetch(`/api/config/${configName}`);
+          const config = await configRequest.json();
 
-        this.setState({ shouIngressNameConfig: true });
-      }
+          this.setState({ loading: false, config });
+        }
 
-      onClickRemoveElement(event) {
-        event.preventDefault();
-        const nameProp = event.target.value;
+        shouldAddConfig(event) {
+          event.preventDefault();
 
-        this.setState((state) => {
-          const nextConfigs = {...state.config.configs};
-          delete nextConfigs[nameProp];
+          const namenewconfig =
+            event.target.elements.namedItem("namenewconfig").value;
 
-          const newState = {
-            ...state,
-            config: {
-              ...state.config,
-              configs: nextConfigs,
-            }
-          };
-
-          return newState;
-        });
-      }
-
-      async shouldUpdateValues(event) {
-        const { configName } = this.props.exec.groups;
-  
-        event.preventDefault();
-
-        const elements = [...event.target.elements]
-          .filter(element => {
-            return element.dataset.complexJoin === "true"
-          })
-          .map(element => {
-            const conf = JSON.parse(element.name);
-            return {
-              ref: conf.r,
-              action: conf.t,
-              value: element.value,
+          this.setState((preState) => {
+            const nextState = {
+              ...preState,
+              shouIngressNameConfig: false,
+              config: {
+                ...preState.config,
+                configs: {
+                  ...preState.config.configs,
+                  [namenewconfig]: "",
+                },
+              },
             };
-          })
-          .reduce((acum, v) => {
-            acum[v.ref] = acum[v.ref] ? { ...acum[v.ref], [v.action]: v.value } : { [v.action]: v.value };
 
-            return acum;
-          }, {});
+            return nextState;
+          });
+        }
 
-        const newConfig = Object.values(elements).reduce((acum, v) => ({...acum, [v.key]: v.value}), {});
+        shouldAddRow(event) {
+          event.preventDefault();
 
-        const reqUpdateConfig = await fetch(`/api/config/${configName}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newConfig),
-        });
+          this.setState({ shouIngressNameConfig: true });
+        }
 
-        this.setState((state) => {
-          if (state.alertVisible === false) {
-            return {
-              ...state,
-              alertVisible: true,
-            }
-          }
-          return state;
-        });
+        onClickRemoveElement(event) {
+          event.preventDefault();
+          const nameProp = event.target.value;
 
-        clearTimeout(this.__t);
-
-        this.__t = setTimeout(() => {
           this.setState((state) => {
-            if (state.alertVisible === true) {
+            const nextConfigs = { ...state.config.configs };
+            delete nextConfigs[nameProp];
+
+            const newState = {
+              ...state,
+              config: {
+                ...state.config,
+                configs: nextConfigs,
+              },
+            };
+
+            return newState;
+          });
+        }
+
+        async shouldUpdateValues(event) {
+          const { configName } = this.props.exec.groups;
+
+          event.preventDefault();
+
+          const elements = [...event.target.elements]
+            .filter((element) => {
+              return element.dataset.complexJoin === "true";
+            })
+            .map((element) => {
+              const conf = JSON.parse(element.name);
+              return {
+                ref: conf.r,
+                action: conf.t,
+                value: element.value,
+              };
+            })
+            .reduce((acum, v) => {
+              acum[v.ref] = acum[v.ref]
+                ? { ...acum[v.ref], [v.action]: v.value }
+                : { [v.action]: v.value };
+
+              return acum;
+            }, {});
+
+          const newConfig = Object.values(elements).reduce(
+            (acum, v) => ({ ...acum, [v.key]: v.value }),
+            {}
+          );
+
+          const reqUpdateConfig = await fetch(`/api/config/${configName}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newConfig),
+          });
+
+          this.setState((state) => {
+            if (state.alertVisible === false) {
               return {
                 ...state,
-                alertVisible: false,
-              }
+                alertVisible: true,
+              };
             }
             return state;
           });
-        }, 5 * 1000);
-      }
 
-      render() {
-        if (this.state.loading) return r(Loading);
+          clearTimeout(this.__t);
 
-        return (
-          r('div', { className: 'container' },
+          this.__t = setTimeout(() => {
+            this.setState((state) => {
+              if (state.alertVisible === true) {
+                return {
+                  ...state,
+                  alertVisible: false,
+                };
+              }
+              return state;
+            });
+          }, 5 * 1000);
+        }
+
+        render() {
+          if (this.state.loading) return r(Loading);
+
+          return r(
+            "div",
+            { className: "container" },
 
             // Alert
             // <div class="myAlert-bottom alert alert-danger">
             //   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             //   <strong>Danger!</strong> This alert box could indicate a dangerous or potentially negative action.
             // </div>
-            this.state.alertVisible && r('div', {className: 'fixed-top pt-4 pl-4 pr-4'},
-              r('div', {className: 'alert alert-success mb-0'},
-                // r('a', {className: 'close', dangerouslySetInnerHTML: {__html: '&times;'}}),
-                r('strong', {}, 'Saved!'),
-                ` The ${this.state.config.regex.groups.configName} configuration was saved successfully`
+            this.state.alertVisible &&
+              r(
+                "div",
+                { className: "fixed-top pt-4 pl-4 pr-4" },
+                r(
+                  "div",
+                  { className: "alert alert-success mb-0" },
+                  // r('a', {className: 'close', dangerouslySetInnerHTML: {__html: '&times;'}}),
+                  r("strong", {}, "Saved!"),
+                  ` The ${this.state.config.regex.groups.configName} configuration was saved successfully`
+                )
               ),
+
+            r(
+              "h1",
+              {},
+              r("a", { className: "btn btn-link", href: "#/" }, "Back"),
+              " ",
+              r(
+                "span",
+                {},
+                "Config: ",
+                r("span", {}, this.state.config.regex.groups.configName)
+              )
             ),
+            r(
+              "div",
+              {},
+              r(
+                "form",
+                { onSubmit: this.shouldUpdateValues.bind(this) },
 
-            r('h1', {},
-              r('a', { className: 'btn btn-link', href: '#/' }, 'Back'),
-              ' ',
-              r('span', {}, 'Config: ', r('span', {}, this.state.config.regex.groups.configName)),
-            ),
-            r('div', {},
-              r('form', {onSubmit: this.shouldUpdateValues.bind(this)},
+                Object.entries(this.state.config.configs).map(
+                  ([name, value]) => {
+                    return r(FieldEdit, {
+                      name,
+                      value,
+                      key: name,
+                      onClickRemoveElement:
+                        this.onClickRemoveElement.bind(this),
+                    });
+                  }
+                ),
 
-                Object.entries(this.state.config.configs).map(([ name, value ]) => {
-                  return r(FieldEdit, { name, value, key: name, onClickRemoveElement: this.onClickRemoveElement.bind(this) });
-                }),
-
-                r('div', {},
+                r(
+                  "div",
+                  {},
                   this.state.shouIngressNameConfig === false && [
-                    r('button', { key: 'btn-ingress-new-config', type: 'button', className: "btn btn-outline-secondary mb-2", onClick: this.shouldAddRow.bind(this) }, 'Add Property'),
-                    ' ',
+                    r(
+                      "button",
+                      {
+                        key: "btn-ingress-new-config",
+                        type: "button",
+                        className: "btn btn-outline-secondary mb-2",
+                        onClick: this.shouldAddRow.bind(this),
+                      },
+                      "Add Property"
+                    ),
+                    " ",
                   ],
 
-                  r('button', { type: 'submit', className: "btn btn-outline-primary mb-2" }, 'Save'),
-                ),
+                  r(
+                    "button",
+                    {
+                      type: "submit",
+                      className: "btn btn-outline-primary mb-2",
+                    },
+                    "Save"
+                  )
+                )
               ),
 
-              this.state.shouIngressNameConfig === true && r('form', {onSubmit: this.shouldAddConfig.bind(this)},
-                r('div', { className: 'form-group' },
-                  r('label', {}, 'Name Config'),
-                  r('input', { className: 'form-control', name: 'namenewconfig' }),
-                ),
-                r('button', { type: 'submit', className: 'btn btn-primary' }, 'Agregar'),
-              ),
-
-            ),
-          )
-        );
+              this.state.shouIngressNameConfig === true &&
+                r(
+                  "form",
+                  { onSubmit: this.shouldAddConfig.bind(this) },
+                  r(
+                    "div",
+                    { className: "form-group" },
+                    r("label", {}, "Name Config"),
+                    r("input", {
+                      className: "form-control",
+                      name: "namenewconfig",
+                    })
+                  ),
+                  r(
+                    "button",
+                    { type: "submit", className: "btn btn-primary" },
+                    "Agregar"
+                  )
+                )
+            )
+          );
+        }
       }
-    }
 
-    ReactDOM.render(r(Router,{}), document.querySelector('#app'));
-  </script>
-</body>
+      ReactDOM.render(r(Router, {}), document.querySelector("#app"));
+    </script>
+  </body>
 </html>

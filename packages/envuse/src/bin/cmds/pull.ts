@@ -1,25 +1,28 @@
 import yargs, { CommandModule } from "yargs";
 import { readFileSync, fstat, existsSync, statSync } from "fs";
 import { relative } from "path";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import { EOL } from "os";
-import querystring from 'querystring';
+import querystring from "querystring";
 import { getConfigStore } from "../../lib/getConfigStore";
 import { HerokuEngine } from "../../lib/engines/HerokuEngine";
 import { TypeEnvConfig } from "../../lib/EnvConfigStore";
 import chalk from "chalk";
 
-type c = CommandModule<{}, {
-  cwd: string;
-}>;
+type c = CommandModule<
+  {},
+  {
+    cwd: string;
+  }
+>;
 
 export = <c>{
-  describe: 'Sync the currect selected environment',
-  command: 'pull',
-  aliases: 'p',
+  describe: "Sync the currect selected environment",
+  command: "pull",
+  aliases: "p",
   builder: {
     cwd: {
-      type: 'string',
+      type: "string",
       default: process.cwd(),
     },
   },
@@ -30,8 +33,8 @@ export = <c>{
 
     console.log(chalk`Pull config {green ${name}}`);
     await configStore.pullConfig(type, name);
-    
+
     console.log(chalk`Select config {green ${name}}`);
     await configStore.selectConfig(type, name);
-  }
-}
+  },
+};

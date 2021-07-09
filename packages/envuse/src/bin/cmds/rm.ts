@@ -5,21 +5,24 @@ import path from "path";
 import { TypeEnvConfig } from "../../lib/EnvConfigStore";
 import { HerokuEngine } from "../../lib/engines/HerokuEngine";
 import { LocalEngine } from "../../lib/engines/LocalEngine";
-import inquirer from 'inquirer';
+import inquirer from "inquirer";
 
-type c = CommandModule<{}, {
-  cwd: string,
-  config: string,
-}>;
+type c = CommandModule<
+  {},
+  {
+    cwd: string;
+    config: string;
+  }
+>;
 
 export = <c>{
-  command: 'rm',
-  describe: 'remove configs',
+  command: "rm",
+  describe: "remove configs",
   builder: {
     cwd: {
-      type: 'string',
+      type: "string",
       default: process.cwd(),
-    }
+    },
   },
   handler: async (args) => {
     const { configStore, saveConfigStore } = getConfigStore(args.cwd);
@@ -30,13 +33,13 @@ export = <c>{
     }
 
     const { configSelected } = await inquirer.prompt({
-      name: 'configSelected',
-      type: 'list',
+      name: "configSelected",
+      type: "list",
       choices: [
         ...configStore.listEnvs().map((c) => ({
           value: c.id,
           name: c.name,
-        }))
+        })),
       ],
     });
 
@@ -46,4 +49,4 @@ export = <c>{
 
     saveConfigStore();
   },
-}
+};

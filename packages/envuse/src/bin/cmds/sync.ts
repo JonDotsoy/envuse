@@ -5,18 +5,21 @@ import { TypeEnvConfig } from "../../lib/EnvConfigStore";
 import { HerokuEngine } from "../../lib/engines/HerokuEngine";
 import { LocalEngine } from "../../lib/engines/LocalEngine";
 
-type c = CommandModule<{}, {
-  cwd: string,
-}>;
+type c = CommandModule<
+  {},
+  {
+    cwd: string;
+  }
+>;
 
 export = <c>{
-  command: 'sync',
-  describe: 'sync all configs',
+  command: "sync",
+  describe: "sync all configs",
   builder: {
     cwd: {
-      type: 'string',
+      type: "string",
       default: process.cwd(),
-    }
+    },
   },
   handler: async (args) => {
     const { configStore, saveConfigStore } = getConfigStore(args.cwd);
@@ -39,4 +42,4 @@ export = <c>{
 
     saveConfigStore();
   },
-}
+};

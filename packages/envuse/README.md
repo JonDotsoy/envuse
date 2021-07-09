@@ -2,14 +2,11 @@
 
 The `envuse` is a client to choose a environment into your project.
 
-
 [Contributors](https://github.com/JonDotsoy/envuse/graphs/contributors)
-
 
 ## How to use
 
 Please install with `npm i -g envuse`
-
 
 ## Command Topics
 
@@ -20,13 +17,11 @@ Please install with `npm i -g envuse`
 - [`$ envuse select`](#command-envuse-select) — Choose an environment origin.
 - [`$ envuse sync`](#command-envuse-sync) — Synchronize all environments' origin.
 
-
 <span id="command-envuse-ls"></span>
 
 ## Command `$ envuse ls`
 
 List the environments origin joined.
-
 
 <span id="command-envuse-add"></span>
 
@@ -34,13 +29,11 @@ List the environments origin joined.
 
 Add a new environment origin.
 
-
 <span id="command-envuse-pull"></span>
 
 ## Command `$ envuse pull`
 
 Synchronize the selected environment with the remote environment origin.
-
 
 <span id="command-envuse-rm"></span>
 
@@ -48,13 +41,11 @@ Synchronize the selected environment with the remote environment origin.
 
 Remove an environment origin.
 
-
 <span id="command-envuse-select"></span>
 
 ## Command `$ envuse select`
 
 Choose an environment origin.
-
 
 <span id="command-envuse-sync"></span>
 
@@ -62,14 +53,11 @@ Choose an environment origin.
 
 Synchronize all environments' origin.
 
-
-
 ## Integrations
 
 With Envuse project, Allow integrations with another platform as Heroku.
 
 > This is an **experimental** feature, please if not work put an issue post with the problem.
-
 
 ### Heroku
 

@@ -6,19 +6,22 @@ import chalk from "chalk";
 import { writeFileSync } from "fs";
 import { EOL } from "os";
 import { formatingEnvConfig } from "../../lib/format";
-import querystring from 'querystring';
+import querystring from "querystring";
 
-type c = CommandModule<{}, {
-  cwd: string;
-}>;
+type c = CommandModule<
+  {},
+  {
+    cwd: string;
+  }
+>;
 
 export = <c>{
-  command: 'select',
-  describe: 'select a env to use',
-  aliases: 's',
+  command: "select",
+  describe: "select a env to use",
+  aliases: "s",
   builder: {
     cwd: {
-      type: 'string',
+      type: "string",
       default: process.cwd(),
     },
   },
@@ -26,8 +29,8 @@ export = <c>{
     const { configStore } = getConfigStore(args.cwd);
 
     const answers = await inquirer.prompt({
-      name: 'envSelected',
-      type: 'list',
+      name: "envSelected",
+      type: "list",
       choices: Object.entries(configStore.listEnvs()).map(([, env]) => ({
         key: env.id,
         name: env.name,
@@ -38,5 +41,5 @@ export = <c>{
     const env = configStore.getEnvConfig(answers.envSelected);
 
     configStore.selectConfig(env.type, env.name);
-  }
+  },
 };

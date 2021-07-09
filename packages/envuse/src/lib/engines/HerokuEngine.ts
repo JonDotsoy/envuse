@@ -1,7 +1,7 @@
-import { Engine } from './Engine';
-import { execSync } from 'child_process';
-import dotenv from 'dotenv';
-import { EnvuseConfigStore, TypeEnvConfig } from '../EnvConfigStore';
+import { Engine } from "./Engine";
+import { execSync } from "child_process";
+import dotenv from "dotenv";
+import { EnvuseConfigStore, TypeEnvConfig } from "../EnvConfigStore";
 
 export class HerokuEngine implements Engine {
   cmd(cmd: string, log = false) {
@@ -13,7 +13,9 @@ export class HerokuEngine implements Engine {
   }
 
   insert(configStore: EnvuseConfigStore, herokuApp: string) {
-    const defaultconfig = JSON.parse(this.cmd(`config -a "${herokuApp}" --json`, true).toString());
+    const defaultconfig = JSON.parse(
+      this.cmd(`config -a "${herokuApp}" --json`, true).toString()
+    );
 
     const resource = {
       type: TypeEnvConfig.heroku,

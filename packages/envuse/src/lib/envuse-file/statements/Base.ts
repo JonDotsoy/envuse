@@ -1,108 +1,143 @@
 import { BufferCursor } from "./BufferCursor";
 import { Iter } from "./Iter";
 import { UnexpectedTokenError } from "./UnexpectedTokenError";
-import { EventEmitter } from 'events'
-import util from 'util'
+import { EventEmitter } from "events";
+import util from "util";
 
 export const printElement = (element: Base, color: boolean = false) =>
-  `${element.toObjectName()} (${element.pos}, ${element.end}): ${element.body.slice(element.pos, element.end)}`
+  `${element.toObjectName()} (${element.pos}, ${
+    element.end
+  }): ${element.body.slice(element.pos, element.end)}`;
 
-type B<T> = T extends { propsMutable: infer R } ? R extends keyof T ? Partial<Pick<T, R>> : {} : {}
+type B<T> = T extends { propsMutable: infer R }
+  ? R extends keyof T
+    ? Partial<Pick<T, R>>
+    : {}
+  : {};
 
 type BaseEvents = {
-  create_element: (element: Base) => void
-}
+  create_element: (element: Base) => void;
+};
 
-type ArgsType<T> = T extends (...args: infer R) => void ? R : []
+type ArgsType<T> = T extends (...args: infer R) => void ? R : [];
 
 export abstract class Base {
-  #events = new EventEmitter()
+  #events = new EventEmitter();
 
   end: number = this.pos;
   children: Base[] = [];
-  #elementList: Base[] = [this]
+  #elementList: Base[] = [this];
 
   raw = Buffer.from([]);
-  _raw: string = '';
+  _raw: string = "";
   #filename: string | null;
-  #bufferCursor: BufferCursor
-  #body: Buffer
+  #bufferCursor: BufferCursor;
+  #body: Buffer;
 
   constructor(
     filename: string | null,
     body: Buffer,
     public pos: number,
-    bufferCursor = new BufferCursor(body),
+    bufferCursor = new BufferCursor(body)
   ) {
     this.#filename = filename;
-    this.#bufferCursor = bufferCursor
-    this.#body = body
+    this.#bufferCursor = bufferCursor;
+    this.#body = body;
   }
 
   toObjectName() {
-    return this.constructor.name
+    return this.constructor.name;
   }
 
   toString() {
-    return printElement(this)
+    return printElement(this);
   }
 
   [util.inspect.custom]() {
-    return printElement(this)
+    return printElement(this);
   }
 
   on<T extends keyof BaseEvents>(event: T, listener: BaseEvents[T]) {
-    this.#events.on(event, listener)
+    this.#events.on(event, listener);
     return () => {
-      this.removeListener(event, listener)
-    }
+      this.removeListener(event, listener);
+    };
   }
 
-  removeListener<T extends keyof BaseEvents>(event: T, listener: BaseEvents[T]) {
-    this.#events.removeListener(event, listener)
+  removeListener<T extends keyof BaseEvents>(
+    event: T,
+    listener: BaseEvents[T]
+  ) {
+    this.#events.removeListener(event, listener);
   }
 
-  private emit<T extends keyof BaseEvents>(event: T, ...args: ArgsType<BaseEvents[T]>) {
-    this.#events.emit(event, ...args)
+  private emit<T extends keyof BaseEvents>(
+    event: T,
+    ...args: ArgsType<BaseEvents[T]>
+  ) {
+    this.#events.emit(event, ...args);
   }
 
-  get filename() { return this.#filename; }
-  get bufferCursor() { return this.#bufferCursor; }
-  get body() { return this.#body; }
-  get elementList() { return this.#elementList; }
+  get filename() {
+    return this.#filename;
+  }
+  get bufferCursor() {
+    return this.#bufferCursor;
+  }
+  get body() {
+    return this.#body;
+  }
+  get elementList() {
+    return this.#elementList;
+  }
 
   private load() {
-    const unsubscribeForward = this.bufferCursor.on('forward', () => {
-      this.end = this.bufferCursor.position
-    })
-    const unsubscribeCreateElement = this.on('create_element', (element) => {
-      this.#elementList.push(element)
-    })
+    const unsubscribeForward = this.bufferCursor.on("forward", () => {
+      this.end = this.bufferCursor.position;
+    });
+    const unsubscribeCreateElement = this.on("create_element", (element) => {
+      this.#elementList.push(element);
+    });
     this.prepare(this.bufferCursor);
-    unsubscribeForward()
-    unsubscribeCreateElement()
+    unsubscribeForward();
+    unsubscribeCreateElement();
     return this;
   }
 
-  createElement<T extends Base>(Comp: { new(filename: string | null, body: Buffer, pos: number, bufferCursor?: BufferCursor): T }, assign?: B<T>) {
-    const comp = new Comp(this.filename, this.body, this.bufferCursor.position, this.bufferCursor);
+  createElement<T extends Base>(
+    Comp: {
+      new (
+        filename: string | null,
+        body: Buffer,
+        pos: number,
+        bufferCursor?: BufferCursor
+      ): T;
+    },
+    assign?: B<T>
+  ) {
+    const comp = new Comp(
+      this.filename,
+      this.body,
+      this.bufferCursor.position,
+      this.bufferCursor
+    );
 
-    this.emit('create_element', comp)
-    Base.createElement(comp, assign)
+    this.emit("create_element", comp);
+    Base.createElement(comp, assign);
 
-    const [, ...elements] = comp.elementList
+    const [, ...elements] = comp.elementList;
 
-    this.elementList.push(...elements)
+    this.elementList.push(...elements);
 
-    return comp
+    return comp;
   }
 
   static createElement<T extends Base>(comp: T, assign?: B<T>) {
     if (assign) {
-      Object.assign(comp, assign)
+      Object.assign(comp, assign);
     }
 
-    return comp.load()
+    return comp.load();
   }
 
   abstract prepare(bufferCursor: BufferCursor): void;
@@ -119,7 +154,10 @@ export abstract class Base {
   // }
 
   appendRaw(raw: Buffer | number) {
-    this.raw = Buffer.concat([this.raw, typeof raw === 'number' ? Buffer.from([raw]) : raw]);
+    this.raw = Buffer.concat([
+      this.raw,
+      typeof raw === "number" ? Buffer.from([raw]) : raw,
+    ]);
     this._raw = this.raw.toString();
 
     return this;
@@ -131,11 +169,10 @@ export abstract class Base {
 
     while (true) {
       const char = this.body[index];
-      if (char === undefined)
-        break;
+      if (char === undefined) break;
 
       const current_index = index;
-      const current_char = Buffer.from([char])
+      const current_char = Buffer.from([char]);
       const prev = (len: number) => {
         const begin = Math.max(index - len + 1, 0);
         const end = Math.min(index + 1, this.body.length);
@@ -147,21 +184,29 @@ export abstract class Base {
         return this.body.slice(begin, end);
       };
 
-      yield [index, current_char, { current_char, current_index, prev, next }] as const;
+      yield [
+        index,
+        current_char,
+        { current_char, current_index, prev, next },
+      ] as const;
 
       index += 1;
     }
   }
 
   rejectUnexpectedTokenError(): never {
-    const err = new UnexpectedTokenError(this.filename, this.body, this.bufferCursor.position)
+    const err = new UnexpectedTokenError(
+      this.filename,
+      this.body,
+      this.bufferCursor.position
+    );
 
-    Error.captureStackTrace(err, Base.prototype.rejectUnexpectedTokenError)
+    Error.captureStackTrace(err, Base.prototype.rejectUnexpectedTokenError);
 
     throw err;
   }
 
   toJSON() {
-    return {}
+    return {};
   }
 }

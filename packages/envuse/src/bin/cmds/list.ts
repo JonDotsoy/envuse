@@ -1,20 +1,22 @@
-
 import { getConfigStore } from "../../lib/getConfigStore";
 import { EOL } from "os";
 import chalk from "chalk";
 import { CommandModule } from "yargs";
 
-type n = CommandModule<{}, {
-  cwd: string;
-}>;
+type n = CommandModule<
+  {},
+  {
+    cwd: string;
+  }
+>;
 
 export = <n>{
-  command: 'list',
-  describe: 'List environments',
-  aliases: ['ls', 'l'],
+  command: "list",
+  describe: "List environments",
+  aliases: ["ls", "l"],
   builder: {
     cwd: {
-      type: 'string',
+      type: "string",
       default: process.cwd(),
     },
   },
@@ -26,7 +28,7 @@ export = <n>{
     if (!envs.length) return console.log(chalk`{red No envs}`);
 
     console.log(
-      envs.map(e => chalk`{green ${e.type || ''}}: ${e.name}`).join(EOL)
+      envs.map((e) => chalk`{green ${e.type || ""}}: ${e.name}`).join(EOL)
     );
-  }
+  },
 };
