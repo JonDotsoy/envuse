@@ -1,4 +1,4 @@
-import { BCharType } from "./BCharType";
+import { BCharType } from "../tdo/BCharType";
 import { ArrCursor } from "./ArrCursor";
 
 

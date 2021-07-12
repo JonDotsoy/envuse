@@ -1,18 +1,18 @@
-import { BufferCursor } from "./BufferCursor";
-import { Iter } from "./Iter";
-import { UnexpectedTokenError } from "./UnexpectedTokenError";
+import { BufferCursor } from "../lib/BufferCursor";
+import { UnexpectedTokenError } from "../tdo/UnexpectedTokenError";
 import { EventEmitter } from "events";
 import util from "util";
+import { BaseSerializeOption as BaseSerializeOption } from "../tdo/BaseSerializeOption";
+import { TypeNamesList } from "../tdo/TypeNamesList";
 
-export const printElement = (element: Base, color: boolean = false) =>
-  `${element.toObjectName()} (${element.pos}, ${
-    element.end
+export const printElement = (element: Base) =>
+  `${element.toObjectName()} (${element.pos}, ${element.end
   }): ${JSON.stringify(element.body.slice(element.pos, element.end).toString())}`;
 
-type B<T> = T extends { propsMutable: infer R }
+type BodyAssigned<T> = T extends { propsMutable: infer R }
   ? R extends keyof T
-    ? Partial<Pick<T, R>>
-    : {}
+  ? Partial<Pick<T, R>>
+  : {}
   : {};
 
 type BaseEvents = {
@@ -22,6 +22,8 @@ type BaseEvents = {
 type ArgsType<T> = T extends (...args: infer R) => void ? R : [];
 
 export abstract class Base {
+  abstract $type: TypeNamesList;
+
   #events = new EventEmitter();
 
   end: number = this.pos;
@@ -106,14 +108,14 @@ export abstract class Base {
 
   createElement<T extends Base>(
     Comp: {
-      new (
+      new(
         filename: string | null,
         body: Buffer,
         pos: number,
         bufferCursor?: BufferCursor
       ): T;
     },
-    assign?: B<T>
+    assign?: BodyAssigned<T>
   ) {
     const comp = new Comp(
       this.filename,
@@ -132,7 +134,7 @@ export abstract class Base {
     return comp;
   }
 
-  static createElement<T extends Base>(comp: T, assign?: B<T>) {
+  static createElement<T extends Base>(comp: T, assign?: BodyAssigned<T>) {
     if (assign) {
       Object.assign(comp, assign);
     }
@@ -207,6 +209,15 @@ export abstract class Base {
   }
 
   toJSON() {
-    return {};
+    return {
+      $type: this.$type,
+      pos: this.pos,
+      end: this.end,
+      children: this.children.length ? this.children : undefined,
+    };
+  }
+
+  static serialize(opts: BaseSerializeOption<Base>): Buffer {
+    return Buffer.from([])
   }
 }

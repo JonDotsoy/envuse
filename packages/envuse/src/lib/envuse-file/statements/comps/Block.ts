@@ -1,20 +1,14 @@
 import { Base } from "./Base";
-import { BufferCursor } from "./BufferCursor";
+import { BufferCursor } from "../lib/BufferCursor";
 import { Comment } from "./Comment";
 import { CommentOperator } from "./CommentOperator";
 import { Variable } from "./Variable";
-import { SpaceNewLine } from "./Space";
+import { SpaceNewLine } from "./SpaceNewLine";
 
-class None extends Base {
-  prepare(bufferCursor: BufferCursor<number | undefined>): void {
-    while (bufferCursor.has()) {
-      this.appendRaw(bufferCursor.current());
-      bufferCursor.forward();
-    }
-  }
-}
 
 export class Block extends Base {
+  $type = 'Block' as const
+
   propsMutable!: "handleCheckCloseBlock";
 
   prepare(bufferCursor: BufferCursor) {

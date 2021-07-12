@@ -1,11 +1,14 @@
 import { EnvuseFileParser } from "./envuse-file-parser";
-import { takeDemoFile } from "./statements/takeDemoFile";
+import { takeDemoFile } from "./statements/lib/takeDemoFile";
 import util from "util";
-import { CommentOperator } from "./statements/CommentOperator";
-import { CommentOperatorStatement } from "./statements/CommentOperatorStatement";
-import { StatementObject } from "./statements/StatementObject";
-import { Base, printElement } from "./statements/Base";
-import { toBuffer as b } from "./statements/toBuffer";
+import { CommentOperator } from "./statements/comps/CommentOperator";
+import { CommentOperatorStatement } from "./statements/comps/CommentOperatorStatement";
+import { StatementObject } from "./statements/comps/StatementObject";
+import { Base, printElement } from "./statements/comps/Base";
+import { toBuffer as b } from "./statements/lib/toBuffer";
+import { Block } from "./statements/comps/Block";
+
+const go = (cb: () => void) => cb();
 
 describe("EnvuseFileParser2", () => {
   it("shoud make a ast out", () => {
@@ -227,33 +230,272 @@ describe("EnvuseFileParser2", () => {
   });
 });
 
-describe.only('Envuse file parse', () => {
-  it('parse file', () => {
-    const res = EnvuseFileParser.parse({ body: b(`foo=var\nabc=def\naaa=32`) })
+describe("Envuse file parse", () => {
+  it("parse file", () => {
+    const res = EnvuseFileParser.parse({ body: b(`foo=var\nabc=def\naaa=32`) });
 
     expect(res.parsed).toEqual({
-      foo: 'var',
-      abc: 'def',
-      aaa: '32'
-    })
-  })
+      foo: "var",
+      abc: "def",
+      aaa: "32",
+    });
+  });
 
-  it('parse file with conditionals', () => {
-    const res1 = EnvuseFileParser.parse({ body: b(`foo=var\nabc=def\naaa=32\n#; if true\nbbb=ccc\n#; fi`) })
-
-    expect(res1.parsed).toEqual({
-      foo: 'var',
-      abc: 'def',
-      aaa: '32',
-      bbb: 'ccc',
+  it("should parse with mixing conditionals", () => {
+    const res1 = EnvuseFileParser.parse({
+      body: b(`foo=var\nabc=def\naaa=32\n#; if true\nbbb=ccc\n#; fi`),
     });
 
-    const res2 = EnvuseFileParser.parse({ body: b(`foo=var\nabc=def\naaa=32\n#; if false\nbbb=ccc\n#; fi`) })
+    expect(res1.parsed).toEqual({
+      foo: "var",
+      abc: "def",
+      aaa: "32",
+      bbb: "ccc",
+    });
+
+    const res2 = EnvuseFileParser.parse({
+      body: b(`foo=var\nabc=def\naaa=32\n#; if false\nbbb=ccc\n#; fi`),
+    });
 
     expect(res2.parsed).toEqual({
-      foo: 'var',
-      abc: 'def',
-      aaa: '32'
-    })
+      foo: "var",
+      abc: "def",
+      aaa: "32",
+    });
+
+    const res3 = EnvuseFileParser.parse({
+      body: b(
+        `aaa=aaa\n#; if true\nbbb=bbb\n#; if false\nccc=ccc\n#; fi\n#; fi`
+      ),
+    });
+
+    expect(res3.parsed).toEqual({
+      aaa: "aaa",
+      bbb: "bbb",
+    });
+
+    const res4 = EnvuseFileParser.parse({
+      body: b(
+        `aaa=aaa\n#; if false\nbbb=bbb\n#; if true\nccc=ccc\n#; fi\n#; fi`
+      ),
+    });
+
+    expect(res4.parsed).toEqual({
+      aaa: "aaa",
+    });
+  });
+
+  describe("complex sentences", () => {
+    it("should parse with complex sentences (booleans)", () => {
+      const res = EnvuseFileParser.parse({
+        body: b(`#; if true === true\naaa=aaa\n#; fi`),
+      });
+
+      expect(res.parsed).toStrictEqual({
+        aaa: "aaa",
+      });
+    });
+
+    it("should parse with complex sentences (booleans)", () => {
+      const res = EnvuseFileParser.parse({
+        body: b(`bbb=bbb\n#; if true === true === false\naaa=aaa\n#; fi`),
+      });
+
+      expect(res.parsed).toStrictEqual({
+        bbb: "bbb",
+      });
+    });
+
+    it("should parse with complex sentences (strings)", () => {
+      const res = EnvuseFileParser.parse({
+        body: b(`aaa=aaa\n#; if 'aaa' === 'aaa'\nbbb=bbb\n#; fi`),
+      });
+
+      expect(res.parsed).toStrictEqual({
+        aaa: "aaa",
+        bbb: "bbb",
+      });
+    });
+
+    it("should parse with complex sentences (strings)", () => {
+      const res = EnvuseFileParser.parse({
+        body: b(`aaa=aaa\n#; if 'ccc' === 'aaa'\nbbb=bbb\n#; fi`),
+      });
+
+      expect(res.parsed).toStrictEqual({
+        aaa: "aaa",
+      });
+    });
+
+    it("should parse with complex sentences (booleans)", () => {
+      const res = EnvuseFileParser.parse({
+        body: b(`aaa=aaa\n#; if 12 === 12\nbbb=bbb\n#; fi`),
+      });
+
+      expect(res.parsed).toStrictEqual({
+        aaa: "aaa",
+        bbb: "bbb",
+      });
+    });
+
+    it("should parse with complex sentences (booleans)", () => {
+      const res = EnvuseFileParser.parse({
+        body: b(`aaa=aaa\n#; if 13_3 === 12\nbbb=bbb\n#; fi`),
+      });
+
+      expect(res.parsed).toStrictEqual({
+        aaa: "aaa",
+      });
+    });
+
+    it("should parse with complex sentences (name instance)", () => {
+      const res = EnvuseFileParser.parse({
+        body: b(`aaa=aaa\n#; if 'aaa' === aaa\nbbb=bbb\n#; fi`),
+      });
+
+      expect(res.parsed).toStrictEqual({
+        aaa: "aaa",
+        bbb: "bbb",
+      });
+    });
+
+    it("should parse with complex sentences (name instance)", () => {
+      const res = EnvuseFileParser.parse({
+        body: b(`aaa=aaa\n#; if 'ccc' === aaa\nbbb=bbb\n#; fi`),
+      });
+
+      expect(res.parsed).toStrictEqual({
+        aaa: "aaa",
+      });
+    });
+
+    it("should parse with complex sentences (name instance and values)", () => {
+      const res = EnvuseFileParser.parse(
+        { body: b(`aaa=aaa\n#; if 'ccc' === externalVal\nbbb=bbb\n#; fi`) },
+        { externalVal: "ccc" }
+      );
+
+      expect(res.parsed).toStrictEqual({
+        aaa: "aaa",
+        bbb: "bbb",
+      });
+    });
+  });
+});
+
+describe("envuse file stringify", () => {
+  it("should stringify ast", () => {
+    const ast = EnvuseFileParser.parseToAst(b(`foo=bar`));
+
+    const str = JSON.stringify(ast, null, 2);
+
+    expect(str).toMatchInlineSnapshot(`
+      "{
+        \\"$type\\": \\"Block\\",
+        \\"pos\\": 0,
+        \\"end\\": 7,
+        \\"children\\": [
+          {
+            \\"$type\\": \\"Variable\\",
+            \\"pos\\": 0,
+            \\"end\\": 7,
+            \\"children\\": [
+              {
+                \\"$type\\": \\"VariableKey\\",
+                \\"pos\\": 0,
+                \\"end\\": 3,
+                \\"value\\": \\"foo\\"
+              },
+              {
+                \\"$type\\": \\"SymbolEqual\\",
+                \\"pos\\": 3,
+                \\"end\\": 4
+              },
+              {
+                \\"$type\\": \\"VariableValue\\",
+                \\"pos\\": 4,
+                \\"end\\": 7,
+                \\"value\\": \\"bar\\"
+              }
+            ]
+          }
+        ]
+      }"
+    `);
+  });
+
+  it("should stringify ast", () => {
+    // const ast = EnvuseFileParser.parseToAst(b('a=b\n#; if true\nc=d\n#; fi'))
+    const ast = EnvuseFileParser.parseToAst(b("#; if true\n#; fi"));
+
+    const str = JSON.stringify(ast, null, 2);
+
+    expect(str).toMatchInlineSnapshot(`
+      "{
+        \\"$type\\": \\"Block\\",
+        \\"pos\\": 0,
+        \\"end\\": 16,
+        \\"children\\": [
+          {
+            \\"$type\\": \\"CommentOperator\\",
+            \\"pos\\": 0,
+            \\"end\\": 16,
+            \\"operator\\": {
+              \\"$type\\": \\"VariableKey\\",
+              \\"pos\\": 3,
+              \\"end\\": 5,
+              \\"value\\": \\"if\\"
+            },
+            \\"statement\\": {
+              \\"$type\\": \\"CommentOperatorStatement\\",
+              \\"pos\\": 6,
+              \\"end\\": 11,
+              \\"statements\\": [
+                {
+                  \\"$type\\": \\"StatementObject\\",
+                  \\"pos\\": 6,
+                  \\"end\\": 10,
+                  \\"type\\": \\"Boolean\\",
+                  \\"value\\": true
+                }
+              ]
+            },
+            \\"block\\": {
+              \\"$type\\": \\"Block\\",
+              \\"pos\\": 11,
+              \\"end\\": 16,
+              \\"children\\": [
+                {
+                  \\"$type\\": \\"CommentOperator\\",
+                  \\"pos\\": 11,
+                  \\"end\\": 16,
+                  \\"operator\\": {
+                    \\"$type\\": \\"VariableKey\\",
+                    \\"pos\\": 14,
+                    \\"end\\": 16,
+                    \\"value\\": \\"fi\\"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }"
+    `);
+  });
+});
+
+describe.only('envuse file format', () => {
+
+  it('should make a ast spec and format buffer file', () => {
+
+    // const ast = Block.serialize({
+    //   children: undefined
+    // })
+
+    // console.log(ast.toString())
+
   })
+
+
 })

@@ -1,11 +1,12 @@
 import { Base } from "./Base";
-import { BufferCursor } from "./BufferCursor";
-import { BCharType } from "./BCharType";
+import { BufferCursor } from "../lib/BufferCursor";
+import { BCharType } from "../tdo/BCharType";
 import { Space } from "./Space";
-import { CharactersKey as K } from "./CharactersKey";
+import { CharactersKey as K } from "../tdo/CharactersKey";
 import { StatementObject } from "./StatementObject";
 
 export class CommentOperatorStatement extends Base {
+  $type = 'CommentOperatorStatement' as const;
   statements: StatementObject[] = []
 
   prepare(bufferCursor: BufferCursor<BCharType>): void {
@@ -29,6 +30,13 @@ export class CommentOperatorStatement extends Base {
       if (bufferCursor.current() === K.space) {
         this.createElement(Space);
       }
+    }
+  }
+
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      statements: this.statements,
     }
   }
 }

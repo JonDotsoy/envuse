@@ -1,7 +1,9 @@
 import { Base } from "./Base";
-import { Iter } from "./Iter";
+
 
 export class Code extends Base {
+  $type = 'Code' as const
+
   prepare() {
     // let initialized = false
     // while (true) {

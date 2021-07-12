@@ -1,13 +1,13 @@
 import { eventNames } from "process";
-import { Base } from "./statements/Base";
-import { Block } from "./statements/Block";
-import { ArrCursor } from "./statements/ArrCursor";
-import { CommentOperator } from "./statements/CommentOperator";
-import { UnexpectedTokenError } from "./statements/UnexpectedTokenError";
-import { Variable } from "./statements/Variable";
-import { StatementObject } from "./statements/StatementObject";
+import { Base } from "./statements/comps/Base";
+import { Block } from "./statements/comps/Block";
+import { ArrCursor } from "./statements/lib/ArrCursor";
+import { CommentOperator } from "./statements/comps/CommentOperator";
+import { UnexpectedTokenError } from "./statements/tdo/UnexpectedTokenError";
+import { Variable } from "./statements/comps/Variable";
+import { StatementObject } from "./statements/comps/StatementObject";
 
-type Option = {
+type Option = Buffer | {
   filename?: string | null;
   body: Buffer;
 };
@@ -36,6 +36,21 @@ export class EnvuseFileParser {
       const a = new ArrCursor(operator.statement.statements)
       let accumulator: any;
 
+      const getValue = (statementObject: StatementObject) => {
+        switch (statementObject.type) {
+          case 'NameInstance':
+            return Array.isArray(statementObject.value) && statementObject.value.reduce(
+              (r, path) => typeof r === 'object' ? r[path] : undefined,
+              value,
+            )
+          case 'Number':
+          case 'Boolean':
+          case 'String':
+            return statementObject.value
+          default: throw new Error('unprocessable statement')
+        }
+      }
+
       while (a.has()) {
         if (a.position === 0) {
           accumulator = a.current().value
@@ -46,7 +61,8 @@ export class EnvuseFileParser {
         switch (a.current().type) {
           case 'StrictEqualitySymbol': {
             a.forward()
-            accumulator = accumulator === a.current().value
+            // console.log({ accumulator, currentType: a.current().type, currentValue: a.current().value, parsed: getValue(a.current()), value })
+            accumulator = accumulator === getValue(a.current())
             a.forward()
             break
           }
@@ -58,7 +74,7 @@ export class EnvuseFileParser {
     }
   }
 
-  static parse(options: Option) {
+  static parse(options: Option, values?: { [k: string]: any }) {
     const ast = this.parseToAst(options)
 
     const operatorsList = ast.elementList
@@ -74,7 +90,7 @@ export class EnvuseFileParser {
       .reduce((acum, element) => {
         const operators = operatorsList.filter(operator => operator.operator.elementList.includes(element))
         if (operators.length) {
-          const result = operators.reduce((v, operator) => v && operator.assert(acum), true)
+          const result = operators.reduce((v, operator) => v && operator.assert({ ...values, ...acum }), true)
           if (!result) {
             return acum;
           }
@@ -89,6 +105,9 @@ export class EnvuseFileParser {
   }
 
   static parseToAst(options: Option) {
+    if (options instanceof Buffer) {
+      return new EnvuseFileParser(null, options).toAstBody();
+    }
     return new EnvuseFileParser(options.filename ?? null, options.body).toAstBody();
   }
 }

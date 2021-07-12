@@ -1,14 +1,16 @@
 import { Base } from "./Base";
-import { BufferCursor } from "./BufferCursor";
-import { BCharType } from "./BCharType";
+import { BufferCursor } from "../lib/BufferCursor";
+import { BCharType } from "../tdo/BCharType";
 import { Space } from "./Space";
-import { VariableKey } from "./Variable";
+import { VariableKey } from "./VariableKey";
 import { Block } from "./Block";
-import { CharactersKey as K } from "./CharactersKey";
-import { toBuffer as b } from "./toBuffer";
+import { CharactersKey as K } from "../tdo/CharactersKey";
+import { toBuffer as b } from "../lib/toBuffer";
 import { CommentOperatorStatement } from "./CommentOperatorStatement";
 
+
 export class CommentOperator extends Base {
+  $type = 'CommentOperator' as const;
   operator!: VariableKey;
   statement!: CommentOperatorStatement;
   block!: Block;
@@ -51,5 +53,14 @@ export class CommentOperator extends Base {
         return false;
       },
     });
+  }
+
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      operator: this.operator,
+      statement: this.statement,
+      block: this.block,
+    }
   }
 }

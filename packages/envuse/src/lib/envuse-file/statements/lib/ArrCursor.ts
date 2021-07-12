@@ -1,7 +1,7 @@
 import { range } from "./range";
 import { EventEmitter } from "events";
-import { ArgsType } from "./ArgsType";
-import { Events } from "./Events";
+import { ArgsType } from "../tdo/ArgsType";
+import { EventsArrCursor } from "../tdo/EventsArrCursor";
 
 export class ArrCursor<T, B extends T | undefined = T | undefined> {
   #event = new EventEmitter();
@@ -10,18 +10,18 @@ export class ArrCursor<T, B extends T | undefined = T | undefined> {
   constructor(private body: T[] | Buffer) { }
 
   // Events Methods
-  on<T extends keyof Events>(event: T, listener: Events[T]) {
+  on<T extends keyof EventsArrCursor>(event: T, listener: EventsArrCursor[T]) {
     this.#event.on(event, listener);
     return () => {
       this.removeListener(event, listener);
     };
   }
 
-  removeListener<T extends keyof Events>(event: T, listener: Events[T]) {
+  removeListener<T extends keyof EventsArrCursor>(event: T, listener: EventsArrCursor[T]) {
     this.#event.removeListener(event, listener);
   }
 
-  private emit<T extends keyof Events>(event: T, ...args: ArgsType<Events[T]>) {
+  private emit<T extends keyof EventsArrCursor>(event: T, ...args: ArgsType<EventsArrCursor[T]>) {
     this.#event.emit(event, ...args);
   }
 

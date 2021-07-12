@@ -1,6 +1,8 @@
-import { range } from "./range";
+import { range } from "../lib/range";
 
 export namespace CharactersKey {
+  /** symbol: $ */
+  export const dollarSign = 0x24;
   /** symbol: = */
   export const equalsSign = 0x3d;
   /** symbol: \ */
