@@ -3,7 +3,15 @@ import { BufferCursor } from "../lib/BufferCursor";
 import { BCharType } from "../tdo/BCharType";
 import { Space } from "./Space";
 import { CharactersKey as K } from "../tdo/CharactersKey";
-import { StatementObject } from "./StatementObject";
+import { StatementObject, StatementObjectType } from "./StatementObject";
+import { BaseSerializeOption } from "../tdo/BaseSerializeOption";
+
+
+export type CommentOperatorStatementType = {
+  $type: 'CommentOperatorStatement'
+  statements: StatementObjectType[]
+}
+
 
 export class CommentOperatorStatement extends Base {
   $type = 'CommentOperatorStatement' as const;
@@ -38,5 +46,16 @@ export class CommentOperatorStatement extends Base {
       ...super.toJSON(),
       statements: this.statements,
     }
+  }
+
+  static serialize(comp: CommentOperatorStatementType) {
+    return Buffer.concat(
+      comp.statements.map((s, i, { length }) =>
+        Buffer.concat([
+          StatementObject.serialize(s),
+          Buffer.from((length - 1) === i ? '' : ' '),
+        ])
+      )
+    )
   }
 }

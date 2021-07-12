@@ -1,5 +1,13 @@
 import { BufferCursor } from "../lib/BufferCursor";
+import { BaseSerializeOption } from "../tdo/BaseSerializeOption";
 import { Base } from "./Base";
+
+
+export type VariableValueType = {
+  $type: 'VariableValue'
+  value: string
+  [k: string]: any
+}
 
 
 export class VariableValue extends Base {
@@ -45,5 +53,9 @@ export class VariableValue extends Base {
       ...super.toJSON(),
       value: this.value,
     }
+  }
+
+  static serialize(comp: VariableValueType) {
+    return Buffer.from(`${JSON.stringify(comp.value)}`)
   }
 }

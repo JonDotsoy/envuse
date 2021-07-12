@@ -5,6 +5,20 @@ import util from "util";
 import { BaseSerializeOption as BaseSerializeOption } from "../tdo/BaseSerializeOption";
 import { TypeNamesList } from "../tdo/TypeNamesList";
 
+export type BaseType = {
+  $type: TypeNamesList
+}
+
+export type BaseExportType = {
+  pos: number
+  end: number
+  children?: BaseExportType[]
+}
+
+export type BaseExportTypeJSON<T = TypeNamesList> = BaseExportType & {
+  $type: T
+}
+
 export const printElement = (element: Base) =>
   `${element.toObjectName()} (${element.pos}, ${element.end
   }): ${JSON.stringify(element.body.slice(element.pos, element.end).toString())}`;
@@ -209,15 +223,15 @@ export abstract class Base {
   }
 
   toJSON() {
-    return {
+    return <BaseExportTypeJSON>{
       $type: this.$type,
       pos: this.pos,
       end: this.end,
-      children: this.children.length ? this.children : undefined,
+      children: this.children.length ? this.children as any[] : undefined,
     };
   }
 
-  static serialize(opts: BaseSerializeOption<Base>): Buffer {
+  static serialize(opts: BaseType): Buffer {
     return Buffer.from([])
   }
 }

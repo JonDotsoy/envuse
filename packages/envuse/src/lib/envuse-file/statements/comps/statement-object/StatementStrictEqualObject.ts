@@ -1,6 +1,6 @@
 import { BufferCursor } from "../../lib/BufferCursor";
 import { BCharType } from "../../tdo/BCharType";
-import { toBuffer as b } from "../../lib/toBuffer";
+import {  b } from "../../lib/toBuffer";
 import { StatementObjectTypes } from "../../tdo/StatementObjectTypes";
 import { StatementObjectDefinition } from "../StatementObjectDefinition";
 

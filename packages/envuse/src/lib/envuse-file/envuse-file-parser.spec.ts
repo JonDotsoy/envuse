@@ -5,7 +5,7 @@ import { CommentOperator } from "./statements/comps/CommentOperator";
 import { CommentOperatorStatement } from "./statements/comps/CommentOperatorStatement";
 import { StatementObject } from "./statements/comps/StatementObject";
 import { Base, printElement } from "./statements/comps/Base";
-import { toBuffer as b } from "./statements/lib/toBuffer";
+import { b } from "./statements/lib/toBuffer";
 import { Block } from "./statements/comps/Block";
 
 const go = (cb: () => void) => cb();

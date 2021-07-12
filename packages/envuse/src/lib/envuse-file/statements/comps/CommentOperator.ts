@@ -2,14 +2,24 @@ import { Base } from "./Base";
 import { BufferCursor } from "../lib/BufferCursor";
 import { BCharType } from "../tdo/BCharType";
 import { Space } from "./Space";
-import { VariableKey } from "./VariableKey";
-import { Block } from "./Block";
+import { VariableKey, VariableKeyType } from "./VariableKey";
+import { Block, BlockType } from "./Block";
 import { CharactersKey as K } from "../tdo/CharactersKey";
-import { toBuffer as b } from "../lib/toBuffer";
-import { CommentOperatorStatement } from "./CommentOperatorStatement";
+import { b } from "../lib/toBuffer";
+import { CommentOperatorStatement, CommentOperatorStatementType } from "./CommentOperatorStatement";
+import { BaseSerializeOption } from "../tdo/BaseSerializeOption";
 
 
-export class CommentOperator extends Base {
+export type CommentOperatorType = {
+  $type: 'CommentOperator'
+  operator: VariableKeyType
+  statement: CommentOperatorStatementType
+  block: BlockType
+  [k: string]: any
+}
+
+
+export class CommentOperator extends Base  {
   $type = 'CommentOperator' as const;
   operator!: VariableKey;
   statement!: CommentOperatorStatement;
@@ -62,5 +72,21 @@ export class CommentOperator extends Base {
       statement: this.statement,
       block: this.block,
     }
+  }
+
+  static serialize(comp: CommentOperatorType) {
+    const buff: Buffer[] = [];
+
+    buff.push(
+      comp.statement
+        ? b(`#; ${VariableKey.serialize(comp.operator)} ${CommentOperatorStatement.serialize(comp.statement)}\n`)
+        : b(`#; ${VariableKey.serialize(comp.operator)}\n`)
+    )
+
+    if (comp.block) {
+      buff.push(Block.serialize(comp.block))
+    }
+
+    return Buffer.concat(buff);
   }
 }

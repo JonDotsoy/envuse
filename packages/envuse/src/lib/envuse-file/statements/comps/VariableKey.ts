@@ -1,6 +1,14 @@
 import { Base } from "./Base";
 import { BufferCursor } from "../lib/BufferCursor";
 import { charactersKeys } from "../tdo/charactersKeys";
+import { BaseSerializeOption } from "../tdo/BaseSerializeOption";
+
+
+export type VariableKeyType = {
+  $type: 'VariableKey'
+  value: string
+  [k: string]: any
+}
 
 
 export class VariableKey extends Base {
@@ -25,5 +33,9 @@ export class VariableKey extends Base {
       ...super.toJSON(),
       value: this.value,
     }
+  }
+
+  static serialize(comp: VariableKeyType) {
+    return Buffer.from(comp.value);
   }
 }

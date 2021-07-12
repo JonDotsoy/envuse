@@ -2,10 +2,20 @@ import { Base } from "./Base";
 import { BufferCursor } from "../lib/BufferCursor";
 import { Space } from "./Space";
 import { SpaceNewLine } from "./SpaceNewLine";
-import { VariableKey } from "./VariableKey";
+import { VariableKey, VariableKeyType } from "./VariableKey";
 import { charactersKeys } from "../tdo/charactersKeys";
 import { SymbolEqual } from "./SymbolEqual";
-import { VariableValue } from "./VariableValue";
+import { VariableValue, VariableValueType } from "./VariableValue";
+import { BaseSerializeOption } from "../tdo/BaseSerializeOption";
+
+
+export type VariableType = {
+  $type: 'Variable'
+  keyVariable: VariableKeyType
+  valueVariable: VariableValueType
+  [k: string]: any
+}
+
 
 export class Variable extends Base {
   $type = 'Variable' as const;
@@ -35,5 +45,17 @@ export class Variable extends Base {
     return;
   }
 
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      keyVariable: this.keyVariable,
+      valueVariable: this.valueVariable,
+    }
+  }
+
   static charactersKey = charactersKeys;
+
+  static serialize(comp: VariableType) {
+    return Buffer.from(`${VariableKey.serialize(comp.keyVariable)}=${VariableValue.serialize(comp.valueVariable)}\n`)
+  }
 }

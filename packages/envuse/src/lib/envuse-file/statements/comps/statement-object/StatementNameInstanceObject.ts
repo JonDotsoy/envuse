@@ -1,7 +1,7 @@
 import { BufferCursor } from "../../lib/BufferCursor";
 import { BCharType } from "../../tdo/BCharType";
 import { CharactersKey as k } from "../../tdo/CharactersKey";
-import { toBuffer } from "../../lib/toBuffer";
+import { b as toBuffer } from "../../lib/toBuffer";
 import { StatementObjectTypes } from "../../tdo/StatementObjectTypes";
 import { StatementObjectDefinition } from "../StatementObjectDefinition";
 

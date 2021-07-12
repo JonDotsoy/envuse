@@ -1,7 +1,13 @@
 import { Base } from "./Base";
 import { BufferCursor } from "../lib/BufferCursor";
 import { CharactersKey as K } from "../tdo/CharactersKey";
-import { VariableKey } from "./VariableKey";
+
+
+export type SpaceType = {
+  $type: 'Space'
+  [k: string]: any
+}
+
 
 export class Space extends Base {
   $type = 'Space' as const;

@@ -1,6 +1,6 @@
 import { eventNames } from "process";
 import { Base } from "./statements/comps/Base";
-import { Block } from "./statements/comps/Block";
+import { Block, BlockType } from "./statements/comps/Block";
 import { ArrCursor } from "./statements/lib/ArrCursor";
 import { CommentOperator } from "./statements/comps/CommentOperator";
 import { UnexpectedTokenError } from "./statements/tdo/UnexpectedTokenError";

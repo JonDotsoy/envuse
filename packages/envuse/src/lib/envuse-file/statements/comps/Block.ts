@@ -1,14 +1,21 @@
-import { Base } from "./Base";
+import { Base, BaseExportTypeJSON } from "./Base";
 import { BufferCursor } from "../lib/BufferCursor";
-import { Comment } from "./Comment";
-import { CommentOperator } from "./CommentOperator";
-import { Variable } from "./Variable";
-import { SpaceNewLine } from "./SpaceNewLine";
+import { Comment, CommentType } from "./Comment";
+import { CommentOperator, CommentOperatorType } from "./CommentOperator";
+import { Variable, VariableType } from "./Variable";
+import { SpaceNewLine, SpaceNewLineType } from "./SpaceNewLine";
+import { BaseSerializeOption } from "../tdo/BaseSerializeOption";
 
+export type BlockType = {
+  $type: 'Block'
+  children: (SpaceNewLineType | VariableType | CommentOperatorType | CommentType)[]
+  [k: string]: any
+}
 
 export class Block extends Base {
   $type = 'Block' as const
 
+  children: (SpaceNewLine | Variable | CommentOperator | Comment)[] = []
   propsMutable!: "handleCheckCloseBlock";
 
   prepare(bufferCursor: BufferCursor) {
@@ -59,4 +66,29 @@ export class Block extends Base {
     this: Base,
     bufferCursor: BufferCursor<number>
   ) => boolean;
+
+  toJSON() {
+    return {
+      ...super.toJSON()
+    }
+  }
+
+  static serialize(comp: BlockType) {
+    const buff: Buffer[] = comp.children.map(child => {
+
+      switch (child.$type) {
+        case 'SpaceNewLine': return Buffer.from([])
+        case "CommentOperator": return CommentOperator.serialize(child);
+        case "Comment": return Comment.serialize(child);
+        case "Variable": return Variable.serialize(child);
+        default: {
+          // @ts-ignore
+          throw new Error(`type unsupported ${child.$type}`)
+        }
+      }
+
+    })
+
+    return Buffer.concat(buff)
+  }
 }
