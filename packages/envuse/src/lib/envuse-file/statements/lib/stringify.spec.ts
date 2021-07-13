@@ -167,11 +167,11 @@ describe("serialize", () => {
     );
 
     expect(stringify(block).toString()).toMatchInlineSnapshot(`
-"#; if true === true
-aaa=\\"bbb\\"
-#; fi
-"
-`);
+      "#; if true === true
+      aaa=\\"bbb\\"
+      #; fi
+      "
+    `);
   });
 
   it("should serialize component complex", () => {

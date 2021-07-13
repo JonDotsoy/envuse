@@ -101,7 +101,7 @@ export class EnvuseFileParser {
         };
       }, {} as { [k: string]: any; });
 
-    return { parsed } as const
+    return { parsed, ast } as const
   }
 
   static parseToAst(options: Option) {
@@ -110,4 +110,6 @@ export class EnvuseFileParser {
     }
     return new EnvuseFileParser(options.filename ?? null, options.body).toAstBody();
   }
+
+  
 }
