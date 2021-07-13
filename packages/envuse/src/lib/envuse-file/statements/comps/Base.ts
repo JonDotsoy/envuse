@@ -222,6 +222,14 @@ export abstract class Base {
     throw err;
   }
 
+  lastChildren() {
+    return this.children[this.children.length - 1]
+  }
+
+  removeChildren(children: Base) {
+    this.children = this.children.filter(elm => elm !== children)
+  }
+
   toJSON() {
     return <BaseExportTypeJSON>{
       $type: this.$type,

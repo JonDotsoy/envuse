@@ -48,6 +48,7 @@ export class Variable extends Base {
   toJSON() {
     return {
       ...super.toJSON(),
+      children: undefined,
       keyVariable: this.keyVariable,
       valueVariable: this.valueVariable,
     }

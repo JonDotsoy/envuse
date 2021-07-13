@@ -19,7 +19,7 @@ export type CommentOperatorType = {
 }
 
 
-export class CommentOperator extends Base  {
+export class CommentOperator extends Base {
   $type = 'CommentOperator' as const;
   operator!: VariableKey;
   statement!: CommentOperatorStatement;
@@ -53,11 +53,12 @@ export class CommentOperator extends Base  {
 
     this.block = this.createElement(Block, {
       handleCheckCloseBlock() {
-        const lastChild = this.children[this.children.length - 1];
+        const lastChild = this.lastChildren();
         if (
           lastChild instanceof CommentOperator &&
           lastChild.operator.raw.equals(b("fi"))
         ) {
+          this.removeChildren(lastChild)
           return true;
         }
         return false;
@@ -86,6 +87,8 @@ export class CommentOperator extends Base  {
     if (comp.block) {
       buff.push(Block.serialize(comp.block))
     }
+
+    buff.push(b(`#; fi\n`))
 
     return Buffer.concat(buff);
   }

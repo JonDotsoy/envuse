@@ -4,6 +4,109 @@ import { b } from "./toBuffer";
 import { EnvuseFileParser } from "../../envuse-file-parser";
 import { BlockType } from "../comps/Block";
 
+describe("parse ast", () => {
+  it("should parse ast variable", () => {
+    const body = EnvuseFileParser.parseToAst(Buffer.concat([b(`a=3\n`)]));
+
+    expect(JSON.stringify(body, null, 2)).toMatchInlineSnapshot(`
+      "{
+        \\"$type\\": \\"Block\\",
+        \\"pos\\": 0,
+        \\"end\\": 4,
+        \\"children\\": [
+          {
+            \\"$type\\": \\"Variable\\",
+            \\"pos\\": 0,
+            \\"end\\": 4,
+            \\"keyVariable\\": {
+              \\"$type\\": \\"VariableKey\\",
+              \\"pos\\": 0,
+              \\"end\\": 1,
+              \\"value\\": \\"a\\"
+            },
+            \\"valueVariable\\": {
+              \\"$type\\": \\"VariableValue\\",
+              \\"pos\\": 2,
+              \\"end\\": 4,
+              \\"value\\": \\"3\\"
+            }
+          }
+        ]
+      }"
+    `);
+  });
+
+  it("should parse ast operator", () => {
+    const body = EnvuseFileParser.parseToAst(
+      Buffer.concat([b(`#; if true\n`), b(`a=b\n`), b(`#; fi\n`)])
+    );
+
+    expect(JSON.stringify(body, null, 2)).toMatchInlineSnapshot(`
+      "{
+        \\"$type\\": \\"Block\\",
+        \\"pos\\": 0,
+        \\"end\\": 21,
+        \\"children\\": [
+          {
+            \\"$type\\": \\"CommentOperator\\",
+            \\"pos\\": 0,
+            \\"end\\": 20,
+            \\"operator\\": {
+              \\"$type\\": \\"VariableKey\\",
+              \\"pos\\": 3,
+              \\"end\\": 5,
+              \\"value\\": \\"if\\"
+            },
+            \\"statement\\": {
+              \\"$type\\": \\"CommentOperatorStatement\\",
+              \\"pos\\": 6,
+              \\"end\\": 11,
+              \\"statements\\": [
+                {
+                  \\"$type\\": \\"StatementObject\\",
+                  \\"pos\\": 6,
+                  \\"end\\": 10,
+                  \\"type\\": \\"Boolean\\",
+                  \\"value\\": true
+                }
+              ]
+            },
+            \\"block\\": {
+              \\"$type\\": \\"Block\\",
+              \\"pos\\": 11,
+              \\"end\\": 20,
+              \\"children\\": [
+                {
+                  \\"$type\\": \\"Variable\\",
+                  \\"pos\\": 11,
+                  \\"end\\": 15,
+                  \\"keyVariable\\": {
+                    \\"$type\\": \\"VariableKey\\",
+                    \\"pos\\": 11,
+                    \\"end\\": 12,
+                    \\"value\\": \\"a\\"
+                  },
+                  \\"valueVariable\\": {
+                    \\"$type\\": \\"VariableValue\\",
+                    \\"pos\\": 13,
+                    \\"end\\": 15,
+                    \\"value\\": \\"b\\"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            \\"$type\\": \\"SpaceNewLine\\",
+            \\"pos\\": 20,
+            \\"end\\": 21
+          }
+        ]
+      }"
+    `);
+  });
+});
+
 describe("serialize", () => {
   it("serialize component block", () => {
     const block: BlockType = {
@@ -64,11 +167,11 @@ describe("serialize", () => {
     );
 
     expect(stringify(block).toString()).toMatchInlineSnapshot(`
-      "#; if true === true
-      aaa=\\"bbb\\"
-      #; fi
-      "
-    `);
+"#; if true === true
+aaa=\\"bbb\\"
+#; fi
+"
+`);
   });
 
   it("should serialize component complex", () => {
@@ -118,8 +221,8 @@ describe("serialize", () => {
             statements: [
               {
                 $type: "StatementObject",
-                type: "String",
-                value: "asd",
+                type: "Boolean",
+                value: true,
               },
             ],
           },
@@ -133,7 +236,8 @@ describe("serialize", () => {
 
     expect(stringify(block).toString()).toMatchInlineSnapshot(`
       "# I am comment
-      #; if \\"asd\\"
+      #; if true
+      #; fi
       "
     `);
   });
