@@ -1,8 +1,7 @@
 import { Base } from "./Base";
 
-
 export class Code extends Base {
-  $type = 'Code' as const
+  $type = "Code" as const;
 
   prepare() {
     // let initialized = false

@@ -6,28 +6,26 @@ import { Space } from "./Space";
 import { charactersKeys } from "../tdo/charactersKeys";
 import { CharactersKey } from "../tdo/CharactersKey";
 
-
 export type CommentType = {
-  $type: 'Comment'
-  value: string
-  [k: string]: any
-}
-
+  $type: "Comment";
+  value: string;
+  [k: string]: any;
+};
 
 export class Comment extends Base {
-  $type = 'Comment' as const
+  $type = "Comment" as const;
 
-  private valueRaw: number[] = []
+  private valueRaw: number[] = [];
 
   get value() {
-    return Buffer.from(this.valueRaw).toString()
+    return Buffer.from(this.valueRaw).toString();
   }
 
   prepare(bufferCursor: BufferCursor<BCharType>): void {
-    bufferCursor.forward()
+    bufferCursor.forward();
 
     if (bufferCursor.current() === CharactersKey.space) {
-      this.createElement(Space)
+      this.createElement(Space);
     }
 
     while (bufferCursor.has()) {
@@ -45,10 +43,10 @@ export class Comment extends Base {
     return {
       ...super.toJSON(),
       value: this.value,
-    }
+    };
   }
 
   static serialize(comp: CommentType) {
-    return Buffer.from(`# ${comp.value}\n`)
+    return Buffer.from(`# ${comp.value}\n`);
   }
 }

@@ -6,16 +6,16 @@ import { StatementObjectTypes } from "../../tdo/StatementObjectTypes";
 import { StatementObjectDefinition } from "../StatementObjectDefinition";
 
 export class StatementNameInstanceObject extends StatementObjectDefinition {
-  static characterKeyAccept = [
-    ...k.english_alphabet,
-    k.dollarSign,
-  ];
+  static characterKeyAccept = [...k.english_alphabet, k.dollarSign];
 
   assert(
     bufferCursor: BufferCursor<BCharType>
   ): bufferCursor is BufferCursor<number> {
     return (
-      bufferCursor.has() && StatementNameInstanceObject.characterKeyAccept.includes(bufferCursor.current())
+      bufferCursor.has() &&
+      StatementNameInstanceObject.characterKeyAccept.includes(
+        bufferCursor.current()
+      )
     );
   }
 
@@ -25,9 +25,11 @@ export class StatementNameInstanceObject extends StatementObjectDefinition {
     let charAccumulation: number[] = [];
 
     while (bufferCursor.has()) {
-      if (bufferCursor.isClosed() ||
+      if (
+        bufferCursor.isClosed() ||
         bufferCursor.current() === k.space ||
-        bufferCursor.current() === k.newLineLF) {
+        bufferCursor.current() === k.newLineLF
+      ) {
         partialPath.push(toBuffer(charAccumulation).toString());
         this.value = partialPath;
         // bufferCursor.forward();
@@ -41,9 +43,13 @@ export class StatementNameInstanceObject extends StatementObjectDefinition {
         continue;
       }
 
-      if (StatementNameInstanceObject.characterKeyAccept.includes(bufferCursor.current()) ||
+      if (
+        StatementNameInstanceObject.characterKeyAccept.includes(
+          bufferCursor.current()
+        ) ||
         k.underscore === bufferCursor.current() ||
-        k.numbers.includes(bufferCursor.current())) {
+        k.numbers.includes(bufferCursor.current())
+      ) {
         charAccumulation.push(bufferCursor.current());
         bufferCursor.forward();
         continue;

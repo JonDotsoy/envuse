@@ -485,17 +485,11 @@ describe("envuse file stringify", () => {
   });
 });
 
-describe.only('envuse file format', () => {
-
-  it('should make a ast spec and format buffer file', () => {
-
+describe.only("envuse file format", () => {
+  it("should make a ast spec and format buffer file", () => {
     // const ast = Block.serialize({
     //   children: undefined
     // })
-
     // console.log(ast.toString())
-
-  })
-
-
-})
+  });
+});

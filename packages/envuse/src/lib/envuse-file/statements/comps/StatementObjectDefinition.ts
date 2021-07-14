@@ -6,7 +6,7 @@ export abstract class StatementObjectDefinition {
   type!: typesValues;
   value: any;
 
-  constructor(readonly rejectUnexpectedTokenError: () => never) { }
+  constructor(readonly rejectUnexpectedTokenError: () => never) {}
 
   abstract assert(
     bufferCursor: BufferCursor<BCharType>

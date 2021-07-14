@@ -3,7 +3,7 @@ import { BufferCursor } from "../lib/BufferCursor";
 import { BCharType } from "../tdo/BCharType";
 
 export class SymbolEqual extends Base {
-  $type = 'SymbolEqual' as const;
+  $type = "SymbolEqual" as const;
 
   prepare(bufferCursor: BufferCursor<BCharType>): void {
     while (bufferCursor.has()) {

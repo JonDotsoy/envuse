@@ -6,21 +6,22 @@ import { VariableKey, VariableKeyType } from "./VariableKey";
 import { Block, BlockType } from "./Block";
 import { CharactersKey as K } from "../tdo/CharactersKey";
 import { b } from "../lib/toBuffer";
-import { CommentOperatorStatement, CommentOperatorStatementType } from "./CommentOperatorStatement";
+import {
+  CommentOperatorStatement,
+  CommentOperatorStatementType,
+} from "./CommentOperatorStatement";
 import { BaseSerializeOption } from "../tdo/BaseSerializeOption";
 
-
 export type CommentOperatorType = {
-  $type: 'CommentOperator'
-  operator: VariableKeyType
-  statement: CommentOperatorStatementType
-  block: BlockType
-  [k: string]: any
-}
-
+  $type: "CommentOperator";
+  operator: VariableKeyType;
+  statement: CommentOperatorStatementType;
+  block: BlockType;
+  [k: string]: any;
+};
 
 export class CommentOperator extends Base {
-  $type = 'CommentOperator' as const;
+  $type = "CommentOperator" as const;
   operator!: VariableKey;
   statement!: CommentOperatorStatement;
   block!: Block;
@@ -58,7 +59,7 @@ export class CommentOperator extends Base {
           lastChild instanceof CommentOperator &&
           lastChild.operator.raw.equals(b("fi"))
         ) {
-          this.removeChildren(lastChild)
+          this.removeChildren(lastChild);
           return true;
         }
         return false;
@@ -72,7 +73,7 @@ export class CommentOperator extends Base {
       operator: this.operator,
       statement: this.statement,
       block: this.block,
-    }
+    };
   }
 
   static serialize(comp: CommentOperatorType) {
@@ -80,15 +81,19 @@ export class CommentOperator extends Base {
 
     buff.push(
       comp.statement
-        ? b(`#; ${VariableKey.serialize(comp.operator)} ${CommentOperatorStatement.serialize(comp.statement)}\n`)
+        ? b(
+            `#; ${VariableKey.serialize(
+              comp.operator
+            )} ${CommentOperatorStatement.serialize(comp.statement)}\n`
+          )
         : b(`#; ${VariableKey.serialize(comp.operator)}\n`)
-    )
+    );
 
     if (comp.block) {
-      buff.push(Block.serialize(comp.block))
+      buff.push(Block.serialize(comp.block));
     }
 
-    buff.push(b(`#; fi\n`))
+    buff.push(b(`#; fi\n`));
 
     return Buffer.concat(buff);
   }

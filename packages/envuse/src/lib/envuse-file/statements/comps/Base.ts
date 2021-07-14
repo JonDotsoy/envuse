@@ -6,27 +6,28 @@ import { BaseSerializeOption as BaseSerializeOption } from "../tdo/BaseSerialize
 import { TypeNamesList } from "../tdo/TypeNamesList";
 
 export type BaseType = {
-  $type: TypeNamesList
-}
+  $type: TypeNamesList;
+};
 
 export type BaseExportType = {
-  pos: number
-  end: number
-  children?: BaseExportType[]
-}
+  pos: number;
+  end: number;
+  children?: BaseExportType[];
+};
 
 export type BaseExportTypeJSON<T = TypeNamesList> = BaseExportType & {
-  $type: T
-}
+  $type: T;
+};
 
 export const printElement = (element: Base) =>
-  `${element.toObjectName()} (${element.pos}, ${element.end
-  }): ${JSON.stringify(element.body.slice(element.pos, element.end).toString())}`;
+  `${element.toObjectName()} (${element.pos}, ${element.end}): ${JSON.stringify(
+    element.body.slice(element.pos, element.end).toString()
+  )}`;
 
 type BodyAssigned<T> = T extends { propsMutable: infer R }
   ? R extends keyof T
-  ? Partial<Pick<T, R>>
-  : {}
+    ? Partial<Pick<T, R>>
+    : {}
   : {};
 
 type BaseEvents = {
@@ -122,7 +123,7 @@ export abstract class Base {
 
   createElement<T extends Base>(
     Comp: {
-      new(
+      new (
         filename: string | null,
         body: Buffer,
         pos: number,
@@ -223,11 +224,11 @@ export abstract class Base {
   }
 
   lastChildren() {
-    return this.children[this.children.length - 1]
+    return this.children[this.children.length - 1];
   }
 
   removeChildren(children: Base) {
-    this.children = this.children.filter(elm => elm !== children)
+    this.children = this.children.filter((elm) => elm !== children);
   }
 
   toJSON() {
@@ -235,11 +236,11 @@ export abstract class Base {
       $type: this.$type,
       pos: this.pos,
       end: this.end,
-      children: this.children.length ? this.children as any[] : undefined,
+      children: this.children.length ? (this.children as any[]) : undefined,
     };
   }
 
   static serialize(opts: BaseType): Buffer {
-    return Buffer.from([])
+    return Buffer.from([]);
   }
 }

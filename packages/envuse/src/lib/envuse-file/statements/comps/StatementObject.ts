@@ -11,39 +11,39 @@ import { StatementNameInstanceObject } from "./statement-object/StatementNameIns
 import { StatementStringObject } from "./statement-object/StatementStringObject";
 import { StatementNumberObject } from "./statement-object/StatementNumberObject";
 
-
 type StatementObjectTypeBase =
   | {
-    $type: 'StatementObject'
-    type: 'NameInstance'
-    value: string[]
-  }
+      $type: "StatementObject";
+      type: "NameInstance";
+      value: string[];
+    }
   | {
-    $type: 'StatementObject'
-    type: 'String'
-    value: string
-  }
+      $type: "StatementObject";
+      type: "String";
+      value: string;
+    }
   | {
-    $type: 'StatementObject'
-    type: 'Boolean'
-    value: boolean
-  }
+      $type: "StatementObject";
+      type: "Boolean";
+      value: boolean;
+    }
   | {
-    $type: 'StatementObject'
-    type: 'Number'
-    value: number
-  }
+      $type: "StatementObject";
+      type: "Number";
+      value: number;
+    }
   | {
-    $type: 'StatementObject'
-    type: 'StrictEqualitySymbol'
-    value: '==='
-  }
+      $type: "StatementObject";
+      type: "StrictEqualitySymbol";
+      value: "===";
+    };
 
-export type StatementObjectType = StatementObjectTypeBase & { [k: string]: any }
-
+export type StatementObjectType = StatementObjectTypeBase & {
+  [k: string]: any;
+};
 
 export class StatementObject extends Base {
-  $type = 'StatementObject' as const;
+  $type = "StatementObject" as const;
 
   static types = StatementObjectTypes;
 
@@ -79,27 +79,27 @@ export class StatementObject extends Base {
   }
 
   toJSON() {
-    return <BaseExportTypeJSON<'StatementObject'> & StatementObjectType>{
+    return <BaseExportTypeJSON<"StatementObject"> & StatementObjectType>{
       ...super.toJSON(),
       type: this.type,
-      value: this.value
-    }
+      value: this.value,
+    };
   }
 
   static serialize(comp: StatementObjectType) {
     switch (comp.type) {
-      case 'NameInstance':
-        return Buffer.from(comp.value.join('.'))
-      case 'StrictEqualitySymbol':
-        return Buffer.from('===')
-      case 'String':
-        return Buffer.from(JSON.stringify(comp.value.toString()))
-      case 'Number':
-      case 'Boolean':
-        return Buffer.from(comp.value.toString())
+      case "NameInstance":
+        return Buffer.from(comp.value.join("."));
+      case "StrictEqualitySymbol":
+        return Buffer.from("===");
+      case "String":
+        return Buffer.from(JSON.stringify(comp.value.toString()));
+      case "Number":
+      case "Boolean":
+        return Buffer.from(comp.value.toString());
       default: {
         // @ts-ignore
-        throw new Error(`type ${comp.type} is not supported`)
+        throw new Error(`type ${comp.type} is not supported`);
       }
     }
   }

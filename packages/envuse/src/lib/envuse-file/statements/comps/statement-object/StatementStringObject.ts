@@ -1,7 +1,7 @@
 import { BufferCursor } from "../../lib/BufferCursor";
 import { BCharType } from "../../tdo/BCharType";
 import { CharactersKey as k } from "../../tdo/CharactersKey";
-import {  b } from "../../lib/toBuffer";
+import { b } from "../../lib/toBuffer";
 import { StatementObjectTypes } from "../../tdo/StatementObjectTypes";
 import { StatementObjectDefinition } from "../StatementObjectDefinition";
 
@@ -28,9 +28,11 @@ export class StatementStringObject extends StatementObjectDefinition {
 
     while (bufferCursor.has()) {
       const p = bufferCursor.prev(2);
-      if (bufferCursor.isClosed() ||
+      if (
+        bufferCursor.isClosed() ||
         initialQuote === bufferCursor.current() ||
-        bufferCursor.current() === k.newLineLF) {
+        bufferCursor.current() === k.newLineLF
+      ) {
         bufferCursor.forward();
         this.value = String(b(raw));
         return;

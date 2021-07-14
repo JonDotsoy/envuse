@@ -2,16 +2,14 @@ import { BufferCursor } from "../lib/BufferCursor";
 import { BaseSerializeOption } from "../tdo/BaseSerializeOption";
 import { Base } from "./Base";
 
-
 export type VariableValueType = {
-  $type: 'VariableValue'
-  value: string
-  [k: string]: any
-}
-
+  $type: "VariableValue";
+  value: string;
+  [k: string]: any;
+};
 
 export class VariableValue extends Base {
-  $type = 'VariableValue' as const;
+  $type = "VariableValue" as const;
 
   get value() {
     return this.raw.toString();
@@ -19,15 +17,18 @@ export class VariableValue extends Base {
 
   prepare(bufferCursor: BufferCursor): void {
     const firsCharacter = bufferCursor.current();
-    const valueWithQuotationMark = firsCharacter === 0x22 ? 0x22 : firsCharacter === 0x27 ? 0x27 : null;
+    const valueWithQuotationMark =
+      firsCharacter === 0x22 ? 0x22 : firsCharacter === 0x27 ? 0x27 : null;
 
     if (valueWithQuotationMark) {
       bufferCursor.forward();
     }
 
     while (bufferCursor.has()) {
-      if (bufferCursor.current() === 0x23 &&
-        valueWithQuotationMark === undefined) {
+      if (
+        bufferCursor.current() === 0x23 &&
+        valueWithQuotationMark === undefined
+      ) {
         return;
       }
 
@@ -36,8 +37,10 @@ export class VariableValue extends Base {
         return;
       }
 
-      if (bufferCursor.current() === valueWithQuotationMark &&
-        bufferCursor.prev(1)[0] !== 0x5c) {
+      if (
+        bufferCursor.current() === valueWithQuotationMark &&
+        bufferCursor.prev(1)[0] !== 0x5c
+      ) {
         bufferCursor.forward();
         return;
       }
@@ -52,10 +55,10 @@ export class VariableValue extends Base {
     return {
       ...super.toJSON(),
       value: this.value,
-    }
+    };
   }
 
   static serialize(comp: VariableValueType) {
-    return Buffer.from(`${JSON.stringify(comp.value)}`)
+    return Buffer.from(`${JSON.stringify(comp.value)}`);
   }
 }

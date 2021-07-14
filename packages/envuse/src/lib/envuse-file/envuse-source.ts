@@ -6,16 +6,18 @@ import { CommentOperator } from "./statements/comps/CommentOperator";
 import { UnexpectedTokenError } from "./statements/tdo/UnexpectedTokenError";
 import { Variable } from "./statements/comps/Variable";
 import { StatementObject } from "./statements/comps/StatementObject";
-import fs from "fs"
+import fs from "fs";
 
-type Option = Buffer | {
-  filename?: string | null;
-  body: Buffer;
-};
+type Option =
+  | Buffer
+  | {
+      filename?: string | null;
+      body: Buffer;
+    };
 
 /** AST Parser */
 export class Envuse {
-  constructor(private filename: string | null, private body: Buffer) { }
+  constructor(private filename: string | null, private body: Buffer) {}
 
   toAstBody() {
     try {
@@ -34,82 +36,96 @@ export class Envuse {
 
   private static makeOperatorEvaluator(operator: CommentOperator) {
     return (value: { [k: string]: any }) => {
-      const a = new ArrCursor(operator.statement.statements)
+      const a = new ArrCursor(operator.statement.statements);
       let accumulator: any;
 
       const getValue = (statementObject: StatementObject) => {
         switch (statementObject.type) {
-          case 'NameInstance':
-            return Array.isArray(statementObject.value) && statementObject.value.reduce(
-              (r, path) => typeof r === 'object' ? r[path] : undefined,
-              value,
-            )
-          case 'Number':
-          case 'Boolean':
-          case 'String':
-            return statementObject.value
-          default: throw new Error('unprocessable statement')
+          case "NameInstance":
+            return (
+              Array.isArray(statementObject.value) &&
+              statementObject.value.reduce(
+                (r, path) => (typeof r === "object" ? r[path] : undefined),
+                value
+              )
+            );
+          case "Number":
+          case "Boolean":
+          case "String":
+            return statementObject.value;
+          default:
+            throw new Error("unprocessable statement");
         }
-      }
+      };
 
       while (a.has()) {
         if (a.position === 0) {
-          accumulator = a.current().value
-          a.forward()
-          continue
+          accumulator = a.current().value;
+          a.forward();
+          continue;
         }
 
         switch (a.current().type) {
-          case 'StrictEqualitySymbol': {
-            a.forward()
+          case "StrictEqualitySymbol": {
+            a.forward();
             // console.log({ accumulator, currentType: a.current().type, currentValue: a.current().value, parsed: getValue(a.current()), value })
-            accumulator = accumulator === getValue(a.current())
-            a.forward()
-            break
+            accumulator = accumulator === getValue(a.current());
+            a.forward();
+            break;
           }
-          default: throw new Error(`Statement no expected`)
+          default:
+            throw new Error(`Statement no expected`);
         }
       }
 
-      return accumulator
-    }
+      return accumulator;
+    };
   }
 
   static parse(options: Option, values?: { [k: string]: any }) {
-    const ast = this.createDataSource(options)
+    const ast = this.createDataSource(options);
 
     const operatorsList = ast.elementList
-      .filter((element): element is CommentOperator => element instanceof CommentOperator)
+      .filter(
+        (element): element is CommentOperator =>
+          element instanceof CommentOperator
+      )
       .map((operator) => ({
         operator,
         assert: this.makeOperatorEvaluator(operator),
-      }))
+      }));
 
-    const variableList = ast.elementList.filter((element): element is Variable => element instanceof Variable)
+    const variableList = ast.elementList.filter(
+      (element): element is Variable => element instanceof Variable
+    );
 
-    const parsed = variableList
-      .reduce((acum, element) => {
-        const operators = operatorsList.filter(operator => operator.operator.elementList.includes(element))
-        if (operators.length) {
-          const result = operators.reduce((v, operator) => v && operator.assert({ ...values, ...acum }), true)
-          if (!result) {
-            return acum;
-          }
+    const parsed = variableList.reduce((acum, element) => {
+      const operators = operatorsList.filter((operator) =>
+        operator.operator.elementList.includes(element)
+      );
+      if (operators.length) {
+        const result = operators.reduce(
+          (v, operator) => v && operator.assert({ ...values, ...acum }),
+          true
+        );
+        if (!result) {
+          return acum;
         }
-        return {
-          ...acum,
-          [element.keyVariable.value]: element.valueVariable.value
-        };
-      }, {} as { [k: string]: any; });
+      }
+      return {
+        ...acum,
+        [element.keyVariable.value]: element.valueVariable.value,
+      };
+    }, {} as { [k: string]: any });
 
-    return { parsed, ast } as const
+    return { parsed, ast } as const;
   }
 
   static parseFile(filename: string, values?: { [k: string]: any }) {
     // read file and store buffer
     const buffer = fs.readFileSync(filename);
 
-    return this.parse({ filename, body: buffer }, values)
+    return this.parse({ filename, body: buffer }, values);
   }
 
   static createDataSource(options: Option) {
@@ -118,5 +134,4 @@ export class Envuse {
     }
     return new Envuse(options.filename ?? null, options.body).toAstBody();
   }
-
 }

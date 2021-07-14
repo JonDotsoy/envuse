@@ -3,16 +3,14 @@ import { BufferCursor } from "../lib/BufferCursor";
 import { charactersKeys } from "../tdo/charactersKeys";
 import { BaseSerializeOption } from "../tdo/BaseSerializeOption";
 
-
 export type VariableKeyType = {
-  $type: 'VariableKey'
-  value: string
-  [k: string]: any
-}
-
+  $type: "VariableKey";
+  value: string;
+  [k: string]: any;
+};
 
 export class VariableKey extends Base {
-  $type = 'VariableKey' as const;
+  $type = "VariableKey" as const;
   value!: string;
 
   prepare(bufferCursor: BufferCursor): void {
@@ -32,7 +30,7 @@ export class VariableKey extends Base {
     return {
       ...super.toJSON(),
       value: this.value,
-    }
+    };
   }
 
   static serialize(comp: VariableKeyType) {

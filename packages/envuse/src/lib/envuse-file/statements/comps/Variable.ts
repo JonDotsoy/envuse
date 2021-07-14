@@ -8,17 +8,15 @@ import { SymbolEqual } from "./SymbolEqual";
 import { VariableValue, VariableValueType } from "./VariableValue";
 import { BaseSerializeOption } from "../tdo/BaseSerializeOption";
 
-
 export type VariableType = {
-  $type: 'Variable'
-  keyVariable: VariableKeyType
-  valueVariable: VariableValueType
-  [k: string]: any
-}
-
+  $type: "Variable";
+  keyVariable: VariableKeyType;
+  valueVariable: VariableValueType;
+  [k: string]: any;
+};
 
 export class Variable extends Base {
-  $type = 'Variable' as const;
+  $type = "Variable" as const;
 
   keyVariable!: VariableKey;
   valueVariable!: VariableValue;
@@ -51,12 +49,16 @@ export class Variable extends Base {
       children: undefined,
       keyVariable: this.keyVariable,
       valueVariable: this.valueVariable,
-    }
+    };
   }
 
   static charactersKey = charactersKeys;
 
   static serialize(comp: VariableType) {
-    return Buffer.from(`${VariableKey.serialize(comp.keyVariable)}=${VariableValue.serialize(comp.valueVariable)}\n`)
+    return Buffer.from(
+      `${VariableKey.serialize(comp.keyVariable)}=${VariableValue.serialize(
+        comp.valueVariable
+      )}\n`
+    );
   }
 }

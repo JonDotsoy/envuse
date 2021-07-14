@@ -20,15 +20,19 @@ export class StatementNumberObject extends StatementObjectDefinition {
 
     this.type = StatementObjectTypes.Number;
     while (bufferCursor.has()) {
-      if (bufferCursor.isClosed() ||
+      if (
+        bufferCursor.isClosed() ||
         k.space === bufferCursor.current() ||
         bufferCursor.current() === k.newLineLF ||
-        bufferCursor.current() === k.equalsSign) {
+        bufferCursor.current() === k.equalsSign
+      ) {
         this.value = Number(b(raw));
         return;
       }
-      if (k.numbers.includes(bufferCursor.current()) ||
-        bufferCursor.current() === k.dot) {
+      if (
+        k.numbers.includes(bufferCursor.current()) ||
+        bufferCursor.current() === k.dot
+      ) {
         appendRaw(bufferCursor.current());
         bufferCursor.forward();
         continue;

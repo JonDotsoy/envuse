@@ -6,16 +6,14 @@ import { CharactersKey as K } from "../tdo/CharactersKey";
 import { StatementObject, StatementObjectType } from "./StatementObject";
 import { BaseSerializeOption } from "../tdo/BaseSerializeOption";
 
-
 export type CommentOperatorStatementType = {
-  $type: 'CommentOperatorStatement'
-  statements: StatementObjectType[]
-}
-
+  $type: "CommentOperatorStatement";
+  statements: StatementObjectType[];
+};
 
 export class CommentOperatorStatement extends Base {
-  $type = 'CommentOperatorStatement' as const;
-  statements: StatementObject[] = []
+  $type = "CommentOperatorStatement" as const;
+  statements: StatementObject[] = [];
 
   prepare(bufferCursor: BufferCursor<BCharType>): void {
     while (true) {
@@ -45,7 +43,7 @@ export class CommentOperatorStatement extends Base {
     return {
       ...super.toJSON(),
       statements: this.statements,
-    }
+    };
   }
 
   static serialize(comp: CommentOperatorStatementType) {
@@ -53,9 +51,9 @@ export class CommentOperatorStatement extends Base {
       comp.statements.map((s, i, { length }) =>
         Buffer.concat([
           StatementObject.serialize(s),
-          Buffer.from((length - 1) === i ? '' : ' '),
+          Buffer.from(length - 1 === i ? "" : " "),
         ])
       )
-    )
+    );
   }
 }

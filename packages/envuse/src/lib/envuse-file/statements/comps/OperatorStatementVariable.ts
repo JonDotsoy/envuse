@@ -3,7 +3,7 @@ import { BufferCursor } from "../lib/BufferCursor";
 import { BCharType } from "../tdo/BCharType";
 
 export class OperatorStatementVariable extends Base {
-  $type = 'OperatorStatementVariable' as const;
+  $type = "OperatorStatementVariable" as const;
 
   prepare(bufferCursor: BufferCursor<BCharType>): void {
     while (bufferCursor.has()) {

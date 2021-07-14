@@ -7,15 +7,20 @@ import { SpaceNewLine, SpaceNewLineType } from "./SpaceNewLine";
 import { BaseSerializeOption } from "../tdo/BaseSerializeOption";
 
 export type BlockType = {
-  $type: 'Block'
-  children: (SpaceNewLineType | VariableType | CommentOperatorType | CommentType)[]
-  [k: string]: any
-}
+  $type: "Block";
+  children: (
+    | SpaceNewLineType
+    | VariableType
+    | CommentOperatorType
+    | CommentType
+  )[];
+  [k: string]: any;
+};
 
 export class Block extends Base {
-  $type = 'Block' as const
+  $type = "Block" as const;
 
-  children: (SpaceNewLine | Variable | CommentOperator | Comment)[] = []
+  children: (SpaceNewLine | Variable | CommentOperator | Comment)[] = [];
   propsMutable!: "handleCheckCloseBlock";
 
   prepare(bufferCursor: BufferCursor) {
@@ -44,7 +49,10 @@ export class Block extends Base {
       return true;
     }
 
-    if (bufferCursor.has() && Variable.charactersKey.includes(bufferCursor.current())) {
+    if (
+      bufferCursor.has() &&
+      Variable.charactersKey.includes(bufferCursor.current())
+    ) {
       this.children.push(this.createElement(Variable));
       return true;
     }
@@ -69,26 +77,28 @@ export class Block extends Base {
 
   toJSON() {
     return {
-      ...super.toJSON()
-    }
+      ...super.toJSON(),
+    };
   }
 
   static serialize(comp: BlockType) {
-    const buff: Buffer[] = comp.children.map(child => {
-
+    const buff: Buffer[] = comp.children.map((child) => {
       switch (child.$type) {
-        case 'SpaceNewLine': return Buffer.from([])
-        case "CommentOperator": return CommentOperator.serialize(child);
-        case "Comment": return Comment.serialize(child);
-        case "Variable": return Variable.serialize(child);
+        case "SpaceNewLine":
+          return Buffer.from([]);
+        case "CommentOperator":
+          return CommentOperator.serialize(child);
+        case "Comment":
+          return Comment.serialize(child);
+        case "Variable":
+          return Variable.serialize(child);
         default: {
           // @ts-ignore
-          throw new Error(`type unsupported ${child.$type}`)
+          throw new Error(`type unsupported ${child.$type}`);
         }
       }
+    });
 
-    })
-
-    return Buffer.concat(buff)
+    return Buffer.concat(buff);
   }
 }

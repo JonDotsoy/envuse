@@ -7,7 +7,7 @@ export class ArrCursor<T, B extends T | undefined = T | undefined> {
   #event = new EventEmitter();
   #position = 0;
 
-  constructor(private body: T[] | Buffer) { }
+  constructor(private body: T[] | Buffer) {}
 
   // Events Methods
   on<T extends keyof EventsArrCursor>(event: T, listener: EventsArrCursor[T]) {
@@ -17,11 +17,17 @@ export class ArrCursor<T, B extends T | undefined = T | undefined> {
     };
   }
 
-  removeListener<T extends keyof EventsArrCursor>(event: T, listener: EventsArrCursor[T]) {
+  removeListener<T extends keyof EventsArrCursor>(
+    event: T,
+    listener: EventsArrCursor[T]
+  ) {
     this.#event.removeListener(event, listener);
   }
 
-  private emit<T extends keyof EventsArrCursor>(event: T, ...args: ArgsType<EventsArrCursor[T]>) {
+  private emit<T extends keyof EventsArrCursor>(
+    event: T,
+    ...args: ArgsType<EventsArrCursor[T]>
+  ) {
     this.#event.emit(event, ...args);
   }
 

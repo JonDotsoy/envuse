@@ -1,15 +1,13 @@
 import { Base } from "./Base";
 import { BufferCursor } from "../lib/BufferCursor";
 
-
 export type SpaceNewLineType = {
-  $type: 'SpaceNewLine'
-  [k: string]: any
-}
+  $type: "SpaceNewLine";
+  [k: string]: any;
+};
 
-
-export class SpaceNewLine extends Base  {
-  $type = 'SpaceNewLine' as const;
+export class SpaceNewLine extends Base {
+  $type = "SpaceNewLine" as const;
 
   prepare(bufferCursor: BufferCursor<number | undefined>): void {
     while (bufferCursor.has()) {
