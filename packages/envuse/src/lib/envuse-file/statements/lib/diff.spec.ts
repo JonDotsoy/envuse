@@ -1,10 +1,10 @@
-import { EnvuseFileParser } from "../../envuse-file-parser";
+import { Envuse } from "../../envuse-source";
 import { diff } from "./diff";
 import { b } from "./toBuffer";
 
 describe("diff", () => {
   it("should diff deleted", () => {
-    const block1 = EnvuseFileParser.parseToAst(
+    const block1 = Envuse.createDataSource(
       Buffer.concat([
         b("foo=bar\n"),
         b("aaa=bbb\n"),
@@ -13,7 +13,7 @@ describe("diff", () => {
       ])
     );
 
-    const block2 = EnvuseFileParser.parseToAst(
+    const block2 = Envuse.createDataSource(
       Buffer.concat([
         b("foo=bar\n"),
         b("aaa=bbb\n"),

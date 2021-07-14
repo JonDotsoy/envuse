@@ -120,15 +120,11 @@ export const diff = (blockBase: Block, blockCompare: Block) => {
 
 
   elementsBase.map((element, index) => {
-
     tableOfDiff.append(0, keyGeneratorBase.match(element), element)
-
   })
 
   elementsCompare.map((element, index) => {
-
     tableOfDiff.append(1, keyGeneratorCompare.match(element), element)
-
   })
 
 

@@ -6,6 +6,7 @@ import { CommentOperator } from "./statements/comps/CommentOperator";
 import { UnexpectedTokenError } from "./statements/tdo/UnexpectedTokenError";
 import { Variable } from "./statements/comps/Variable";
 import { StatementObject } from "./statements/comps/StatementObject";
+import fs from "fs"
 
 type Option = Buffer | {
   filename?: string | null;
@@ -13,7 +14,7 @@ type Option = Buffer | {
 };
 
 /** AST Parser */
-export class EnvuseFileParser {
+export class Envuse {
   constructor(private filename: string | null, private body: Buffer) { }
 
   toAstBody() {
@@ -75,7 +76,7 @@ export class EnvuseFileParser {
   }
 
   static parse(options: Option, values?: { [k: string]: any }) {
-    const ast = this.parseToAst(options)
+    const ast = this.createDataSource(options)
 
     const operatorsList = ast.elementList
       .filter((element): element is CommentOperator => element instanceof CommentOperator)
@@ -104,12 +105,18 @@ export class EnvuseFileParser {
     return { parsed, ast } as const
   }
 
-  static parseToAst(options: Option) {
-    if (options instanceof Buffer) {
-      return new EnvuseFileParser(null, options).toAstBody();
-    }
-    return new EnvuseFileParser(options.filename ?? null, options.body).toAstBody();
+  static parseFile(filename: string, values?: { [k: string]: any }) {
+    // read file and store buffer
+    const buffer = fs.readFileSync(filename);
+
+    return this.parse({ filename, body: buffer }, values)
   }
 
-  
+  static createDataSource(options: Option) {
+    if (options instanceof Buffer) {
+      return new Envuse(null, options).toAstBody();
+    }
+    return new Envuse(options.filename ?? null, options.body).toAstBody();
+  }
+
 }

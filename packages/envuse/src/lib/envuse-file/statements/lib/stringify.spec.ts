@@ -1,12 +1,12 @@
 import { stringify } from "./stringify";
 import { BlockObj } from "../comps/_compsTypes";
 import { b } from "./toBuffer";
-import { EnvuseFileParser } from "../../envuse-file-parser";
+import { Envuse } from "../../envuse-source";
 import { BlockType } from "../comps/Block";
 
 describe("parse ast", () => {
   it("should parse ast variable", () => {
-    const body = EnvuseFileParser.parseToAst(Buffer.concat([b(`a=3\n`)]));
+    const body = Envuse.createDataSource(Buffer.concat([b(`a=3\n`)]));
 
     expect(JSON.stringify(body, null, 2)).toMatchInlineSnapshot(`
       "{
@@ -37,7 +37,7 @@ describe("parse ast", () => {
   });
 
   it("should parse ast operator", () => {
-    const body = EnvuseFileParser.parseToAst(
+    const body = Envuse.createDataSource(
       Buffer.concat([b(`#; if true\n`), b(`a=b\n`), b(`#; fi\n`)])
     );
 
@@ -162,7 +162,7 @@ describe("serialize", () => {
   });
 
   it("serialize component variable and comment", () => {
-    const block = EnvuseFileParser.parseToAst(
+    const block = Envuse.createDataSource(
       Buffer.concat([b(`#; if true === true\n`), b(`aaa=bbb\n`), b(`#; fi\n`)])
     );
 
@@ -175,7 +175,7 @@ describe("serialize", () => {
   });
 
   it("should serialize component complex", () => {
-    const block = EnvuseFileParser.parseToAst(
+    const block = Envuse.createDataSource(
       Buffer.concat([
         b(`# single comment\n`),
         b(`abc=abc\n`),
