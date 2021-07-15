@@ -1,12 +1,12 @@
-import { eventNames } from "process";
 import { Base } from "./statements/comps/Base";
-import { Block, BlockType } from "./statements/comps/Block";
+import { Block } from "./statements/comps/Block";
 import { ArrCursor } from "./statements/lib/ArrCursor";
 import { CommentOperator } from "./statements/comps/CommentOperator";
 import { UnexpectedTokenError } from "./statements/tdo/UnexpectedTokenError";
 import { Variable } from "./statements/comps/Variable";
 import { StatementObject } from "./statements/comps/StatementObject";
 import fs from "fs";
+
 
 type Option =
   | Buffer
@@ -16,7 +16,7 @@ type Option =
     };
 
 /** AST Parser */
-export class Envuse {
+export class DataSource {
   constructor(private filename: string | null, private body: Buffer) {}
 
   toAstBody() {
@@ -130,8 +130,8 @@ export class Envuse {
 
   static createDataSource(options: Option) {
     if (options instanceof Buffer) {
-      return new Envuse(null, options).toAstBody();
+      return new DataSource(null, options).toAstBody();
     }
-    return new Envuse(options.filename ?? null, options.body).toAstBody();
+    return new DataSource(options.filename ?? null, options.body).toAstBody();
   }
 }

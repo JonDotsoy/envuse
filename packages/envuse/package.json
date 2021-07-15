@@ -1,14 +1,11 @@
 {
   "name": "envuse",
-  "version": "2.0.3-alpha.0",
+  "version": "2.0.4-alpha.0",
   "description": "The `envuse` is a client to choose a environment into your project.",
   "main": "index.js",
   "publishConfig": {
     "access": "public",
     "tag": "alpha"
-  },
-  "bin": {
-    "envuse": "bin/cli"
   },
   "scripts": {
     "build": "tsc",
@@ -25,37 +22,18 @@
   ],
   "author": "Jonathan Delgado <hi@jon.soy> (https://jon.soy)",
   "license": "ISC",
-  "dependencies": {
-    "chalk": "^2.4.2",
-    "dotenv": "^6.2.0",
-    "http-errors": "^1.7.3",
-    "inquirer": "^6.5.2",
-    "inquirer-autocomplete-prompt": "^1.0.1",
-    "inquirer-select-line": "^1.1.1",
-    "json5": "^2.1.0",
-    "lodash": "^4.17.15",
-    "opn": "^5.5.0",
-    "ow": "^0.26.0",
-    "yargs": "^17.0.1"
-  },
   "devDependencies": {
-    "@types/dotenv": "^6.1.1",
-    "@types/inquirer": "^6.5.0",
     "@types/jest": "^26.0.23",
-    "@types/json5": "^2.2.0",
     "@types/node": "^12.7.5",
-    "@types/yargs": "^17.0.2",
     "jest": "^27.0.6",
-    "np": "^7.5.0",
     "ts-jest": "^27.0.3",
     "ts-node": "^10.0.0",
-    "typescript": "^3.6.3",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.8"
+    "typescript": "^3.6.3"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JonDotsoy/envuse.git"
+    "url": "git+https://github.com/JonDotsoy/envuse.git",
+    "directory": "packages/envuse"
   },
   "bugs": {
     "url": "https://github.com/JonDotsoy/envuse/issues"

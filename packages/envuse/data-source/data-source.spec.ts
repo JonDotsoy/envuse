@@ -1,20 +1,18 @@
-import { Envuse } from "./envuse-source";
+import { DataSource } from "./data-source";
 import { takeDemoFile } from "./statements/lib/takeDemoFile";
 import util from "util";
 import { CommentOperator } from "./statements/comps/CommentOperator";
 import { CommentOperatorStatement } from "./statements/comps/CommentOperatorStatement";
 import { StatementObject } from "./statements/comps/StatementObject";
-import { Base, printElement } from "./statements/comps/Base";
+import { Base } from "./statements/comps/Base";
 import { b } from "./statements/lib/toBuffer";
-import { Block } from "./statements/comps/Block";
 
-const go = (cb: () => void) => cb();
 
-describe("EnvuseFileParser2", () => {
+describe("DataSource", () => {
   it("shoud make a ast out", () => {
     const [filename1, body1] = takeDemoFile(".env");
 
-    const envuseFileParser = new Envuse(filename1, body1);
+    const envuseFileParser = new DataSource(filename1, body1);
     expect(
       util.formatWithOptions(
         { depth: Infinity },
@@ -27,7 +25,7 @@ describe("EnvuseFileParser2", () => {
   it("shoud make a ast with operators", () => {
     const [filename, body] = takeDemoFile(".env");
 
-    const envuseFileParser = new Envuse(filename, body);
+    const envuseFileParser = new DataSource(filename, body);
     expect(
       util.formatWithOptions(
         { depth: Infinity },
@@ -41,7 +39,7 @@ describe("EnvuseFileParser2", () => {
   it("shoud make a ast with multiple blocks", () => {
     const [filename, body] = takeDemoFile(".env");
 
-    const envuseFileParser = new Envuse(filename, body);
+    const envuseFileParser = new DataSource(filename, body);
     expect(
       util.formatWithOptions(
         { depth: Infinity },
@@ -157,7 +155,7 @@ describe("EnvuseFileParser2", () => {
     it("should read property list children", () => {
       const [fl, body] = takeDemoFile(".env");
 
-      const envuseFileParser = new Envuse(fl, body);
+      const envuseFileParser = new DataSource(fl, body);
 
       const b = envuseFileParser.toAstBody();
 
@@ -197,31 +195,31 @@ describe("EnvuseFileParser2", () => {
 
     it("should parse comment operator correctly", () => {
       expect(
-        Envuse.createDataSource({
+        DataSource.createDataSource({
           filename: null,
           body: Buffer.from(`#;if a.b.c.d ===\nfoo="bar"\n#;fi\n`),
         }).elementList.map((e) => e.toString())
       ).toMatchSnapshot();
       expect(
-        Envuse.createDataSource({
+        DataSource.createDataSource({
           filename: null,
           body: Buffer.from(`#;if true\nfoo="bar"\n#;fi\n`),
         }).elementList.map((e) => e.toString())
       ).toMatchSnapshot();
       expect(
-        Envuse.createDataSource({
+        DataSource.createDataSource({
           filename: null,
           body: Buffer.from(`#;if 123\nfoo="bar"\n#;fi\n`),
         }).elementList.map((e) => e.toString())
       ).toMatchSnapshot();
       expect(
-        Envuse.createDataSource({
+        DataSource.createDataSource({
           filename: null,
           body: Buffer.from(`#;if var\nfoo="bar"\n#;fi\n`),
         }).elementList.map((e) => e.toString())
       ).toMatchSnapshot();
       expect(
-        Envuse.createDataSource({
+        DataSource.createDataSource({
           filename: null,
           body: Buffer.from(`#;if foo === bar\nfoo="bar"\n#;fi\n`),
         }).elementList.map((e) => e.toString())
@@ -230,9 +228,9 @@ describe("EnvuseFileParser2", () => {
   });
 });
 
-describe("Envuse file parse", () => {
+describe("DataSource file parse", () => {
   it("parse file", () => {
-    const res = Envuse.parse({ body: b(`foo=var\nabc=def\naaa=32`) });
+    const res = DataSource.parse({ body: b(`foo=var\nabc=def\naaa=32`) });
 
     expect(res.parsed).toEqual({
       foo: "var",
@@ -242,7 +240,7 @@ describe("Envuse file parse", () => {
   });
 
   it("should parse with mixing conditionals", () => {
-    const res1 = Envuse.parse({
+    const res1 = DataSource.parse({
       body: b(`foo=var\nabc=def\naaa=32\n#; if true\nbbb=ccc\n#; fi`),
     });
 
@@ -253,7 +251,7 @@ describe("Envuse file parse", () => {
       bbb: "ccc",
     });
 
-    const res2 = Envuse.parse({
+    const res2 = DataSource.parse({
       body: b(`foo=var\nabc=def\naaa=32\n#; if false\nbbb=ccc\n#; fi`),
     });
 
@@ -263,7 +261,7 @@ describe("Envuse file parse", () => {
       aaa: "32",
     });
 
-    const res3 = Envuse.parse({
+    const res3 = DataSource.parse({
       body: b(
         `aaa=aaa\n#; if true\nbbb=bbb\n#; if false\nccc=ccc\n#; fi\n#; fi`
       ),
@@ -274,7 +272,7 @@ describe("Envuse file parse", () => {
       bbb: "bbb",
     });
 
-    const res4 = Envuse.parse({
+    const res4 = DataSource.parse({
       body: b(
         `aaa=aaa\n#; if false\nbbb=bbb\n#; if true\nccc=ccc\n#; fi\n#; fi`
       ),
@@ -287,7 +285,7 @@ describe("Envuse file parse", () => {
 
   describe("complex sentences", () => {
     it("should parse with complex sentences (booleans)", () => {
-      const res = Envuse.parse({
+      const res = DataSource.parse({
         body: b(`#; if true === true\naaa=aaa\n#; fi`),
       });
 
@@ -297,7 +295,7 @@ describe("Envuse file parse", () => {
     });
 
     it("should parse with complex sentences (booleans)", () => {
-      const res = Envuse.parse({
+      const res = DataSource.parse({
         body: b(`bbb=bbb\n#; if true === true === false\naaa=aaa\n#; fi`),
       });
 
@@ -307,7 +305,7 @@ describe("Envuse file parse", () => {
     });
 
     it("should parse with complex sentences (strings)", () => {
-      const res = Envuse.parse({
+      const res = DataSource.parse({
         body: b(`aaa=aaa\n#; if 'aaa' === 'aaa'\nbbb=bbb\n#; fi`),
       });
 
@@ -318,7 +316,7 @@ describe("Envuse file parse", () => {
     });
 
     it("should parse with complex sentences (strings)", () => {
-      const res = Envuse.parse({
+      const res = DataSource.parse({
         body: b(`aaa=aaa\n#; if 'ccc' === 'aaa'\nbbb=bbb\n#; fi`),
       });
 
@@ -328,7 +326,7 @@ describe("Envuse file parse", () => {
     });
 
     it("should parse with complex sentences (booleans)", () => {
-      const res = Envuse.parse({
+      const res = DataSource.parse({
         body: b(`aaa=aaa\n#; if 12 === 12\nbbb=bbb\n#; fi`),
       });
 
@@ -339,7 +337,7 @@ describe("Envuse file parse", () => {
     });
 
     it("should parse with complex sentences (booleans)", () => {
-      const res = Envuse.parse({
+      const res = DataSource.parse({
         body: b(`aaa=aaa\n#; if 13_3 === 12\nbbb=bbb\n#; fi`),
       });
 
@@ -349,7 +347,7 @@ describe("Envuse file parse", () => {
     });
 
     it("should parse with complex sentences (name instance)", () => {
-      const res = Envuse.parse({
+      const res = DataSource.parse({
         body: b(`aaa=aaa\n#; if 'aaa' === aaa\nbbb=bbb\n#; fi`),
       });
 
@@ -360,7 +358,7 @@ describe("Envuse file parse", () => {
     });
 
     it("should parse with complex sentences (name instance)", () => {
-      const res = Envuse.parse({
+      const res = DataSource.parse({
         body: b(`aaa=aaa\n#; if 'ccc' === aaa\nbbb=bbb\n#; fi`),
       });
 
@@ -370,7 +368,7 @@ describe("Envuse file parse", () => {
     });
 
     it("should parse with complex sentences (name instance and values)", () => {
-      const res = Envuse.parse(
+      const res = DataSource.parse(
         { body: b(`aaa=aaa\n#; if 'ccc' === externalVal\nbbb=bbb\n#; fi`) },
         { externalVal: "ccc" }
       );
@@ -383,9 +381,9 @@ describe("Envuse file parse", () => {
   });
 });
 
-describe("envuse file stringify", () => {
+describe("DataSource file stringify", () => {
   it("should stringify ast", () => {
-    const ast = Envuse.createDataSource(b(`foo=bar`));
+    const ast = DataSource.createDataSource(b(`foo=bar`));
 
     const str = JSON.stringify(ast, null, 2);
 
@@ -426,7 +424,7 @@ describe("envuse file stringify", () => {
 
   it("should stringify ast", () => {
     // const ast = EnvuseFileParser.parseToAst(b('a=b\n#; if true\nc=d\n#; fi'))
-    const ast = Envuse.createDataSource(b("#; if true\n#; fi"));
+    const ast = DataSource.createDataSource(b("#; if true\n#; fi"));
 
     const str = JSON.stringify(ast, null, 2);
 

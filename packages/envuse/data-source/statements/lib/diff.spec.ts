@@ -1,10 +1,10 @@
-import { Envuse } from "../../envuse-source";
+import { DataSource } from "../../data-source";
 import { diff } from "./diff";
 import { b } from "./toBuffer";
 
 describe("diff", () => {
   it("should diff deleted", () => {
-    const block1 = Envuse.createDataSource(
+    const block1 = DataSource.createDataSource(
       Buffer.concat([
         b("foo=bar\n"),
         b("aaa=bbb\n"),
@@ -13,7 +13,7 @@ describe("diff", () => {
       ])
     );
 
-    const block2 = Envuse.createDataSource(
+    const block2 = DataSource.createDataSource(
       Buffer.concat([
         b("foo=bar\n"),
         b("aaa=bbb\n"),
