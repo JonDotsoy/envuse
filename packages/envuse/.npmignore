@@ -6,3 +6,9 @@ __snapshots__
 *.tgz
 .editorconfig
 tsconfig.json
+jest.config.js
+**/*.spec.ts
+**/*.spec.d.ts
+**/*.spec.js
+**/*.spec.js.map
+.environment/
