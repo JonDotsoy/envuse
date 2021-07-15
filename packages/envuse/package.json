@@ -1,8 +1,8 @@
 {
   "name": "envuse",
-  "version": "2.0.4-alpha.0",
+  "version": "2.0.5-alpha.0",
   "description": "The `envuse` is a client to choose a environment into your project.",
-  "main": "index.js",
+  "main": "envuse.js",
   "publishConfig": {
     "access": "public",
     "tag": "alpha"
