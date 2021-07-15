@@ -1,7 +1,7 @@
 {
   "name": "envuse",
-  "version": "2.0.8-alpha.0",
-  "description": "The `envuse` is a client to choose a environment into your project.",
+  "version": "2.0.9-alpha.0",
+  "description": "Load environment variables from a `.envuse` file into the `process.env`",
   "main": "envuse.js",
   "publishConfig": {
     "access": "public",
