@@ -11,7 +11,7 @@ const f = (filepath?: string) => {
 
 
 export const defaultFilepath =
-  f(process.env.ENVUSE_PATH) ?? f(`${process.cwd()}/.envuse`);
+  f(process.env.ENVUSE_FILE_PATH) ?? f(`${process.cwd()}/.envuse`);
 
 
 export const register = (opts?: { filepath: string }) => {
