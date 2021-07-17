@@ -63,7 +63,7 @@ or
 $ ENVUSE_FILE_PATH=path/to/your/envuse/file node -r envuse/register your-app.js
 ```
 
-### Configure in the app script
+### Configure in the app script
 
 Load the `envuse` module in your app script to load the `.envuse` file into the `process.env` object.
 
