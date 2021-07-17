@@ -1,6 +1,7 @@
 name: Publish package envuse
 
 on:
+    workflow_dispatch: {}
     push:
         tags:
             - "envuse/v*"
@@ -16,6 +17,8 @@ jobs:
                   node-version: "12.x"
                   registry-url: "https://registry.npmjs.org"
             - run: npm install
+              working-directory: packages/envuse
             - run: npm publish
+              working-directory: packages/envuse
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
