@@ -1,5 +1,5 @@
 import fs from "fs";
-import { DataSource } from "./data-source/data-source";
+import { DataSource, Option, Values } from "./data-source/data-source";
 
 // ensure filepath is a file or return null
 const f = (filepath?: string) => {
@@ -27,3 +27,15 @@ export const register = (opts?: { filepath: string }) => {
     }
   }
 };
+
+export const parse = (option: Option, values?: Values) => {
+  return DataSource.parse(option, values);
+}
+
+export const parseFile = (filepath: string, values: Values) => {
+  return DataSource.parseFile(filepath, values);
+}
+
+export const createDataSource = (option: Option) => {
+  return DataSource.createDataSource(option);
+}

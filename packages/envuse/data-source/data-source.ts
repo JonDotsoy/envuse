@@ -8,12 +8,16 @@ import { StatementObject } from "./statements/comps/StatementObject";
 import fs from "fs";
 
 
-type Option =
+export type Option =
   | Buffer
   | {
       filename?: string | null;
       body: Buffer;
     };
+
+export type Values = {
+  [k: string]: any;
+};
 
 /** AST Parser */
 export class DataSource {
@@ -82,7 +86,7 @@ export class DataSource {
     };
   }
 
-  static parse(options: Option, values?: { [k: string]: any }) {
+  static parse(options: Option, values?: Values) {
     const ast = this.createDataSource(options);
 
     const operatorsList = ast.elementList

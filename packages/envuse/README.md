@@ -84,14 +84,91 @@ import "envuse/register";
 
 ## parse
 
-## load data source (AST)
+Use the parse method to parse a buffer with the content envuse format.
+
+```ts
+import { parse } from "envuse";
+
+const buf = Buffer.from("FOO=BAR");
+
+const { parsed } = parse(buf);
+
+console.log(parsed); // { FOO: "BAR" }
+```
+
+## parse file
+
+Similar to the parse method, but read and parse the content into file.
+
+```ts
+import { parseFile } from "envuse";
+
+const { parsed } = parseFile("my_file.envuse");
+
+console.log(parsed); // { FOO: "BAR" }
+```
+
+## create data source (AST)
+
+This method return the [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree) from a Buffer.
+
+```ts
+import { createDataSource } from "envuse";
+
+const buf = Buffer.from("FOO=bar\nBAZ=qux\n", "utf8");
+
+const ast = createDataSource(buf);
+
+console.log(JSON.stringify(ast));
+// {
+//   "$type": "Block",
+//   "pos": 0,
+//   "end": 16,
+//   "children": [
+//     {
+//       "$type": "Variable",
+//       "pos": 0,
+//       "end": 8,
+//       "keyVariable": {
+//         "$type": "VariableKey",
+//         "pos": 0,
+//         "end": 3,
+//         "value": "FOO"
+//       },
+//       "valueVariable": {
+//         "$type": "VariableValue",
+//         "pos": 4,
+//         "end": 8,
+//         "value": "bar"
+//       }
+//     },
+//     {
+//       "$type": "Variable",
+//       "pos": 8,
+//       "end": 16,
+//       "keyVariable": {
+//         "$type": "VariableKey",
+//         "pos": 8,
+//         "end": 11,
+//         "value": "BAZ"
+//       },
+//       "valueVariable": {
+//         "$type": "VariableValue",
+//         "pos": 12,
+//         "end": 16,
+//         "value": "qux"
+//       }
+//     }
+//   ]
+// }
+```
 
 ## Contribution
 
 > Before you must not have files compile (`.d.ts`, `.js` and `.js.map`). You can clean the source with the command below.
 >
 > ```shell
-> $ rm src/**/*.{js,js.map,d.ts}
+> $ rm {data-source/**/,}*{.js,.js.map,.d.ts}
 > ```
 >
 > This command remove only files with extensions `.d.ts`, `.js` and `.js.map`.
