@@ -1,6 +1,6 @@
 # envuse
 
-![](https://github.com/JonDotsoy/envuse/blob/feature/envuse-file-parse/packages/envuse/assets/brand/brand@250w.png?raw=true)
+![](./assets/brand/brand@250w.png)
 
 Module to load environment variables from a `.envuse` file into the `process.env`.
 
