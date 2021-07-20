@@ -2,4 +2,4 @@
 
 Syntax for the Envuse language.
 
-![](./assets/demo2.png)
+![](assets/demo2.png)
