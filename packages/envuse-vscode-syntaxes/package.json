@@ -1,0 +1,34 @@
+{
+  "name": "envuse",
+  "displayName": "Envuse",
+  "publisher": "jondotsoy",
+  "description": "Module to load environment variables from a `.envuse` file into the `process.env`.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.58.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "envuse",
+        "aliases": [
+          "Envuse Syntax",
+          "envuse"
+        ],
+        "extensions": [
+          ".envuse"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "envuse",
+        "scopeName": "source.envuse",
+        "path": "./syntaxes/envuse.tmLanguage.json"
+      }
+    ]
+  }
+}

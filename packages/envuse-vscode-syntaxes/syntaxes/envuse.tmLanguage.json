@@ -1,0 +1,118 @@
+{
+  "fileTypes": [
+    "envuse"
+  ],
+  "name": "envuse",
+  "patterns": [
+    {
+      "include": "#main"
+    }
+  ],
+  "scopeName": "source.envuse",
+  "uuid": "",
+  "repository": {
+    "main": {
+      "patterns": [
+        {
+          "match": "^([a-zA-Z0-9][a-zA-Z0-9_-]*)\\s*(=)\\s*(.*)$",
+          "captures": {
+            "1": {
+              "name": "variable, meta.property-name.envuse"
+            },
+            "2": {
+              "name": "constant.other.symbol.envuse"
+            },
+            "3": {
+              "name": "storage.envuse"
+            }
+          }
+        },
+        {
+          "begin": "^(#;\\s*)(if)",
+          "beginCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            },
+            "2": {
+              "name": "comment.block.documentation.envuse"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#main__1"
+            }
+          ],
+          "end": "^(#;\\s*)(fi)$",
+          "endCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            },
+            "2": {
+              "name": "comment.block.documentation.envuse"
+            }
+          }
+        },
+        {
+          "match": "(#.*)",
+          "name": "comment.envuse"
+        }
+      ]
+    },
+    "main__1": {
+      "patterns": [
+        {
+          "include": "#main"
+        },
+        {
+          "include": "#sentences"
+        }
+      ]
+    },
+    "sentences": {
+      "patterns": [
+        {
+          "begin": "(\"|')",
+          "beginCaptures": {
+            "1": {
+              "name": "string.envuse"
+            }
+          },
+          "contentName": "string.envuse",
+          "end": "(\"|')",
+          "endCaptures": {
+            "1": {
+              "name": "string.envuse"
+            }
+          }
+        },
+        {
+          "match": "(-?\\d[\\d_]*(.\\d[\\d_]*))",
+          "name": "constant.numeric.envuse"
+        },
+        {
+          "match": "(true|false)",
+          "name": "constant.language, constant.language.boolean.envuse"
+        },
+        {
+          "match": "(null)",
+          "name": "constant.language,constant.language.null.envuse"
+        },
+        {
+          "match": "(undefined)",
+          "name": "constant.language,constant.language.undefined.envuse"
+        },
+        {
+          "match": "([a-zA-Z0-9][a-zA-Z0-9_-]*)",
+          "name": "variable, variable punctuation.envuse"
+        },
+        {
+          "match": "(===)",
+          "name": "constant.other.symbol.envuse"
+        }
+      ]
+    },
+    "sentences__1": {
+      "patterns": []
+    }
+  }
+}

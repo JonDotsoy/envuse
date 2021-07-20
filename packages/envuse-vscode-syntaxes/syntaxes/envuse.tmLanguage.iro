@@ -1,0 +1,114 @@
+name                                  = envuse
+file_extensions []                    = envuse;
+
+styles [] {
+   .comments : style {
+      color                           = #008000
+      textmate_scope                  = comment
+   }
+   .variableKey : style {
+      color                           = #0070C1
+      textmate_scope                  = variable, meta.property-name
+   }
+   .variableValue : style {
+      color                           = #A31515
+      textmate_scope                  = storage
+   }
+   .spacial : style {
+      color = "black";
+      textmate_scope                  = constant.other.symbol
+   }
+   .statement : style {
+      color = #AF00DB
+      textmate_scope                  = comment.block.documentation
+   }  
+   .instance_name : style {
+      color = #0070C1
+      textmate_scope                  = variable, variable punctuation
+   }
+   .boolean : style {
+      color = #0000FF
+      textmate_scope                  = constant.language, constant.language.boolean
+   }
+   .number : style {
+      color = #098658
+      textmate_scope                  = constant.numeric
+   }
+   .string : style {
+      color = #A31515
+      textmate_scope                  = string
+   }
+   .null : style {
+      color = #0000FF
+      textmate_scope                  = constant.language,constant.language.null
+   }
+   .undefined : style {
+      color = #0000FF
+      textmate_scope                  = constant.language,constant.language.undefined
+   }
+}
+
+__variableKey = ([a-zA-Z0-9][a-zA-Z0-9_-]*)
+__variableValue = (.*)
+
+contexts[] {
+   main : context {
+
+      : pattern {
+         regex \= ^$${__variableKey}\s*(=)\s*$${__variableValue}$
+         styles [] = .variableKey, .spacial, .variableValue;
+      }
+
+      : inline_push {
+         regex \= ^(#;\s*)(if)
+         styles [] =  .comments, .statement;
+         : pop {
+            regex \= ^(#;\s*)(fi)$
+            styles [] = .comments, .statement;
+         }
+         : include "main";
+         : include "sentences";
+      }
+
+      : pattern {
+         regex \= (#.*)
+         styles [] = .comments;
+      }
+   }
+   
+   sentences : context {
+      : inline_push {
+         regex \= ("|')
+         styles [] = .string;
+         default_style = .string
+         : pop {
+            regex = ("|')
+            styles [] = .string;
+         }
+      }
+      : pattern {
+         regex \= (-?\d[\d_]*(.\d[\d_]*))
+         styles = .number
+      }
+      : pattern {
+         regex \= (true|false)
+         styles [] = .boolean;
+      }
+      : pattern {
+         regex \= (null)
+         styles [] = .null;
+      }
+      : pattern {
+         regex \= (undefined)
+         styles [] = .undefined;
+      }
+      : pattern {
+         regex \= $${__variableKey}
+         styles [] = .instance_name;
+      }
+      : pattern {
+         regex \= (===)
+         styles [] = .spacial;
+      }
+   }
+}

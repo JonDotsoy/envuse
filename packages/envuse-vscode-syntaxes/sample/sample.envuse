@@ -1,0 +1,6 @@
+# a comment
+ABC=ABC
+CDE="cde"
+#; if true === a.b.c === "abc"
+FGE='fge'
+#; fi
