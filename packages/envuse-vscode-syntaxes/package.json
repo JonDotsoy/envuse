@@ -1,11 +1,12 @@
 {
-  "name": "envuse",
+  "name": "envuse-language",
   "displayName": "Envuse Language support",
   "publisher": "jondotsoy",
+  "license": "MIT",
   "description": "Module to load environment variables from a `.envuse` file into the `process.env`.",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "engines": {
-    "vscode": "^1.58.0"
+    "vscode": "^1.22.0"
   },
   "categories": [
     "Programming Languages"
@@ -30,5 +31,10 @@
         "path": "./syntaxes/envuse.tmLanguage.json"
       }
     ]
+  },
+  "repository": {
+    "directory": "./packages/envuse-vscode-syntaxes",
+    "type": "git",
+    "url": "https://github.com/JonDotsoy/envuse.git"
   }
 }
