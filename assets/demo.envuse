@@ -1,0 +1,16 @@
+# .envuse
+
+API_KEY=1234567890
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=postgres
+
+# .envuse
+
+API_KEY=1234567890
+
+#; if SHELL_SYSTEM === 'windows'
+COLOR_TERM=false
+#; fi
