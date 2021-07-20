@@ -1,6 +1,6 @@
 {
   "name": "envuse",
-  "displayName": "Envuse",
+  "displayName": "Envuse Language support",
   "publisher": "jondotsoy",
   "description": "Module to load environment variables from a `.envuse` file into the `process.env`.",
   "version": "0.0.1",
