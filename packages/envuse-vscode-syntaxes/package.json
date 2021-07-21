@@ -5,7 +5,7 @@
   "publisher": "envuse",
   "license": "MIT",
   "description": "Module to load environment variables from a `.envuse` file into the `process.env`.",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "engines": {
     "vscode": "^1.22.0"
   },
@@ -22,7 +22,8 @@
         ],
         "extensions": [
           ".envuse"
-        ]
+        ],
+        "configuration": "./language-configuration.json"
       }
     ],
     "grammars": [
