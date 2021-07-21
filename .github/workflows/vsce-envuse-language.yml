@@ -11,10 +11,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Install VSCE
-        run: npm i -g vsce
       - name: Login vsce
-        run: echo "${{ secrets.VSCE_PERSONAL_TOKEN }}" | vsce login ${{ secrets.VSCE_PUBLISHER }}
+        run: echo "${{ secrets.VSCE_PERSONAL_TOKEN }}" | npx vsce login ${{ secrets.VSCE_PUBLISHER }}
       - name: publish vsce-envuse-language
         working-directory: packages/envuse-vscode-syntaxes
-        run: vsce publish
+        run: npx vsce publish
