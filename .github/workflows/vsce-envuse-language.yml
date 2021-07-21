@@ -15,11 +15,9 @@ jobs:
           node-version: 16.3.0
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Login vsce
-        run: echo "require('fs').writeFileSync('sample', JSON.stringify({publishers:[{name:process.env.VSCE_PUBLISHER,pat:process.env.VSCE_PERSONAL_TOKEN}]}))" | node -
+      - run: npm install
+      - uses: lannonbr/vsce-action@master
+        with:
+          args: "publish -p $VSCE_PERSONAL_TOKEN"
         env:
-          VSCE_PUBLISHER: ${{ secrets.VSCE_PUBLISHER }}
           VSCE_PERSONAL_TOKEN: ${{ secrets.VSCE_PERSONAL_TOKEN }}
-      - name: publish vsce-envuse-language
-        working-directory: packages/envuse-vscode-syntaxes
-        run: npx vsce publish
