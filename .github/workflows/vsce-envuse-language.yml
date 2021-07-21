@@ -1,0 +1,20 @@
+name: VSCE Publish Envuse Language Extension
+
+on:
+  push:
+    tags:
+      - vsce-envuse/v*
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install VSCE
+        run: npm i -g vsce
+      - name: Login vsce
+        run: echo "${{ secrets.VSCE_PERSONAL_TOKEN }}" | vsce login ${{ secrets.VSCE_PUBLISHER }}
+      - name: publish vsce-envuse-language
+        working-directory: packages/envuse-vscode-syntaxes
+        run: vsce publish
