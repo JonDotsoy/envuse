@@ -63,10 +63,11 @@ styles [] {
    }
 }
 
-
-__variableKey = ([a-zA-Z0-9][a-zA-Z0-9_-]*)
-__variableValue = ((?:\".*\")|(?:\'.*\')|(?:[^#]*))
-__commentExpr = (?:(#\s*.*)?)
+// (-?\d[\d_]*(.\d[\d_]*))
+__numberExpr     = (-?\\d[\\d_]*(?:(?:\\.(?:\\d[\\d_]*))|n)?)
+__variableKey    = ([a-zA-Z0-9][a-zA-Z0-9_-]*)
+__variableValue  = ((?:\".*\")|(?:\'.*\')|(?:[^#]*))
+__commentExpr    = (?:(#\s*.*)?)
 
 contexts[] {
    main : context {
@@ -104,19 +105,39 @@ contexts[] {
          : inline_push {
             regex            \= (:)
             styles []         = .spacial;
-            default_style     = .err
             
-            : pop {
+            : eol_pop {}
+            
+            : inline_push {
+               regex            \= (number)
+               styles []         = .type;
+               
+               : eol_pop {}
+               : include "variable_part_value_number" ;
+            }
+            
+            : inline_push {
+               regex            \= (boolean)
+               styles []         = .type;
+               
+               : eol_pop {}
+               : include "variable_part_value_boolean" ;
+            }
+
+            : inline_push {
                regex      \= $${__variableKey}
                styles []   = .type;
+
+               : eol_pop {}
+               : include "variable_part_value_string" ;
             }
          }
          
-         : include "variable_part_value" ;
+         : include "variable_part_value_string" ;
       }
    }
    
-   variable_part_value : context {
+   variable_part_value_string : context {
       : inline_push {
          regex            \= (=)
          styles []         = .spacial;
@@ -125,7 +146,7 @@ contexts[] {
 
          : inline_push {
             regex            \= $${__variableValue}
-            styles []         = .variableValue;
+            styles []         = .string;
 
             : eol_pop {}
 
@@ -140,6 +161,53 @@ contexts[] {
       }
    }
    
+   variable_part_value_number : context {
+      : inline_push {
+         regex            \= (=)
+         styles []         = .spacial;
+
+         : eol_pop {}
+
+         : inline_push {
+            regex            \= $${__variableValue}
+            styles []         = .number;
+
+            : eol_pop {}
+
+            : inline_push {
+               regex      \= $${__commentExpr}
+               styles []   = .comments;
+               default_style     = .err
+
+               : eol_pop {}
+            }
+         }
+      }
+   }
+   
+   variable_part_value_boolean : context {
+      : inline_push {
+         regex            \= (=)
+         styles []         = .spacial;
+
+         : eol_pop {}
+
+         : inline_push {
+            regex            \= $${__variableValue}
+            styles []         = .boolean;
+
+            : eol_pop {}
+
+            : inline_push {
+               regex      \= $${__commentExpr}
+               styles []   = .comments;
+               default_style     = .err
+
+               : eol_pop {}
+            }
+         }
+      }
+   }
    
    sentences : context {
       : inline_push {
@@ -161,7 +229,7 @@ contexts[] {
          }
       }
       : pattern {
-         regex \= (-?\d[\d_]*(.\d[\d_]*))
+         regex \= $${__numberExpr}
          styles = .number
       }
       : pattern {

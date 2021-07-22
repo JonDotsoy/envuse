@@ -171,22 +171,27 @@
                 <string>constant.other.symbol.envuse</string>
               </dict>
             </dict>
-            <key>contentName</key>
-            <string>none.envuse</string>
+            <key>patterns</key>
+            <array>
+              <dict>
+                <key>include</key>
+                <string>#main__5</string>
+              </dict>
+            </array>
             <key>end</key>
-            <string>([a-zA-Z0-9][a-zA-Z0-9_-]*)</string>
+            <string>(^(?=.{0,1})(?:|))</string>
             <key>endCaptures</key>
             <dict>
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>support.type.envuse</string>
+                <string>comment.envuse</string>
               </dict>
             </dict>
           </dict>
           <dict>
             <key>include</key>
-            <string>#variable_part_value</string>
+            <string>#variable_part_value_string</string>
           </dict>
         </array>
       </dict>
@@ -194,6 +199,123 @@
       <dict>
         <key>patterns</key>
         <array>
+          <dict>
+            <key>begin</key>
+            <string>(number)</string>
+            <key>beginCaptures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>support.type.envuse</string>
+              </dict>
+            </dict>
+            <key>patterns</key>
+            <array>
+              <dict>
+                <key>include</key>
+                <string>#main__6</string>
+              </dict>
+            </array>
+            <key>end</key>
+            <string>(^(?=.{0,1})(?:|))</string>
+            <key>endCaptures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>comment.envuse</string>
+              </dict>
+            </dict>
+          </dict>
+          <dict>
+            <key>begin</key>
+            <string>(boolean)</string>
+            <key>beginCaptures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>support.type.envuse</string>
+              </dict>
+            </dict>
+            <key>patterns</key>
+            <array>
+              <dict>
+                <key>include</key>
+                <string>#main__7</string>
+              </dict>
+            </array>
+            <key>end</key>
+            <string>(^(?=.{0,1})(?:|))</string>
+            <key>endCaptures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>comment.envuse</string>
+              </dict>
+            </dict>
+          </dict>
+          <dict>
+            <key>begin</key>
+            <string>([a-zA-Z0-9][a-zA-Z0-9_-]*)</string>
+            <key>beginCaptures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>support.type.envuse</string>
+              </dict>
+            </dict>
+            <key>patterns</key>
+            <array>
+              <dict>
+                <key>include</key>
+                <string>#main__8</string>
+              </dict>
+            </array>
+            <key>end</key>
+            <string>(^(?=.{0,1})(?:|))</string>
+            <key>endCaptures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>comment.envuse</string>
+              </dict>
+            </dict>
+          </dict>
+        </array>
+      </dict>
+      <key>main__6</key>
+      <dict>
+        <key>patterns</key>
+        <array>
+          <dict>
+            <key>include</key>
+            <string>#variable_part_value_number</string>
+          </dict>
+        </array>
+      </dict>
+      <key>main__7</key>
+      <dict>
+        <key>patterns</key>
+        <array>
+          <dict>
+            <key>include</key>
+            <string>#variable_part_value_boolean</string>
+          </dict>
+        </array>
+      </dict>
+      <key>main__8</key>
+      <dict>
+        <key>patterns</key>
+        <array>
+          <dict>
+            <key>include</key>
+            <string>#variable_part_value_string</string>
+          </dict>
         </array>
       </dict>
       <key>sentences</key>
@@ -250,7 +372,7 @@
           </dict>
           <dict>
             <key>match</key>
-            <string>(-?\d[\d_]*(.\d[\d_]*))</string>
+            <string>(-?\d[\d_]*(?:(?:\.(?:\d[\d_]*))|n)?)</string>
             <key>name</key>
             <string>constant.numeric.envuse</string>
           </dict>
@@ -302,7 +424,7 @@
         <array>
         </array>
       </dict>
-      <key>variable_part_value</key>
+      <key>variable_part_value_boolean</key>
       <dict>
         <key>patterns</key>
         <array>
@@ -321,7 +443,7 @@
             <array>
               <dict>
                 <key>include</key>
-                <string>#variable_part_value__1</string>
+                <string>#variable_part_value_boolean__1</string>
               </dict>
             </array>
             <key>end</key>
@@ -337,7 +459,7 @@
           </dict>
         </array>
       </dict>
-      <key>variable_part_value__1</key>
+      <key>variable_part_value_boolean__1</key>
       <dict>
         <key>patterns</key>
         <array>
@@ -349,14 +471,14 @@
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>string, string source.envuse</string>
+                <string>constant.language, constant.language.boolean.envuse</string>
               </dict>
             </dict>
             <key>patterns</key>
             <array>
               <dict>
                 <key>include</key>
-                <string>#variable_part_value__2</string>
+                <string>#variable_part_value_boolean__2</string>
               </dict>
             </array>
             <key>end</key>
@@ -372,7 +494,7 @@
           </dict>
         </array>
       </dict>
-      <key>variable_part_value__2</key>
+      <key>variable_part_value_boolean__2</key>
       <dict>
         <key>patterns</key>
         <array>
@@ -402,7 +524,219 @@
           </dict>
         </array>
       </dict>
-      <key>variable_part_value__3</key>
+      <key>variable_part_value_boolean__3</key>
+      <dict>
+        <key>patterns</key>
+        <array>
+        </array>
+      </dict>
+      <key>variable_part_value_number</key>
+      <dict>
+        <key>patterns</key>
+        <array>
+          <dict>
+            <key>begin</key>
+            <string>(=)</string>
+            <key>beginCaptures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>constant.other.symbol.envuse</string>
+              </dict>
+            </dict>
+            <key>patterns</key>
+            <array>
+              <dict>
+                <key>include</key>
+                <string>#variable_part_value_number__1</string>
+              </dict>
+            </array>
+            <key>end</key>
+            <string>(^(?=.{0,1})(?:|))</string>
+            <key>endCaptures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>comment.envuse</string>
+              </dict>
+            </dict>
+          </dict>
+        </array>
+      </dict>
+      <key>variable_part_value_number__1</key>
+      <dict>
+        <key>patterns</key>
+        <array>
+          <dict>
+            <key>begin</key>
+            <string>((?:&quot;.*&quot;)|(?:&apos;.*&apos;)|(?:[^\x{0023}]*))</string>
+            <key>beginCaptures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>constant.numeric.envuse</string>
+              </dict>
+            </dict>
+            <key>patterns</key>
+            <array>
+              <dict>
+                <key>include</key>
+                <string>#variable_part_value_number__2</string>
+              </dict>
+            </array>
+            <key>end</key>
+            <string>(^(?=.{0,1})(?:|))</string>
+            <key>endCaptures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>comment.envuse</string>
+              </dict>
+            </dict>
+          </dict>
+        </array>
+      </dict>
+      <key>variable_part_value_number__2</key>
+      <dict>
+        <key>patterns</key>
+        <array>
+          <dict>
+            <key>begin</key>
+            <string>(?:(# *.*)?)</string>
+            <key>beginCaptures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>comment.envuse</string>
+              </dict>
+            </dict>
+            <key>contentName</key>
+            <string>none.envuse</string>
+            <key>end</key>
+            <string>(^(?=.{0,1})(?:|))</string>
+            <key>endCaptures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>comment.envuse</string>
+              </dict>
+            </dict>
+          </dict>
+        </array>
+      </dict>
+      <key>variable_part_value_number__3</key>
+      <dict>
+        <key>patterns</key>
+        <array>
+        </array>
+      </dict>
+      <key>variable_part_value_string</key>
+      <dict>
+        <key>patterns</key>
+        <array>
+          <dict>
+            <key>begin</key>
+            <string>(=)</string>
+            <key>beginCaptures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>constant.other.symbol.envuse</string>
+              </dict>
+            </dict>
+            <key>patterns</key>
+            <array>
+              <dict>
+                <key>include</key>
+                <string>#variable_part_value_string__1</string>
+              </dict>
+            </array>
+            <key>end</key>
+            <string>(^(?=.{0,1})(?:|))</string>
+            <key>endCaptures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>comment.envuse</string>
+              </dict>
+            </dict>
+          </dict>
+        </array>
+      </dict>
+      <key>variable_part_value_string__1</key>
+      <dict>
+        <key>patterns</key>
+        <array>
+          <dict>
+            <key>begin</key>
+            <string>((?:&quot;.*&quot;)|(?:&apos;.*&apos;)|(?:[^\x{0023}]*))</string>
+            <key>beginCaptures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>string.envuse</string>
+              </dict>
+            </dict>
+            <key>patterns</key>
+            <array>
+              <dict>
+                <key>include</key>
+                <string>#variable_part_value_string__2</string>
+              </dict>
+            </array>
+            <key>end</key>
+            <string>(^(?=.{0,1})(?:|))</string>
+            <key>endCaptures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>comment.envuse</string>
+              </dict>
+            </dict>
+          </dict>
+        </array>
+      </dict>
+      <key>variable_part_value_string__2</key>
+      <dict>
+        <key>patterns</key>
+        <array>
+          <dict>
+            <key>begin</key>
+            <string>(?:(# *.*)?)</string>
+            <key>beginCaptures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>comment.envuse</string>
+              </dict>
+            </dict>
+            <key>contentName</key>
+            <string>none.envuse</string>
+            <key>end</key>
+            <string>(^(?=.{0,1})(?:|))</string>
+            <key>endCaptures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>comment.envuse</string>
+              </dict>
+            </dict>
+          </dict>
+        </array>
+      </dict>
+      <key>variable_part_value_string__3</key>
       <dict>
         <key>patterns</key>
         <array>

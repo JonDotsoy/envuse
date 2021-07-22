@@ -105,21 +105,104 @@
               "name": "constant.other.symbol.envuse"
             }
           },
-          "contentName": "none.envuse",
-          "end": "([a-zA-Z0-9][a-zA-Z0-9_-]*)",
+          "patterns": [
+            {
+              "include": "#main__5"
+            }
+          ],
+          "end": "(^(?=.{0,1})(?:|))",
           "endCaptures": {
             "1": {
-              "name": "support.type.envuse"
+              "name": "comment.envuse"
             }
           }
         },
         {
-          "include": "#variable_part_value"
+          "include": "#variable_part_value_string"
         }
       ]
     },
     "main__5": {
-      "patterns": []
+      "patterns": [
+        {
+          "begin": "(number)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.type.envuse"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#main__6"
+            }
+          ],
+          "end": "(^(?=.{0,1})(?:|))",
+          "endCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            }
+          }
+        },
+        {
+          "begin": "(boolean)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.type.envuse"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#main__7"
+            }
+          ],
+          "end": "(^(?=.{0,1})(?:|))",
+          "endCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            }
+          }
+        },
+        {
+          "begin": "([a-zA-Z0-9][a-zA-Z0-9_-]*)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.type.envuse"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#main__8"
+            }
+          ],
+          "end": "(^(?=.{0,1})(?:|))",
+          "endCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            }
+          }
+        }
+      ]
+    },
+    "main__6": {
+      "patterns": [
+        {
+          "include": "#variable_part_value_number"
+        }
+      ]
+    },
+    "main__7": {
+      "patterns": [
+        {
+          "include": "#variable_part_value_boolean"
+        }
+      ]
+    },
+    "main__8": {
+      "patterns": [
+        {
+          "include": "#variable_part_value_string"
+        }
+      ]
     },
     "sentences": {
       "patterns": [
@@ -154,7 +237,7 @@
           }
         },
         {
-          "match": "(-?\\d[\\d_]*(.\\d[\\d_]*))",
+          "match": "(-?\\d[\\d_]*(?:(?:\\.(?:\\d[\\d_]*))|n)?)",
           "name": "constant.numeric.envuse"
         },
         {
@@ -187,7 +270,7 @@
     "sentences__2": {
       "patterns": []
     },
-    "variable_part_value": {
+    "variable_part_value_boolean": {
       "patterns": [
         {
           "begin": "(=)",
@@ -198,7 +281,7 @@
           },
           "patterns": [
             {
-              "include": "#variable_part_value__1"
+              "include": "#variable_part_value_boolean__1"
             }
           ],
           "end": "(^(?=.{0,1})(?:|))",
@@ -210,18 +293,18 @@
         }
       ]
     },
-    "variable_part_value__1": {
+    "variable_part_value_boolean__1": {
       "patterns": [
         {
           "begin": "((?:\".*\")|(?:'.*')|(?:[^\\x{0023}]*))",
           "beginCaptures": {
             "1": {
-              "name": "string, string source.envuse"
+              "name": "constant.language, constant.language.boolean.envuse"
             }
           },
           "patterns": [
             {
-              "include": "#variable_part_value__2"
+              "include": "#variable_part_value_boolean__2"
             }
           ],
           "end": "(^(?=.{0,1})(?:|))",
@@ -233,7 +316,7 @@
         }
       ]
     },
-    "variable_part_value__2": {
+    "variable_part_value_boolean__2": {
       "patterns": [
         {
           "begin": "(?:(# *.*)?)",
@@ -252,7 +335,143 @@
         }
       ]
     },
-    "variable_part_value__3": {
+    "variable_part_value_boolean__3": {
+      "patterns": []
+    },
+    "variable_part_value_number": {
+      "patterns": [
+        {
+          "begin": "(=)",
+          "beginCaptures": {
+            "1": {
+              "name": "constant.other.symbol.envuse"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#variable_part_value_number__1"
+            }
+          ],
+          "end": "(^(?=.{0,1})(?:|))",
+          "endCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            }
+          }
+        }
+      ]
+    },
+    "variable_part_value_number__1": {
+      "patterns": [
+        {
+          "begin": "((?:\".*\")|(?:'.*')|(?:[^\\x{0023}]*))",
+          "beginCaptures": {
+            "1": {
+              "name": "constant.numeric.envuse"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#variable_part_value_number__2"
+            }
+          ],
+          "end": "(^(?=.{0,1})(?:|))",
+          "endCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            }
+          }
+        }
+      ]
+    },
+    "variable_part_value_number__2": {
+      "patterns": [
+        {
+          "begin": "(?:(# *.*)?)",
+          "beginCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            }
+          },
+          "contentName": "none.envuse",
+          "end": "(^(?=.{0,1})(?:|))",
+          "endCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            }
+          }
+        }
+      ]
+    },
+    "variable_part_value_number__3": {
+      "patterns": []
+    },
+    "variable_part_value_string": {
+      "patterns": [
+        {
+          "begin": "(=)",
+          "beginCaptures": {
+            "1": {
+              "name": "constant.other.symbol.envuse"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#variable_part_value_string__1"
+            }
+          ],
+          "end": "(^(?=.{0,1})(?:|))",
+          "endCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            }
+          }
+        }
+      ]
+    },
+    "variable_part_value_string__1": {
+      "patterns": [
+        {
+          "begin": "((?:\".*\")|(?:'.*')|(?:[^\\x{0023}]*))",
+          "beginCaptures": {
+            "1": {
+              "name": "string.envuse"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#variable_part_value_string__2"
+            }
+          ],
+          "end": "(^(?=.{0,1})(?:|))",
+          "endCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            }
+          }
+        }
+      ]
+    },
+    "variable_part_value_string__2": {
+      "patterns": [
+        {
+          "begin": "(?:(# *.*)?)",
+          "beginCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            }
+          },
+          "contentName": "none.envuse",
+          "end": "(^(?=.{0,1})(?:|))",
+          "endCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            }
+          }
+        }
+      ]
+    },
+    "variable_part_value_string__3": {
       "patterns": []
     }
   }
