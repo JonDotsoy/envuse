@@ -4,9 +4,12 @@
   "description": "",
   "main": "index.js",
   "workspaces": [
-    "packages/envuse"
+    "packages/envuse",
+    "packages/envuse-vscode-syntaxes"
   ],
   "scripts": {
+    "vsce-syntax:git-tag-current":"npm run git-tag-current -w packages/envuse-vscode-syntaxes",
+    "env": "env",
     "prepare": "husky install"
   },
   "repository": {
