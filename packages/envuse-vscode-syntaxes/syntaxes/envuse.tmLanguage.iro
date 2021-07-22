@@ -1,18 +1,25 @@
 name                                  = envuse
 file_extensions []                    = envuse;
 
+description                      = Envuse syntax
+
+
 styles [] {
    .comments : style {
       color                           = #008000
       textmate_scope                  = comment
    }
+   .comments_documentation: style {
+      color                           = #008000
+      textmate_scope                  = comment.block.documentation, comment
+   }
    .variableKey : style {
       color                           = #0070C1
-      textmate_scope                  = variable, meta.property-name
+      textmate_scope                  = variable, variable.other
    }
    .variableValue : style {
       color                           = #A31515
-      textmate_scope                  = storage
+      textmate_scope                  = string, string source
    }
    .spacial : style {
       color = "black";
@@ -46,43 +53,110 @@ styles [] {
       color = #0000FF
       textmate_scope                  = constant.language,constant.language.undefined
    }
+   .err: style {
+      color                           = red
+      textmate_scope                  = none
+   }
+   .type: style {
+      color                           = #267F99
+      textmate_scope                  = support.type
+   }
 }
 
+
 __variableKey = ([a-zA-Z0-9][a-zA-Z0-9_-]*)
-__variableValue = (.*)
+__variableValue = ((?:\".*\")|(?:\'.*\')|(?:[^#]*))
+__commentExpr = (?:(#\s*.*)?)
 
 contexts[] {
    main : context {
-
-      : pattern {
-         regex \= ^$${__variableKey}\s*(=)\s*$${__variableValue}$
-         styles [] = .variableKey, .spacial, .variableValue;
-      }
-
       : inline_push {
-         regex \= ^(#;\s*)(if)
-         styles [] =  .comments, .statement;
-         : pop {
-            regex \= ^(#;\s*)(fi)$
-            styles [] = .comments, .statement;
-         }
-         : include "main";
+         regex            \= ^(\s*#;\s*(?:if))
+         styles []         = .comments;
+
+         : eol_pop {}
          : include "sentences";
       }
 
-      : pattern {
-         regex \= (#.*)
-         styles [] = .comments;
+      : inline_push {
+         regex            \= ^(\s*###)
+         styles []         = .comments_documentation;
+         default_style     = .comments_documentation
+
+         : pop {
+            regex      \= (###\s*)$
+            styles []   = .comments_documentation;
+         }
+      }
+
+      : inline_push {
+         regex      \= (#)
+         styles []   = .comments;
+         default_style     = .comments
+         : eol_pop {}
+      }
+
+      : inline_push {
+         regex            \= $${__variableKey}
+         styles []         = .variableKey;
+         : eol_pop {}
+         
+         : inline_push {
+            regex            \= (:)
+            styles []         = .spacial;
+            default_style     = .err
+            
+            : pop {
+               regex      \= $${__variableKey}
+               styles []   = .type;
+            }
+         }
+         
+         : include "variable_part_value" ;
       }
    }
    
+   variable_part_value : context {
+      : inline_push {
+         regex            \= (=)
+         styles []         = .spacial;
+
+         : eol_pop {}
+
+         : inline_push {
+            regex            \= $${__variableValue}
+            styles []         = .variableValue;
+
+            : eol_pop {}
+
+            : inline_push {
+               regex      \= $${__commentExpr}
+               styles []   = .comments;
+               default_style     = .err
+
+               : eol_pop {}
+            }
+         }
+      }
+   }
+   
+   
    sentences : context {
       : inline_push {
-         regex \= ("|')
+         regex \= (")
          styles [] = .string;
          default_style = .string
          : pop {
-            regex = ("|')
+            regex = (")
+            styles [] = .string;
+         }
+      }
+      : inline_push {
+         regex \= (')
+         styles [] = .string;
+         default_style = .string
+         : pop {
+            regex = (')
             styles [] = .string;
          }
       }
@@ -105,10 +179,12 @@ contexts[] {
       : pattern {
          regex \= $${__variableKey}
          styles [] = .instance_name;
+         description = Variable Name
       }
       : pattern {
          regex \= (===)
          styles [] = .spacial;
+         description = Symbol Equal
       }
    }
 }

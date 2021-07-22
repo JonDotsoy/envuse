@@ -14,27 +14,10 @@
     "main": {
       "patterns": [
         {
-          "match": "^([a-zA-Z0-9][a-zA-Z0-9_-]*)\\s*(=)\\s*(.*)$",
-          "captures": {
-            "1": {
-              "name": "variable, meta.property-name.envuse"
-            },
-            "2": {
-              "name": "constant.other.symbol.envuse"
-            },
-            "3": {
-              "name": "storage.envuse"
-            }
-          }
-        },
-        {
-          "begin": "^(#;\\s*)(if)",
+          "begin": "^(\\s*#;\\s*(?:if))",
           "beginCaptures": {
             "1": {
               "name": "comment.envuse"
-            },
-            "2": {
-              "name": "comment.block.documentation.envuse"
             }
           },
           "patterns": [
@@ -42,43 +25,128 @@
               "include": "#main__1"
             }
           ],
-          "end": "^(#;\\s*)(fi)$",
+          "end": "(^(?=.{0,1})(?:|))",
           "endCaptures": {
             "1": {
               "name": "comment.envuse"
-            },
-            "2": {
-              "name": "comment.block.documentation.envuse"
             }
           }
         },
         {
-          "match": "(#.*)",
-          "name": "comment.envuse"
+          "begin": "^(\\s*###)",
+          "beginCaptures": {
+            "1": {
+              "name": "comment.block.documentation, comment.envuse"
+            }
+          },
+          "contentName": "comment.block.documentation, comment.envuse",
+          "end": "(###\\s*)$",
+          "endCaptures": {
+            "1": {
+              "name": "comment.block.documentation, comment.envuse"
+            }
+          }
+        },
+        {
+          "begin": "(#)",
+          "beginCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            }
+          },
+          "contentName": "comment.envuse",
+          "end": "(^(?=.{0,1})(?:|))",
+          "endCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            }
+          }
+        },
+        {
+          "begin": "([a-zA-Z0-9][a-zA-Z0-9_-]*)",
+          "beginCaptures": {
+            "1": {
+              "name": "variable, variable.other.envuse"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#main__4"
+            }
+          ],
+          "end": "(^(?=.{0,1})(?:|))",
+          "endCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            }
+          }
         }
       ]
     },
     "main__1": {
       "patterns": [
         {
-          "include": "#main"
-        },
-        {
           "include": "#sentences"
         }
       ]
     },
+    "main__2": {
+      "patterns": []
+    },
+    "main__3": {
+      "patterns": []
+    },
+    "main__4": {
+      "patterns": [
+        {
+          "begin": "(:)",
+          "beginCaptures": {
+            "1": {
+              "name": "constant.other.symbol.envuse"
+            }
+          },
+          "contentName": "none.envuse",
+          "end": "([a-zA-Z0-9][a-zA-Z0-9_-]*)",
+          "endCaptures": {
+            "1": {
+              "name": "support.type.envuse"
+            }
+          }
+        },
+        {
+          "include": "#variable_part_value"
+        }
+      ]
+    },
+    "main__5": {
+      "patterns": []
+    },
     "sentences": {
       "patterns": [
         {
-          "begin": "(\"|')",
+          "begin": "(\")",
           "beginCaptures": {
             "1": {
               "name": "string.envuse"
             }
           },
           "contentName": "string.envuse",
-          "end": "(\"|')",
+          "end": "(\")",
+          "endCaptures": {
+            "1": {
+              "name": "string.envuse"
+            }
+          }
+        },
+        {
+          "begin": "(')",
+          "beginCaptures": {
+            "1": {
+              "name": "string.envuse"
+            }
+          },
+          "contentName": "string.envuse",
+          "end": "(')",
           "endCaptures": {
             "1": {
               "name": "string.envuse"
@@ -103,15 +171,88 @@
         },
         {
           "match": "([a-zA-Z0-9][a-zA-Z0-9_-]*)",
-          "name": "variable, variable punctuation.envuse"
+          "name": "variable, variable punctuation.envuse",
+          "comment": "Variable Name"
         },
         {
           "match": "(===)",
-          "name": "constant.other.symbol.envuse"
+          "name": "constant.other.symbol.envuse",
+          "comment": "Symbol Equal"
         }
       ]
     },
     "sentences__1": {
+      "patterns": []
+    },
+    "sentences__2": {
+      "patterns": []
+    },
+    "variable_part_value": {
+      "patterns": [
+        {
+          "begin": "(=)",
+          "beginCaptures": {
+            "1": {
+              "name": "constant.other.symbol.envuse"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#variable_part_value__1"
+            }
+          ],
+          "end": "(^(?=.{0,1})(?:|))",
+          "endCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            }
+          }
+        }
+      ]
+    },
+    "variable_part_value__1": {
+      "patterns": [
+        {
+          "begin": "((?:\".*\")|(?:'.*')|(?:[^\\x{0023}]*))",
+          "beginCaptures": {
+            "1": {
+              "name": "string, string source.envuse"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#variable_part_value__2"
+            }
+          ],
+          "end": "(^(?=.{0,1})(?:|))",
+          "endCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            }
+          }
+        }
+      ]
+    },
+    "variable_part_value__2": {
+      "patterns": [
+        {
+          "begin": "(?:(# *.*)?)",
+          "beginCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            }
+          },
+          "contentName": "none.envuse",
+          "end": "(^(?=.{0,1})(?:|))",
+          "endCaptures": {
+            "1": {
+              "name": "comment.envuse"
+            }
+          }
+        }
+      ]
+    },
+    "variable_part_value__3": {
       "patterns": []
     }
   }

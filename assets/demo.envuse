@@ -1,16 +1,22 @@
 # .envuse
+##############################
+# Demo file for .envuse
+##############################
 
-API_KEY=1234567890
-DB_HOST=127.0.0.1
-DB_PORT=5432
-DB_USER=postgres
-DB_PASSWORD=postgres
-DB_NAME=postgres
+###
+Comment descriptive
+###
+API_KEY          = cf7d6f43-bb85-4045-a23f-7fb94bfac745 # API key UUIDv4
+DB_HOST          = 127.7.0.1
+DB_PORT : number = 5432 # Database port
+DB_USER          = postgres
+DB_PASSWORD      = postgres
+DB_NAME          = postgres
 
-# .envuse
+#; if SHELL_SYSTEM  ===  'windows'  ===  1_232.3_21_12 === A.D.V
+COLOR_TERM = false
+#; fi
 
-API_KEY=1234567890
-
-#; if SHELL_SYSTEM === 'windows'
-COLOR_TERM=false
+#; if NODE_ENV  ===  'production'
+FORCE_URL_SSL =  true
 #; fi
