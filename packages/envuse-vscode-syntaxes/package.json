@@ -7,7 +7,7 @@
   "description": "Module to load environment variables from a `.envuse` file into the `process.env`.",
   "version": "0.1.14",
   "scripts": {
-    "git-tag-current": "git tag $npm_package_name@$npm_package_version"
+    "git-tag-current": "git tag vsce-$npm_package_name@$npm_package_version"
   },
   "engines": {
     "vscode": "^1.22.0"
