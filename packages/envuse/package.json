@@ -13,7 +13,8 @@
     "dev": "tsc -w",
     "prepare": "tsc",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "git-tag-current": "git tag vsce-$npm_package_name@$npm_package_version"
   },
   "keywords": [
     "client",
