@@ -465,7 +465,7 @@
         <array>
           <dict>
             <key>begin</key>
-            <string>((?:&quot;.*&quot;)|(?:&apos;.*&apos;)|(?:[^\x{0023}]*))</string>
+            <string>(true|false)</string>
             <key>beginCaptures</key>
             <dict>
               <key>1</key>
@@ -571,7 +571,7 @@
         <array>
           <dict>
             <key>begin</key>
-            <string>((?:&quot;.*&quot;)|(?:&apos;.*&apos;)|(?:[^\x{0023}]*))</string>
+            <string>(-?\d[\d_]*(?:(?:\.(?:\d[\d_]*))|n)?)</string>
             <key>beginCaptures</key>
             <dict>
               <key>1</key>

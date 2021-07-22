@@ -14,7 +14,7 @@ DB_PASSWORD       = postgres
 DB_NAME           = postgres
 
 #; if SHELL_SYSTEM  ===  'windows'  ===  1_232.3_21_12 === A.D.V
-COLOR_TERM = false
+COLOR_TERM : boolean = false
 #; fi
 
 #; if NODE_ENV  ===  'production'

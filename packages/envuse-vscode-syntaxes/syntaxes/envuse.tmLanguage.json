@@ -296,7 +296,7 @@
     "variable_part_value_boolean__1": {
       "patterns": [
         {
-          "begin": "((?:\".*\")|(?:'.*')|(?:[^\\x{0023}]*))",
+          "begin": "(true|false)",
           "beginCaptures": {
             "1": {
               "name": "constant.language, constant.language.boolean.envuse"
@@ -364,7 +364,7 @@
     "variable_part_value_number__1": {
       "patterns": [
         {
-          "begin": "((?:\".*\")|(?:'.*')|(?:[^\\x{0023}]*))",
+          "begin": "(-?\\d[\\d_]*(?:(?:\\.(?:\\d[\\d_]*))|n)?)",
           "beginCaptures": {
             "1": {
               "name": "constant.numeric.envuse"

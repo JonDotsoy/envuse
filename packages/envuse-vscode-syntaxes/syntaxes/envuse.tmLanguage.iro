@@ -63,7 +63,8 @@ styles [] {
    }
 }
 
-// (-?\d[\d_]*(.\d[\d_]*))
+
+__booleanExpr    = (true|false)
 __numberExpr     = (-?\\d[\\d_]*(?:(?:\\.(?:\\d[\\d_]*))|n)?)
 __variableKey    = ([a-zA-Z0-9][a-zA-Z0-9_-]*)
 __variableValue  = ((?:\".*\")|(?:\'.*\')|(?:[^#]*))
@@ -169,7 +170,7 @@ contexts[] {
          : eol_pop {}
 
          : inline_push {
-            regex            \= $${__variableValue}
+            regex            \= $${__numberExpr}
             styles []         = .number;
 
             : eol_pop {}
@@ -193,7 +194,7 @@ contexts[] {
          : eol_pop {}
 
          : inline_push {
-            regex            \= $${__variableValue}
+            regex            \= $${__booleanExpr}
             styles []         = .boolean;
 
             : eol_pop {}
@@ -233,7 +234,7 @@ contexts[] {
          styles = .number
       }
       : pattern {
-         regex \= (true|false)
+         regex \= $${__booleanExpr}
          styles [] = .boolean;
       }
       : pattern {
