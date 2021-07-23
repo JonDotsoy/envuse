@@ -9,7 +9,7 @@
     }
   ],
   "scopeName": "source.envuse",
-  "uuid": "",
+  "uuid": "4b0672cb-8881-4e15-bda7-a9a24ea8bba5",
   "repository": {
     "main": {
       "patterns": [
@@ -237,7 +237,7 @@
           }
         },
         {
-          "match": "(-?\\d[\\d_]*(?:(?:\\.(?:\\d[\\d_]*))|n)?)",
+          "match": "(-?\\d(_?\\d)*(?:(?:\\.(?:\\d(_?\\d)*))|n)?)",
           "name": "constant.numeric.envuse"
         },
         {
@@ -364,7 +364,7 @@
     "variable_part_value_number__1": {
       "patterns": [
         {
-          "begin": "(-?\\d[\\d_]*(?:(?:\\.(?:\\d[\\d_]*))|n)?)",
+          "begin": "(-?\\d(_?\\d)*(?:(?:\\.(?:\\d(_?\\d)*))|n)?)",
           "beginCaptures": {
             "1": {
               "name": "constant.numeric.envuse"

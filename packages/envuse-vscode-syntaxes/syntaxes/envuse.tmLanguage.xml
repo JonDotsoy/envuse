@@ -19,7 +19,7 @@
     <key>scopeName</key>
     <string>source.envuse</string>
     <key>uuid</key>
-    <string></string>
+    <string>4b0672cb-8881-4e15-bda7-a9a24ea8bba5</string>
     <key>repository</key>
     <dict>
       <key>main</key>
@@ -372,7 +372,7 @@
           </dict>
           <dict>
             <key>match</key>
-            <string>(-?\d[\d_]*(?:(?:\.(?:\d[\d_]*))|n)?)</string>
+            <string>(-?\d(_?\d)*(?:(?:\.(?:\d(_?\d)*))|n)?)</string>
             <key>name</key>
             <string>constant.numeric.envuse</string>
           </dict>
@@ -571,7 +571,7 @@
         <array>
           <dict>
             <key>begin</key>
-            <string>(-?\d[\d_]*(?:(?:\.(?:\d[\d_]*))|n)?)</string>
+            <string>(-?\d(_?\d)*(?:(?:\.(?:\d(_?\d)*))|n)?)</string>
             <key>beginCaptures</key>
             <dict>
               <key>1</key>
