@@ -19,7 +19,7 @@ export class StatementNumberObject extends StatementObjectDefinition {
     };
 
     this.type = StatementObjectTypes.Number;
-    while (bufferCursor.has()) {
+    while (bufferCursor.hasOrEnd()) {
       if (
         bufferCursor.isClosed() ||
         k.space === bufferCursor.current() ||
@@ -30,8 +30,10 @@ export class StatementNumberObject extends StatementObjectDefinition {
         return;
       }
       if (
-        k.numbers.includes(bufferCursor.current()) ||
-        bufferCursor.current() === k.dot
+        bufferCursor.has() && (
+          k.numbers.includes(bufferCursor.current()) ||
+          bufferCursor.current() === k.dot
+        )
       ) {
         appendRaw(bufferCursor.current());
         bufferCursor.forward();

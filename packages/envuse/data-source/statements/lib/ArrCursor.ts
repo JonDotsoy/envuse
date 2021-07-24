@@ -7,7 +7,7 @@ export class ArrCursor<T, B extends T | undefined = T | undefined> {
   #event = new EventEmitter();
   #position = 0;
 
-  constructor(private body: T[] | Buffer) {}
+  constructor(private body: T[] | Buffer) { }
 
   // Events Methods
   on<T extends keyof EventsArrCursor>(event: T, listener: EventsArrCursor[T]) {
@@ -33,6 +33,10 @@ export class ArrCursor<T, B extends T | undefined = T | undefined> {
 
   get position() {
     return this.#position;
+  }
+
+  hasOrEnd() {
+    return this.position <= this.body.length;
   }
 
   has(): this is ArrCursor<T, Exclude<B, undefined>> {
@@ -75,7 +79,7 @@ export class ArrCursor<T, B extends T | undefined = T | undefined> {
     return [this.current(), ...this.next(len - 1)];
   }
 
-  isClosed(): any {
+  isClosed(): boolean {
     return this.position === this.body.length;
   }
 }

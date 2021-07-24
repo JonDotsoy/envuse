@@ -24,7 +24,7 @@ export class StatementNameInstanceObject extends StatementObjectDefinition {
     let partialPath: string[] = [];
     let charAccumulation: number[] = [];
 
-    while (bufferCursor.has()) {
+    while (bufferCursor.hasOrEnd()) {
       if (
         bufferCursor.isClosed() ||
         bufferCursor.current() === k.space ||
@@ -44,11 +44,13 @@ export class StatementNameInstanceObject extends StatementObjectDefinition {
       }
 
       if (
-        StatementNameInstanceObject.characterKeyAccept.includes(
-          bufferCursor.current()
-        ) ||
-        k.underscore === bufferCursor.current() ||
-        k.numbers.includes(bufferCursor.current())
+        bufferCursor.has() && (
+          StatementNameInstanceObject.characterKeyAccept.includes(
+            bufferCursor.current()
+          ) ||
+          k.underscore === bufferCursor.current() ||
+          k.numbers.includes(bufferCursor.current())
+        )
       ) {
         charAccumulation.push(bufferCursor.current());
         bufferCursor.forward();

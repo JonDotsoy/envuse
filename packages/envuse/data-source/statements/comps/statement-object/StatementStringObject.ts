@@ -26,7 +26,7 @@ export class StatementStringObject extends StatementObjectDefinition {
     const initialQuote = bufferCursor.current();
     bufferCursor.forward();
 
-    while (bufferCursor.has()) {
+    while (bufferCursor.hasOrEnd()) {
       const p = bufferCursor.prev(2);
       if (
         bufferCursor.isClosed() ||
@@ -52,14 +52,13 @@ export class StatementStringObject extends StatementObjectDefinition {
             continue;
           }
           default: {
-            appendRaw(bufferCursor.current());
+            if (bufferCursor.has()) appendRaw(bufferCursor.current());
             bufferCursor.forward();
             continue;
           }
         }
       }
-
-      appendRaw(bufferCursor.current());
+      if (bufferCursor.has()) appendRaw(bufferCursor.current());
       bufferCursor.forward();
     }
   }

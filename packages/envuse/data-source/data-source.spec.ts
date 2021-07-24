@@ -7,10 +7,9 @@ import { StatementObject } from "./statements/comps/StatementObject";
 import { Base } from "./statements/comps/Base";
 import { b } from "./statements/lib/toBuffer";
 
-
 describe("DataSource", () => {
   it("shoud make a ast out", () => {
-    const [filename1, body1] = takeDemoFile(".env");
+    const [filename1, body1] = takeDemoFile();
 
     const envuseFileParser = new DataSource(filename1, body1);
     expect(
@@ -23,7 +22,7 @@ describe("DataSource", () => {
   });
 
   it("shoud make a ast with operators", () => {
-    const [filename, body] = takeDemoFile(".env");
+    const [filename, body] = takeDemoFile();
 
     const envuseFileParser = new DataSource(filename, body);
     expect(
@@ -103,6 +102,9 @@ describe("DataSource", () => {
 
       const cmp = Base.createElement(new StatementObject("a", body, 0));
 
+      expect(cmp).toBeInstanceOf(StatementObject);
+      expect(cmp.$type).toEqual("StatementObject");
+      expect(cmp.type).toEqual("NameInstance");
       expect(cmp.value).toEqual(["obj", "a", "b", "VAL2"]);
     });
 
@@ -131,13 +133,13 @@ describe("DataSource", () => {
 
       expect(cmp.elementList.map((e) => e.toString())).toMatchInlineSnapshot(`
         Array [
-          "CommentOperatorStatement (0, 25): VAL1 ===   obj.a.b.VAL2 #",
-          "StatementObject<NameInstance> (0, 4): VAL1",
-          "Space (4, 5):  ",
-          "StatementObject<StrictEquality> (5, 8): ===",
-          "Space (8, 11):    ",
-          "StatementObject<NameInstance> (11, 23): obj.a.b.VAL2",
-          "Space (23, 24):  ",
+          "CommentOperatorStatement (0, 25): \\"VAL1 ===   obj.a.b.VAL2 #\\"",
+          "StatementObject<NameInstance> (0, 4): \\"VAL1\\"",
+          "Space (4, 5): \\" \\"",
+          "StatementObject<StrictEqualitySymbol> (5, 8): \\"===\\"",
+          "Space (8, 11): \\"   \\"",
+          "StatementObject<NameInstance> (11, 23): \\"obj.a.b.VAL2\\"",
+          "Space (23, 24): \\" \\"",
         ]
       `);
     });
@@ -153,7 +155,7 @@ describe("DataSource", () => {
     });
 
     it("should read property list children", () => {
-      const [fl, body] = takeDemoFile(".env");
+      const [fl, body] = takeDemoFile();
 
       const envuseFileParser = new DataSource(fl, body);
 
@@ -224,6 +226,14 @@ describe("DataSource", () => {
           body: Buffer.from(`#;if foo === bar\nfoo="bar"\n#;fi\n`),
         }).elementList.map((e) => e.toString())
       ).toMatchSnapshot();
+    });
+
+    it("should parse block descriptive comment", () => {
+      const [fl, demo] = takeDemoFile()
+
+      const envuseFileParser = DataSource.createDataSource({ filename: fl, body: demo });
+
+      expect(envuseFileParser).toMatchInlineSnapshot();
     });
   });
 });
@@ -397,25 +407,18 @@ describe("DataSource file stringify", () => {
             \\"$type\\": \\"Variable\\",
             \\"pos\\": 0,
             \\"end\\": 7,
-            \\"children\\": [
-              {
-                \\"$type\\": \\"VariableKey\\",
-                \\"pos\\": 0,
-                \\"end\\": 3,
-                \\"value\\": \\"foo\\"
-              },
-              {
-                \\"$type\\": \\"SymbolEqual\\",
-                \\"pos\\": 3,
-                \\"end\\": 4
-              },
-              {
-                \\"$type\\": \\"VariableValue\\",
-                \\"pos\\": 4,
-                \\"end\\": 7,
-                \\"value\\": \\"bar\\"
-              }
-            ]
+            \\"keyVariable\\": {
+              \\"$type\\": \\"VariableKey\\",
+              \\"pos\\": 0,
+              \\"end\\": 3,
+              \\"value\\": \\"foo\\"
+            },
+            \\"valueVariable\\": {
+              \\"$type\\": \\"VariableValue\\",
+              \\"pos\\": 4,
+              \\"end\\": 7,
+              \\"value\\": \\"bar\\"
+            }
           }
         ]
       }"
@@ -480,14 +483,5 @@ describe("DataSource file stringify", () => {
         ]
       }"
     `);
-  });
-});
-
-describe.only("envuse file format", () => {
-  it("should make a ast spec and format buffer file", () => {
-    // const ast = Block.serialize({
-    //   children: undefined
-    // })
-    // console.log(ast.toString())
   });
 });

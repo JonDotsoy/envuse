@@ -168,7 +168,7 @@ console.log(JSON.stringify(ast));
 > Before you must not have files compile (`.d.ts`, `.js` and `.js.map`). You can clean the source with the command below.
 >
 > ```shell
-> $ rm {data-source/**/,}*{.js,.js.map,.d.ts}
+> $ npm run clean
 > ```
 >
 > This command remove only files with extensions `.d.ts`, `.js` and `.js.map`.

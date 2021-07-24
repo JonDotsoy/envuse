@@ -1,0 +1,183 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DataSource parse statement parse statement operation 1`] = `
+Object {
+  "$type": "CommentOperatorStatement",
+  "children": undefined,
+  "end": 18,
+  "pos": 0,
+  "statements": Array [
+    Object {
+      "$type": "StatementObject",
+      "children": undefined,
+      "end": 4,
+      "pos": 0,
+      "type": "Boolean",
+      "value": true,
+    },
+    Object {
+      "$type": "StatementObject",
+      "children": undefined,
+      "end": 8,
+      "pos": 5,
+      "type": "StrictEqualitySymbol",
+      "value": undefined,
+    },
+    Object {
+      "$type": "StatementObject",
+      "children": undefined,
+      "end": 16,
+      "pos": 11,
+      "type": "Boolean",
+      "value": false,
+    },
+  ],
+}
+`;
+
+exports[`DataSource parse statement should parse comment operator correctly 1`] = `
+Array [
+  "Block (0, 32): \\"#;if a.b.c.d ===\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\\\n\\"",
+  "CommentOperator (0, 31): \\"#;if a.b.c.d ===\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
+  "VariableKey (2, 4): \\"if\\"",
+  "Space (4, 5): \\" \\"",
+  "CommentOperatorStatement (5, 17): \\"a.b.c.d ===\\\\n\\"",
+  "StatementObject<NameInstance> (5, 12): \\"a.b.c.d\\"",
+  "Space (12, 13): \\" \\"",
+  "StatementObject<StrictEqualitySymbol> (13, 16): \\"===\\"",
+  "Block (17, 31): \\"foo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
+  "Variable (17, 26): \\"foo=\\\\\\"bar\\\\\\"\\"",
+  "VariableKey (17, 20): \\"foo\\"",
+  "SymbolEqual (20, 21): \\"=\\"",
+  "VariableValue (21, 26): \\"\\\\\\"bar\\\\\\"\\"",
+  "SpaceNewLine (26, 27): \\"\\\\n\\"",
+  "CommentOperator (27, 31): \\"#;fi\\"",
+  "VariableKey (29, 31): \\"fi\\"",
+  "SpaceNewLine (31, 32): \\"\\\\n\\"",
+]
+`;
+
+exports[`DataSource parse statement should parse comment operator correctly 2`] = `
+Array [
+  "Block (0, 25): \\"#;if true\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\\\n\\"",
+  "CommentOperator (0, 24): \\"#;if true\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
+  "VariableKey (2, 4): \\"if\\"",
+  "Space (4, 5): \\" \\"",
+  "CommentOperatorStatement (5, 10): \\"true\\\\n\\"",
+  "StatementObject<Boolean> (5, 9): \\"true\\"",
+  "Block (10, 24): \\"foo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
+  "Variable (10, 19): \\"foo=\\\\\\"bar\\\\\\"\\"",
+  "VariableKey (10, 13): \\"foo\\"",
+  "SymbolEqual (13, 14): \\"=\\"",
+  "VariableValue (14, 19): \\"\\\\\\"bar\\\\\\"\\"",
+  "SpaceNewLine (19, 20): \\"\\\\n\\"",
+  "CommentOperator (20, 24): \\"#;fi\\"",
+  "VariableKey (22, 24): \\"fi\\"",
+  "SpaceNewLine (24, 25): \\"\\\\n\\"",
+]
+`;
+
+exports[`DataSource parse statement should parse comment operator correctly 3`] = `
+Array [
+  "Block (0, 24): \\"#;if 123\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\\\n\\"",
+  "CommentOperator (0, 23): \\"#;if 123\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
+  "VariableKey (2, 4): \\"if\\"",
+  "Space (4, 5): \\" \\"",
+  "CommentOperatorStatement (5, 9): \\"123\\\\n\\"",
+  "StatementObject<Number> (5, 8): \\"123\\"",
+  "Block (9, 23): \\"foo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
+  "Variable (9, 18): \\"foo=\\\\\\"bar\\\\\\"\\"",
+  "VariableKey (9, 12): \\"foo\\"",
+  "SymbolEqual (12, 13): \\"=\\"",
+  "VariableValue (13, 18): \\"\\\\\\"bar\\\\\\"\\"",
+  "SpaceNewLine (18, 19): \\"\\\\n\\"",
+  "CommentOperator (19, 23): \\"#;fi\\"",
+  "VariableKey (21, 23): \\"fi\\"",
+  "SpaceNewLine (23, 24): \\"\\\\n\\"",
+]
+`;
+
+exports[`DataSource parse statement should parse comment operator correctly 4`] = `
+Array [
+  "Block (0, 24): \\"#;if var\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\\\n\\"",
+  "CommentOperator (0, 23): \\"#;if var\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
+  "VariableKey (2, 4): \\"if\\"",
+  "Space (4, 5): \\" \\"",
+  "CommentOperatorStatement (5, 9): \\"var\\\\n\\"",
+  "StatementObject<NameInstance> (5, 8): \\"var\\"",
+  "Block (9, 23): \\"foo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
+  "Variable (9, 18): \\"foo=\\\\\\"bar\\\\\\"\\"",
+  "VariableKey (9, 12): \\"foo\\"",
+  "SymbolEqual (12, 13): \\"=\\"",
+  "VariableValue (13, 18): \\"\\\\\\"bar\\\\\\"\\"",
+  "SpaceNewLine (18, 19): \\"\\\\n\\"",
+  "CommentOperator (19, 23): \\"#;fi\\"",
+  "VariableKey (21, 23): \\"fi\\"",
+  "SpaceNewLine (23, 24): \\"\\\\n\\"",
+]
+`;
+
+exports[`DataSource parse statement should parse comment operator correctly 5`] = `
+Array [
+  "Block (0, 32): \\"#;if foo === bar\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\\\n\\"",
+  "CommentOperator (0, 31): \\"#;if foo === bar\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
+  "VariableKey (2, 4): \\"if\\"",
+  "Space (4, 5): \\" \\"",
+  "CommentOperatorStatement (5, 17): \\"foo === bar\\\\n\\"",
+  "StatementObject<NameInstance> (5, 8): \\"foo\\"",
+  "Space (8, 9): \\" \\"",
+  "StatementObject<StrictEqualitySymbol> (9, 12): \\"===\\"",
+  "Space (12, 13): \\" \\"",
+  "StatementObject<NameInstance> (13, 16): \\"bar\\"",
+  "Block (17, 31): \\"foo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
+  "Variable (17, 26): \\"foo=\\\\\\"bar\\\\\\"\\"",
+  "VariableKey (17, 20): \\"foo\\"",
+  "SymbolEqual (20, 21): \\"=\\"",
+  "VariableValue (21, 26): \\"\\\\\\"bar\\\\\\"\\"",
+  "SpaceNewLine (26, 27): \\"\\\\n\\"",
+  "CommentOperator (27, 31): \\"#;fi\\"",
+  "VariableKey (29, 31): \\"fi\\"",
+  "SpaceNewLine (31, 32): \\"\\\\n\\"",
+]
+`;
+
+exports[`DataSource parse statement should parse statement with numbers 1`] = `
+Object {
+  "$type": "CommentOperatorStatement",
+  "children": undefined,
+  "end": 26,
+  "pos": 0,
+  "statements": Array [
+    Object {
+      "$type": "StatementObject",
+      "children": undefined,
+      "end": 8,
+      "pos": 0,
+      "type": "Number",
+      "value": 34214324,
+    },
+    Object {
+      "$type": "StatementObject",
+      "children": undefined,
+      "end": 12,
+      "pos": 9,
+      "type": "StrictEqualitySymbol",
+      "value": undefined,
+    },
+    Object {
+      "$type": "StatementObject",
+      "children": undefined,
+      "end": 24,
+      "pos": 15,
+      "type": "Number",
+      "value": 22343.32,
+    },
+  ],
+}
+`;
+
+exports[`DataSource shoud make a ast out 1`] = `" Block (0, 61): \\"abc=def # a comment\\\\nfoo=bar\\\\n\\\\n    \\\\nabc    =\\\\\\"d\\\\\\\\\\\\\\"ef\\\\\\" # comented\\\\n\\""`;
+
+exports[`DataSource shoud make a ast with multiple blocks 1`] = `" Block (0, 43): \\"C=C\\\\n#;if true\\\\na=a\\\\n#;if false\\\\nb=b\\\\n#;fi\\\\n#;fi\\\\n\\""`;
+
+exports[`DataSource shoud make a ast with operators 1`] = `" Block (0, 44): \\"FOO=BAR\\\\n#; if true\\\\naaa=\\\\\\"bbb\\\\\\"\\\\n#; fi\\\\n\\\\nccc=ddd\\\\n\\""`;
