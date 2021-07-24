@@ -41,8 +41,12 @@
   #; fi
 
 "DataSource parse statement should parse block descriptive comment": |
+  # single comment
+
   ###
   No 123
-  ###
+  ###    
+
+  FOO=BAR
 
 

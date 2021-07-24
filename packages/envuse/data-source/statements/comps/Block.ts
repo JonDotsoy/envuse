@@ -4,6 +4,8 @@ import { Comment, CommentType } from "./Comment";
 import { CommentOperator, CommentOperatorType } from "./CommentOperator";
 import { Variable, VariableType } from "./Variable";
 import { SpaceNewLine, SpaceNewLineType } from "./SpaceNewLine";
+import { CharactersKey } from "../tdo/CharactersKey";
+import { BlockComment } from "./BlockComment";
 
 export type BlockType = {
   $type: "Block";
@@ -19,7 +21,7 @@ export type BlockType = {
 export class Block extends Base {
   $type = "Block" as const;
 
-  children: (SpaceNewLine | Variable | CommentOperator | Comment)[] = [];
+  children: (SpaceNewLine | Variable | CommentOperator | Comment | BlockComment)[] = [];
   propsMutable!: "handleCheckCloseBlock";
 
   prepare(bufferCursor: BufferCursor) {
@@ -43,6 +45,8 @@ export class Block extends Base {
   }
 
   intent(bufferCursor: BufferCursor<number>) {
+    // console.log(bufferCursor.position, bufferCursor.current(), JSON.stringify(Buffer.from([bufferCursor.current() ?? 0]).toString()))
+
     // Push a SpaceNewLine
     if (bufferCursor.has() && [0x20, 0x0a].includes(bufferCursor.current())) {
       this.children.push(this.createElement(SpaceNewLine));
@@ -59,10 +63,13 @@ export class Block extends Base {
     }
 
     // Push a BlockComment
-    // if (
-    //   bufferCursor.current() === 0x23 &&
-
-
+    if (
+      bufferCursor.has() &&
+      Buffer.from(Array(3).fill(CharactersKey.numberSign)).equals(Buffer.from(bufferCursor.currentAndNext(3)))
+    ) {
+      this.children.push(this.createElement(BlockComment));
+      return true;
+    }
 
     // Push a CommentOperator
     if (bufferCursor.current() === 0x23 && bufferCursor.next(1)[0] === 0x3b) {

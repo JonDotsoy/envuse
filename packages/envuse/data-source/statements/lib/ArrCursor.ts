@@ -3,11 +3,39 @@ import { EventEmitter } from "events";
 import { ArgsType } from "../tdo/ArgsType";
 import { EventsArrCursor } from "../tdo/EventsArrCursor";
 
+
+export enum ArrCursorMatchActions {
+  stop,
+  continue,
+  breakSuccess,
+}
+
+export type Validator<T extends ArrCursor<any>> = (cursor: T, actions: typeof ArrCursorMatchActions) => ArrCursorMatchActions | void
+
+
 export class ArrCursor<T, B extends T | undefined = T | undefined> {
   #event = new EventEmitter();
   #position = 0;
 
   constructor(private body: T[] | Buffer) { }
+
+  private setPosition(position: number) {
+    this.#position = position;
+  }
+
+  printDescriptor() {
+    const current = this.current();
+    const isNumber = (v:any): v is number => typeof current === "number";
+    const txt = `position: ${this.position} current: ${current} json preview: ${isNumber(current) ? JSON.stringify(Buffer.from([current]).toString()) : ""}`
+    console.log(txt)
+    return txt
+  }
+
+  clone() {
+    const cursor = new ArrCursor<T, B>(this.body)
+    cursor.setPosition(this.position)
+    return cursor
+  }
 
   // Events Methods
   on<T extends keyof EventsArrCursor>(event: T, listener: EventsArrCursor[T]) {
@@ -55,7 +83,7 @@ export class ArrCursor<T, B extends T | undefined = T | undefined> {
 
   backward(steps: number = 1) {
     this.#position -= steps;
-
+    this.emit("backward");
     return this.current();
   }
 
@@ -82,4 +110,35 @@ export class ArrCursor<T, B extends T | undefined = T | undefined> {
   isClosed(): boolean {
     return this.position === this.body.length;
   }
+
+  static ["match.actions"] = ArrCursorMatchActions
+
+  /**
+   * ## Validator
+   * 
+   * Use a validator to continue the match process. If return `ArrCursorMatchActions.stop`, the match process will stop and return false.
+   * Y return `ArrCursorMatchActions.continue`, the match process will continue with the next validator.
+   * If all validator return `ArrCursorMatchActions.continue`, the match return true.
+   */
+  match(...validators: Validator<this>[]) {
+    const success = () => [true, this] as const;
+    const failed = () => [false, this] as const;
+    if (validators.length === 0) return failed()
+
+    for (const [index, validator] of Object.entries(validators)) {
+      const action = validator(this, ArrCursorMatchActions) ?? ArrCursorMatchActions.stop
+      // if validator is end validators
+      if (Number(index) === validators.length - 1) {
+        if (action === ArrCursorMatchActions.continue) return success()
+      }
+      if (action === ArrCursorMatchActions.stop) return failed()
+      if (action === ArrCursorMatchActions.continue) continue
+      if (action === ArrCursorMatchActions.breakSuccess) return success()
+    }
+
+    return failed();
+  }
+
+
 }
+

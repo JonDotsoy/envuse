@@ -1,6 +1,6 @@
 import { DataSource } from "./data-source";
 import { takeDemoFile } from "./statements/lib/takeDemoFile";
-import util from "util";
+import util, { inspect } from "util";
 import { CommentOperator } from "./statements/comps/CommentOperator";
 import { CommentOperatorStatement } from "./statements/comps/CommentOperatorStatement";
 import { StatementObject } from "./statements/comps/StatementObject";
@@ -228,12 +228,29 @@ describe("DataSource", () => {
       ).toMatchSnapshot();
     });
 
-    it("should parse block descriptive comment", () => {
-      const [fl, demo] = takeDemoFile()
+    it.only("should parse block descriptive comment", () => {
+      const [fl, demo] = takeDemoFile();
 
-      const envuseFileParser = DataSource.createDataSource({ filename: fl, body: demo });
+      const envuseFileParser = DataSource.createDataSource({
+        filename: fl,
+        body: demo,
+      });
 
-      expect(envuseFileParser).toMatchInlineSnapshot();
+      // inspect envuseFileParser
+      expect(inspect(envuseFileParser.elementList)).toMatchInlineSnapshot(`
+        "[
+          Block (0, 47): \\"# single comment\\\\n\\\\n###\\\\nNo 123\\\\n###    \\\\n\\\\nFOO=BAR\\\\n\\",
+          Comment (0, 18): \\"# single comment\\\\n\\",
+          SpaceNewLine (18, 19): \\"\\\\n\\",
+          BlockComment (19, 33): \\"###\\\\nNo 123\\\\n###\\",
+          SpaceNewLine (33, 39): \\"    \\\\n\\\\n\\",
+          Variable (39, 47): \\"FOO=BAR\\\\n\\",
+          VariableKey (39, 42): \\"FOO\\",
+          SymbolEqual (42, 43): \\"=\\",
+          VariableValue (43, 47): \\"BAR\\\\n\\"
+        ]"
+      `);
+
     });
   });
 });
