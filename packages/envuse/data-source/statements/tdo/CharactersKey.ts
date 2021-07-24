@@ -40,4 +40,6 @@ export namespace CharactersKey {
   export const newLineCRLF = [carriageReturn, newLineLF];
   /** symbol: "\t" */
   export const horizontalTab = 0x09;
+  /** symbol: : */
+  export const colon = 0x3A;
 }

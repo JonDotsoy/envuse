@@ -228,7 +228,7 @@ describe("DataSource", () => {
       ).toMatchSnapshot();
     });
 
-    it.only("should parse block descriptive comment", () => {
+    it("should parse block descriptive comment", () => {
       const [fl, demo] = takeDemoFile();
 
       const envuseFileParser = DataSource.createDataSource({
@@ -250,7 +250,28 @@ describe("DataSource", () => {
           VariableValue (43, 47): \\"BAR\\\\n\\"
         ]"
       `);
+    });
 
+    it("should parse variable with type", () => {
+      const buff = Buffer.from(`FOO : number = 123`);
+
+      const envuseParser = DataSource.createDataSource(buff);
+
+      expect(inspect(envuseParser.elementList)).toMatchInlineSnapshot(`
+        "[
+          Block (0, 18): \\"FOO : number = 123\\",
+          Variable (0, 18): \\"FOO : number = 123\\",
+          VariableKey (0, 3): \\"FOO\\",
+          Space (3, 4): \\" \\",
+          SymbolColon (4, 5): \\":\\",
+          Space (5, 6): \\" \\",
+          VariableKey (6, 12): \\"number\\",
+          Space (12, 13): \\" \\",
+          SymbolEqual (13, 14): \\"=\\",
+          Space (14, 15): \\" \\",
+          VariableValue (15, 18): \\"123\\"
+        ]"
+      `);
     });
   });
 });

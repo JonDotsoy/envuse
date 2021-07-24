@@ -13,4 +13,5 @@ export type TypeNamesList =
   | "VariableKey"
   | "VariableValue"
   | "SpaceNewLine"
-  | "BlockComment";
+  | "BlockComment"
+  | "SymbolColon";

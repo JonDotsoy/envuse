@@ -4,6 +4,12 @@ import { CharactersKey } from "../tdo/CharactersKey";
 import { TypeNamesList } from "../tdo/TypeNamesList";
 import { Base } from "./Base";
 
+export type BlockCommentType = {
+  $type: "BlockComment";
+  // value: string;
+  [k: string]: any;
+};
+
 export class BlockComment extends Base {
   $type = "BlockComment" as const;
   buff: number[] = [];
@@ -42,5 +48,12 @@ export class BlockComment extends Base {
       this.buff.push(bufferCursor.current());
       bufferCursor.forward();
     }
+  }
+
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      // value: this.value,
+    };
   }
 }

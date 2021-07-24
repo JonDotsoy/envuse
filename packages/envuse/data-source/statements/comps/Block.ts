@@ -5,7 +5,7 @@ import { CommentOperator, CommentOperatorType } from "./CommentOperator";
 import { Variable, VariableType } from "./Variable";
 import { SpaceNewLine, SpaceNewLineType } from "./SpaceNewLine";
 import { CharactersKey } from "../tdo/CharactersKey";
-import { BlockComment } from "./BlockComment";
+import { BlockComment, BlockCommentType } from "./BlockComment";
 
 export type BlockType = {
   $type: "Block";
@@ -14,6 +14,7 @@ export type BlockType = {
     | VariableType
     | CommentOperatorType
     | CommentType
+    | BlockCommentType
   )[];
   [k: string]: any;
 };

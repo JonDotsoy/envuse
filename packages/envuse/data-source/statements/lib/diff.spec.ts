@@ -38,6 +38,7 @@ describe("diff", () => {
                 "value": "ccc",
               },
               "pos": 16,
+              "typeVariable": undefined,
               "valueVariable": Object {
                 "$type": "VariableValue",
                 "children": undefined,
@@ -61,6 +62,7 @@ describe("diff", () => {
                 "value": "hhh",
               },
               "pos": 24,
+              "typeVariable": undefined,
               "valueVariable": Object {
                 "$type": "VariableValue",
                 "children": undefined,
@@ -81,6 +83,7 @@ describe("diff", () => {
                 "value": "hhh",
               },
               "pos": 24,
+              "typeVariable": undefined,
               "valueVariable": Object {
                 "$type": "VariableValue",
                 "children": undefined,
@@ -104,6 +107,7 @@ describe("diff", () => {
                 "value": "eee",
               },
               "pos": 16,
+              "typeVariable": undefined,
               "valueVariable": Object {
                 "$type": "VariableValue",
                 "children": undefined,
