@@ -32,10 +32,20 @@ export namespace CharactersKey {
   export const hyphenMinus = 0x2d;
   /** symbol: " " */
   export const space = 0x20;
+
   /** symbol: "\n" */
   export const newLineLF = 0x0a;
   /** symbol: "\r" */
   export const carriageReturn = 0x0d;
+  /** symbol: "\t" */
+  export const tab = 0x09;
+  /** symbols: \v */
+  export const verticalTab = 0x0b;
+  /** symbols: \f */
+  export const formFeed = 0x0c;
+  /** symbols: \b */
+  export const backspace = 0x08;
+
   /** symbols: "\r\n" */
   export const newLineCRLF = [carriageReturn, newLineLF];
   /** symbol: "\t" */

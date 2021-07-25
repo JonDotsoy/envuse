@@ -201,7 +201,7 @@ describe("serialize", () => {
     expect(stringify(block).toString()).toMatchInlineSnapshot(`
       "# single comment
       abc=\\"abc\\"
-      c=\\"abncnasd\\"
+      c=\\"abnc\\\\nasd\\"
       #; if true === 12 === abc.def === \\"abc\\"
       cde=\\"321\\"
       #; fi

@@ -1,6 +1,6 @@
 import { Validator } from "../lib/ArrCursor";
 import { BufferCursor } from "../lib/BufferCursor";
-import { CharactersKey } from "../tdo/CharactersKey";
+import { CharactersKey as k } from "../tdo/CharactersKey";
 import { Base } from "./Base";
 
 export type VariableValueType = {
@@ -30,9 +30,31 @@ export class VariableValue extends Base {
       while (bufferCursor.has()) {
         if (bufferCursor.isClosed()) return
 
-        if (bufferCursor.current() === CharactersKey.backslash) {
+        if (bufferCursor.current() === k.backslash) {
           bufferCursor.forward()
-          this.appendRaw(bufferCursor.current())
+          switch (bufferCursor.current()) {
+
+            // parse \n
+            case 0x6E: this.appendRaw(k.newLineLF); break;
+            // parse \r
+            case 0x72: this.appendRaw(k.carriageReturn); break;
+            // parse \t
+            case 0x74: this.appendRaw(k.tab); break;
+            // parse \v
+            case 0x76: this.appendRaw(k.verticalTab); break;
+            // parse \f
+            case 0x66: this.appendRaw(k.formFeed); break;
+            // parse \b
+            case 0x62: this.appendRaw(k.backspace); break;
+            // parse \\
+            case 0x5C: this.appendRaw(k.backslash); break;
+            // parse \"
+            case 0x22: this.appendRaw(k.doubleQuotes); break;
+            // parse \'
+            case 0x27: this.appendRaw(k.singleQuote); break;
+
+            default: this.appendRaw(bufferCursor.current()); break;
+          }
           bufferCursor.forward()
           continue
         }
@@ -42,7 +64,7 @@ export class VariableValue extends Base {
           return
         }
 
-        if (bufferCursor.current() === CharactersKey.newLineLF) {
+        if (bufferCursor.current() === k.newLineLF) {
           this.rejectUnexpectedTokenError()
         }
 
@@ -55,14 +77,14 @@ export class VariableValue extends Base {
     }
 
     const validatorPrevToNumberSign: Validator<typeof bufferCursor> = (cursor, actions) => {
-      if (cursor.current() === CharactersKey.space) {
+      if (cursor.current() === k.space) {
         while (cursor.has()) {
-          if (cursor.current() !== CharactersKey.space) {
+          if (cursor.current() !== k.space) {
             break
           }
           cursor.forward()
         }
-        if (cursor.current() === CharactersKey.numberSign) {
+        if (cursor.current() === k.numberSign) {
           return actions.breakSuccess
         }
       }
@@ -72,8 +94,8 @@ export class VariableValue extends Base {
       let matched;
       if (
         bufferCursor.isClosed() ||
-        bufferCursor.current() === CharactersKey.newLineLF ||
-        bufferCursor.current() === CharactersKey.numberSign ||
+        bufferCursor.current() === k.newLineLF ||
+        bufferCursor.current() === k.numberSign ||
         ([matched] = bufferCursor.clone().match(validatorPrevToNumberSign), matched)
       ) {
         return
