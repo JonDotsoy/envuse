@@ -78,3 +78,7 @@
         ###
   No 123
   ###
+
+"DataSource file stringify should parse envuse file and return definition": !file ./demo.envuse
+"DataSource file stringify should compile custom type": !file ./demo-custom-type.envuse
+

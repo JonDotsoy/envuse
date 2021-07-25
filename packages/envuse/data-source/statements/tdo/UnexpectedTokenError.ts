@@ -36,15 +36,20 @@ const getLineStyled = (
   ].join("\n");
 
   return {
-    stackDescriptor: `${
-      filename ? path.relative(process.cwd(), filename) : "<anonymous>"
-    }:${lineNumber}:${column}`,
+    stackDescriptor: `${filename ? path.relative(process.cwd(), filename) : "<anonymous>"
+      }:${lineNumber}:${column}`,
     lineNumber,
     columnNumber: column,
     position,
     lineStyled,
   };
 };
+
+
+export type UnexpectedTokenErrorOption = {
+  message?: string
+}
+
 
 export class UnexpectedTokenError extends Error {
   name = "UnexpectedTokenError";
@@ -55,12 +60,13 @@ export class UnexpectedTokenError extends Error {
   constructor(
     readonly filename: string | null,
     body: Buffer,
-    readonly position: number
+    readonly position: number,
+    options: UnexpectedTokenErrorOption,
   ) {
     super();
 
     const newLocal = getLineStyled(filename, body, position);
-    this.message = `Unexpected token position (${newLocal.stackDescriptor}) (position: ${position}):\n${newLocal.lineStyled}`;
+    this.message = `${options.message ?? "Unexpected token"} position (${newLocal.stackDescriptor}) (position: ${position}):\n${newLocal.lineStyled}`;
 
     this.columnNumber = newLocal.columnNumber;
     this.lineNumber = newLocal.lineNumber;

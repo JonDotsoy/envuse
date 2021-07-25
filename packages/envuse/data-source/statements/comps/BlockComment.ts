@@ -14,6 +14,10 @@ export class BlockComment extends Base {
   $type = "BlockComment" as const;
   buff: number[] = [];
 
+  get value(): string {
+    return this.body.slice(this.pos, this.end).toString();
+  }
+
   prepare(bufferCursor: BufferCursor): void {
     bufferCursor.forward(3);
 

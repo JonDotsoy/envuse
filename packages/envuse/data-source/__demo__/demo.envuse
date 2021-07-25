@@ -1,0 +1,33 @@
+# .envuse
+##############################
+# Demo file for .envuse
+##############################
+#
+
+SHELL_SYSTEM          = "bash"
+
+###
+# Comment descriptive
+###
+API_KEY               = cf7d6f43-bb85-4045-a23f-7fb94bfac745 # API key UUIDv4
+DB_HOST               = 127.7.0.1
+DB_PORT : number      = 5432 # Database port
+DB_USER               = postgres
+DB_PASSWORD           = postgres
+DB_NAME               = postgres
+COLOR_TERM : boolean  = true
+
+#; if "bash"  === "bash"
+  COLOR_TERM : boolean = false
+#; fi
+
+#; if true === true
+  FORCE_URL_SSL : boolean =  true
+#; fi
+
+# single comment
+
+###
+No 123
+###
+A:number=3

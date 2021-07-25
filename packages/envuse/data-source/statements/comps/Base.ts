@@ -26,8 +26,8 @@ export const printElement = (element: Base) =>
 
 type BodyAssigned<T> = T extends { propsMutable: infer R }
   ? R extends keyof T
-    ? Partial<Pick<T, R>>
-    : {}
+  ? Partial<Pick<T, R>>
+  : {}
   : {};
 
 type BaseEvents = {
@@ -35,6 +35,13 @@ type BaseEvents = {
 };
 
 type ArgsType<T> = T extends (...args: infer R) => void ? R : [];
+
+
+export type RejectOptions = {
+  message?: string
+  position?: number
+}
+
 
 export abstract class Base {
   abstract $type: TypeNamesList;
@@ -123,7 +130,7 @@ export abstract class Base {
 
   createElement<T extends Base>(
     Comp: {
-      new (
+      new(
         filename: string | null,
         body: Buffer,
         pos: number,
@@ -211,11 +218,14 @@ export abstract class Base {
     }
   }
 
-  rejectUnexpectedTokenError(): never {
+  rejectUnexpectedTokenError(options?: RejectOptions): never {
     const err = new UnexpectedTokenError(
       this.filename,
       this.body,
-      this.bufferCursor.position
+      options?.position ?? this.bufferCursor.position,
+      {
+        message: options?.message ?? "Unexpected token",
+      },
     );
 
     Error.captureStackTrace(err, Base.prototype.rejectUnexpectedTokenError);

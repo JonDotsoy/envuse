@@ -22,7 +22,7 @@ export class Variable extends Base {
   $type = "Variable" as const;
 
   keyVariable!: VariableKey;
-  typeVariable!: VariableKey;
+  typeVariable?: VariableKey;
   valueVariable!: VariableValue;
 
   prepare(bufferCursor: BufferCursor): void {

@@ -691,4 +691,128 @@ describe("DataSource file stringify", () => {
       }"
     `);
   });
+
+  it("should parse envuse file and return definition", () => {
+    const [fl, buf] = takeDemoFile();
+
+    const a = DataSource.parse({
+      filename: fl,
+      body: buf,
+    });
+
+    expect(inspect(a.definitions)).toMatchInlineSnapshot(`
+      "{
+        SHELL_SYSTEM: {
+          type: 'string',
+          valueStr: 'bash',
+          description: null,
+          value: 'bash',
+          elementVariable: Variable (99, 129): \\"SHELL_SYSTEM          = \\\\\\"bash\\\\\\"\\",
+          elementDescription: null
+        },
+        API_KEY: {
+          type: 'string',
+          valueStr: 'cf7d6f43-bb85-4045-a23f-7fb94bfac745',
+          description: '###\\\\n# Comment descriptive\\\\n###',
+          value: 'cf7d6f43-bb85-4045-a23f-7fb94bfac745',
+          elementVariable: Variable (161, 221): \\"API_KEY               = cf7d6f43-bb85-4045-a23f-7fb94bfac745\\",
+          elementDescription: BlockComment (131, 160): \\"###\\\\n# Comment descriptive\\\\n###\\"
+        },
+        DB_HOST: {
+          type: 'string',
+          valueStr: '127.7.0.1',
+          description: null,
+          value: '127.7.0.1',
+          elementVariable: Variable (239, 272): \\"DB_HOST               = 127.7.0.1\\",
+          elementDescription: null
+        },
+        DB_PORT: {
+          type: 'number',
+          valueStr: '5432',
+          description: null,
+          value: 5432,
+          elementVariable: Variable (273, 301): \\"DB_PORT : number      = 5432\\",
+          elementDescription: null
+        },
+        DB_USER: {
+          type: 'string',
+          valueStr: 'postgres',
+          description: null,
+          value: 'postgres',
+          elementVariable: Variable (318, 350): \\"DB_USER               = postgres\\",
+          elementDescription: null
+        },
+        DB_PASSWORD: {
+          type: 'string',
+          valueStr: 'postgres',
+          description: null,
+          value: 'postgres',
+          elementVariable: Variable (351, 383): \\"DB_PASSWORD           = postgres\\",
+          elementDescription: null
+        },
+        DB_NAME: {
+          type: 'string',
+          valueStr: 'postgres',
+          description: null,
+          value: 'postgres',
+          elementVariable: Variable (384, 416): \\"DB_NAME               = postgres\\",
+          elementDescription: null
+        },
+        COLOR_TERM: {
+          type: 'boolean',
+          valueStr: 'false',
+          description: null,
+          value: false,
+          elementVariable: Variable (474, 502): \\"COLOR_TERM : boolean = false\\",
+          elementDescription: null
+        },
+        FORCE_URL_SSL: {
+          type: 'boolean',
+          valueStr: 'true',
+          description: null,
+          value: true,
+          elementVariable: Variable (532, 563): \\"FORCE_URL_SSL : boolean =  true\\",
+          elementDescription: null
+        },
+        A: {
+          type: 'number',
+          valueStr: '3',
+          description: '###\\\\nNo 123\\\\n###',
+          value: 3,
+          elementVariable: Variable (605, 615): \\"A:number=3\\",
+          elementDescription: BlockComment (590, 604): \\"###\\\\nNo 123\\\\n###\\"
+        }
+      }"
+    `);
+  });
+
+  it("should compile custom type", () => {
+    const [fl, buf] = takeDemoFile();
+
+    const a = DataSource.parse({
+      filename: fl,
+      body: buf,
+      customTypes: [
+        {
+          type: "custom_js",
+          parser: (ctx) => {
+            return eval(`(${ctx.valueStr})`);
+          },
+        },
+      ],
+    });
+
+    expect(inspect(a.definitions)).toMatchInlineSnapshot(`
+      "{
+        FOO: {
+          type: 'custom_js',
+          valueStr: \\"{foo: 'bar'}\\",
+          description: null,
+          value: { foo: 'bar' },
+          elementVariable: Variable (1, 30): \\"FOO: custom_js = {foo: 'bar'}\\",
+          elementDescription: null
+        }
+      }"
+    `);
+  });
 });
