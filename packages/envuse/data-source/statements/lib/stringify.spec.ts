@@ -16,7 +16,7 @@ describe("parse ast", () => {
           {
             \\"$type\\": \\"Variable\\",
             \\"pos\\": 0,
-            \\"end\\": 4,
+            \\"end\\": 3,
             \\"keyVariable\\": {
               \\"$type\\": \\"VariableKey\\",
               \\"pos\\": 0,
@@ -26,9 +26,14 @@ describe("parse ast", () => {
             \\"valueVariable\\": {
               \\"$type\\": \\"VariableValue\\",
               \\"pos\\": 2,
-              \\"end\\": 4,
+              \\"end\\": 3,
               \\"value\\": \\"3\\"
             }
+          },
+          {
+            \\"$type\\": \\"SpaceNewLine\\",
+            \\"pos\\": 3,
+            \\"end\\": 4
           }
         ]
       }"
@@ -78,7 +83,7 @@ describe("parse ast", () => {
                 {
                   \\"$type\\": \\"Variable\\",
                   \\"pos\\": 11,
-                  \\"end\\": 15,
+                  \\"end\\": 14,
                   \\"keyVariable\\": {
                     \\"$type\\": \\"VariableKey\\",
                     \\"pos\\": 11,
@@ -88,9 +93,14 @@ describe("parse ast", () => {
                   \\"valueVariable\\": {
                     \\"$type\\": \\"VariableValue\\",
                     \\"pos\\": 13,
-                    \\"end\\": 15,
+                    \\"end\\": 14,
                     \\"value\\": \\"b\\"
                   }
+                },
+                {
+                  \\"$type\\": \\"SpaceNewLine\\",
+                  \\"pos\\": 14,
+                  \\"end\\": 15
                 }
               ]
             }
@@ -191,7 +201,7 @@ describe("serialize", () => {
     expect(stringify(block).toString()).toMatchInlineSnapshot(`
       "# single comment
       abc=\\"abc\\"
-      c=\\"abnc\\\\\\\\nasd\\"
+      c=\\"abncnasd\\"
       #; if true === 12 === abc.def === \\"abc\\"
       cde=\\"321\\"
       #; fi

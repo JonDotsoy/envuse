@@ -6,6 +6,7 @@ import { CommentOperatorStatement } from "./statements/comps/CommentOperatorStat
 import { StatementObject } from "./statements/comps/StatementObject";
 import { Base } from "./statements/comps/Base";
 import { b } from "./statements/lib/toBuffer";
+import { Console } from "console";
 
 describe("DataSource", () => {
   it("shoud make a ast out", () => {
@@ -170,10 +171,11 @@ describe("DataSource", () => {
       ).toMatchInlineSnapshot(`
         Array [
           "Block <0, 35>",
-          "Variable <0, 8>",
+          "Variable <0, 7>",
           "VariableKey <0, 3>",
           "SymbolEqual <3, 4>",
-          "VariableValue <4, 8>",
+          "VariableValue <4, 7>",
+          "SpaceNewLine <7, 8>",
           "CommentOperator <8, 34>",
           "Space <10, 11>",
           "VariableKey <11, 13>",
@@ -182,11 +184,11 @@ describe("DataSource", () => {
           "StatementObject <14, 18>",
           "Block <19, 34>",
           "SpaceNewLine <19, 20>",
-          "Variable <20, 28>",
+          "Variable <20, 27>",
           "VariableKey <20, 23>",
           "SymbolEqual <23, 24>",
-          "VariableValue <24, 28>",
-          "SpaceNewLine <28, 29>",
+          "VariableValue <24, 27>",
+          "SpaceNewLine <27, 29>",
           "CommentOperator <29, 34>",
           "Space <31, 32>",
           "VariableKey <32, 34>",
@@ -244,10 +246,11 @@ describe("DataSource", () => {
           SpaceNewLine (18, 19): \\"\\\\n\\",
           BlockComment (19, 33): \\"###\\\\nNo 123\\\\n###\\",
           SpaceNewLine (33, 39): \\"    \\\\n\\\\n\\",
-          Variable (39, 47): \\"FOO=BAR\\\\n\\",
+          Variable (39, 46): \\"FOO=BAR\\",
           VariableKey (39, 42): \\"FOO\\",
           SymbolEqual (42, 43): \\"=\\",
-          VariableValue (43, 47): \\"BAR\\\\n\\"
+          VariableValue (43, 46): \\"BAR\\",
+          SpaceNewLine (46, 47): \\"\\\\n\\"
         ]"
       `);
     });
@@ -273,6 +276,172 @@ describe("DataSource", () => {
         ]"
       `);
     });
+
+    it("should parse variable with comment", () => {
+      const buff = Buffer.from(`FOO : number = "123" # comment`);
+
+      const envuseParser = DataSource.createDataSource(buff);
+
+      expect(inspect(envuseParser.elementList)).toMatchInlineSnapshot(`
+        "[
+          Block (0, 30): \\"FOO : number = \\\\\\"123\\\\\\" # comment\\",
+          Variable (0, 20): \\"FOO : number = \\\\\\"123\\\\\\"\\",
+          VariableKey (0, 3): \\"FOO\\",
+          Space (3, 4): \\" \\",
+          SymbolColon (4, 5): \\":\\",
+          Space (5, 6): \\" \\",
+          VariableKey (6, 12): \\"number\\",
+          Space (12, 13): \\" \\",
+          SymbolEqual (13, 14): \\"=\\",
+          Space (14, 15): \\" \\",
+          VariableValue (15, 20): \\"\\\\\\"123\\\\\\"\\",
+          SpaceNewLine (20, 21): \\" \\",
+          Comment (21, 30): \\"# comment\\",
+          Space (22, 23): \\" \\"
+        ]"
+      `);
+    });
+
+    it("should parse variable with comment reject by new line", () => {
+      const buff = Buffer.from(`FOO : number = "12\n3" # comment`);
+
+      expect(() => DataSource.createDataSource(buff)).toThrowError();
+    });
+
+    it("should parse variable with comment", () => {
+      const buff = Buffer.from(`FOO : number = '12#3' # comment`);
+
+      const envuseParser = DataSource.createDataSource(buff);
+
+      expect(inspect(envuseParser.elementList)).toMatchInlineSnapshot(`
+        "[
+          Block (0, 31): \\"FOO : number = '12#3' # comment\\",
+          Variable (0, 21): \\"FOO : number = '12#3'\\",
+          VariableKey (0, 3): \\"FOO\\",
+          Space (3, 4): \\" \\",
+          SymbolColon (4, 5): \\":\\",
+          Space (5, 6): \\" \\",
+          VariableKey (6, 12): \\"number\\",
+          Space (12, 13): \\" \\",
+          SymbolEqual (13, 14): \\"=\\",
+          Space (14, 15): \\" \\",
+          VariableValue (15, 21): \\"'12#3'\\",
+          SpaceNewLine (21, 22): \\" \\",
+          Comment (22, 31): \\"# comment\\",
+          Space (23, 24): \\" \\"
+        ]"
+      `);
+    });
+
+    it("should parse variable with comment", () => {
+      const buff = Buffer.from(`FOO : number = HOLA HI    # comment`);
+
+      const envuseParser = DataSource.createDataSource(buff);
+
+      // console.log(inspect(envuseParser.elementList))
+      expect(inspect(envuseParser.elementList)).toMatchInlineSnapshot(`
+        "[
+          Block (0, 35): \\"FOO : number = HOLA HI    # comment\\",
+          Variable (0, 22): \\"FOO : number = HOLA HI\\",
+          VariableKey (0, 3): \\"FOO\\",
+          Space (3, 4): \\" \\",
+          SymbolColon (4, 5): \\":\\",
+          Space (5, 6): \\" \\",
+          VariableKey (6, 12): \\"number\\",
+          Space (12, 13): \\" \\",
+          SymbolEqual (13, 14): \\"=\\",
+          Space (14, 15): \\" \\",
+          VariableValue (15, 22): \\"HOLA HI\\",
+          SpaceNewLine (22, 26): \\"    \\",
+          Comment (26, 35): \\"# comment\\",
+          Space (27, 28): \\" \\"
+        ]"
+      `);
+    });
+
+    it("should parse variable with comment", () => {
+      const buff = Buffer.from(
+        `FOO : number = HOLA HI    # comment\nA='B#'#sa`
+      );
+
+      const envuseParser = DataSource.createDataSource(buff);
+
+      // console.log(inspect(envuseParser.elementList))
+      expect(inspect(envuseParser.elementList)).toMatchInlineSnapshot(`
+        "[
+          Block (0, 45): \\"FOO : number = HOLA HI    # comment\\\\nA='B#'#sa\\",
+          Variable (0, 22): \\"FOO : number = HOLA HI\\",
+          VariableKey (0, 3): \\"FOO\\",
+          Space (3, 4): \\" \\",
+          SymbolColon (4, 5): \\":\\",
+          Space (5, 6): \\" \\",
+          VariableKey (6, 12): \\"number\\",
+          Space (12, 13): \\" \\",
+          SymbolEqual (13, 14): \\"=\\",
+          Space (14, 15): \\" \\",
+          VariableValue (15, 22): \\"HOLA HI\\",
+          SpaceNewLine (22, 26): \\"    \\",
+          Comment (26, 36): \\"# comment\\\\n\\",
+          Space (27, 28): \\" \\",
+          Variable (36, 42): \\"A='B#'\\",
+          VariableKey (36, 37): \\"A\\",
+          SymbolEqual (37, 38): \\"=\\",
+          VariableValue (38, 42): \\"'B#'\\",
+          Comment (42, 45): \\"#sa\\"
+        ]"
+      `);
+    });
+  });
+
+  it("should parse variable with backslash", () => {
+    const buff = Buffer.from(`A='\\''\n`);
+
+    const envuseParser = DataSource.createDataSource(buff);
+
+    // console.log(inspect(envuseParser.elementList))
+    expect(inspect(envuseParser.elementList)).toMatchInlineSnapshot(`
+      "[
+        Block (0, 7): \\"A='\\\\\\\\''\\\\n\\",
+        Variable (0, 6): \\"A='\\\\\\\\''\\",
+        VariableKey (0, 1): \\"A\\",
+        SymbolEqual (1, 2): \\"=\\",
+        VariableValue (2, 6): \\"'\\\\\\\\''\\",
+        SpaceNewLine (6, 7): \\"\\\\n\\"
+      ]"
+    `);
+  });
+
+  it("should parse variable with backslash", () => {
+    const buff = Buffer.from(`A="\\""\n`);
+
+    const envuseParser = DataSource.createDataSource(buff);
+
+    // console.log(inspect(envuseParser.elementList))
+    expect(inspect(envuseParser.elementList)).toMatchInlineSnapshot(`
+      "[
+        Block (0, 7): \\"A=\\\\\\"\\\\\\\\\\\\\\"\\\\\\"\\\\n\\",
+        Variable (0, 6): \\"A=\\\\\\"\\\\\\\\\\\\\\"\\\\\\"\\",
+        VariableKey (0, 1): \\"A\\",
+        SymbolEqual (1, 2): \\"=\\",
+        VariableValue (2, 6): \\"\\\\\\"\\\\\\\\\\\\\\"\\\\\\"\\",
+        SpaceNewLine (6, 7): \\"\\\\n\\"
+      ]"
+    `);
+  });
+
+  it("should parse data source full demo", () => {
+    const [fl, buff] = takeDemoFile();
+
+    expect(() => {
+      DataSource.createDataSource({
+        filename: fl,
+        body: buff,
+      });
+    }).not.toThrowError();
+
+    // console.log(inspect(envuseFileParser.elementList))
+
+    // expect(inspect(envuseFileParser.elementList)).toMatchInlineSnapshot();
   });
 });
 

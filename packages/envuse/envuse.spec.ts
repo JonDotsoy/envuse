@@ -22,7 +22,7 @@ describe("envuse", () => {
           {
             \\"$type\\": \\"Variable\\",
             \\"pos\\": 0,
-            \\"end\\": 8,
+            \\"end\\": 7,
             \\"keyVariable\\": {
               \\"$type\\": \\"VariableKey\\",
               \\"pos\\": 0,
@@ -32,14 +32,19 @@ describe("envuse", () => {
             \\"valueVariable\\": {
               \\"$type\\": \\"VariableValue\\",
               \\"pos\\": 4,
-              \\"end\\": 8,
+              \\"end\\": 7,
               \\"value\\": \\"bar\\"
             }
           },
           {
+            \\"$type\\": \\"SpaceNewLine\\",
+            \\"pos\\": 7,
+            \\"end\\": 8
+          },
+          {
             \\"$type\\": \\"Variable\\",
             \\"pos\\": 8,
-            \\"end\\": 16,
+            \\"end\\": 15,
             \\"keyVariable\\": {
               \\"$type\\": \\"VariableKey\\",
               \\"pos\\": 8,
@@ -49,9 +54,14 @@ describe("envuse", () => {
             \\"valueVariable\\": {
               \\"$type\\": \\"VariableValue\\",
               \\"pos\\": 12,
-              \\"end\\": 16,
+              \\"end\\": 15,
               \\"value\\": \\"qux\\"
             }
+          },
+          {
+            \\"$type\\": \\"SpaceNewLine\\",
+            \\"pos\\": 15,
+            \\"end\\": 16
           }
         ]
       }"

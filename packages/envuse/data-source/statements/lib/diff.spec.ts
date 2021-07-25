@@ -29,7 +29,7 @@ describe("diff", () => {
             "base": Object {
               "$type": "Variable",
               "children": undefined,
-              "end": 24,
+              "end": 23,
               "keyVariable": Object {
                 "$type": "VariableKey",
                 "children": undefined,
@@ -42,7 +42,7 @@ describe("diff", () => {
               "valueVariable": Object {
                 "$type": "VariableValue",
                 "children": undefined,
-                "end": 24,
+                "end": 23,
                 "pos": 20,
                 "value": "ddd",
               },
@@ -53,7 +53,7 @@ describe("diff", () => {
             "base": Object {
               "$type": "Variable",
               "children": undefined,
-              "end": 32,
+              "end": 31,
               "keyVariable": Object {
                 "$type": "VariableKey",
                 "children": undefined,
@@ -66,7 +66,7 @@ describe("diff", () => {
               "valueVariable": Object {
                 "$type": "VariableValue",
                 "children": undefined,
-                "end": 32,
+                "end": 31,
                 "pos": 28,
                 "value": "iii",
               },
@@ -74,7 +74,7 @@ describe("diff", () => {
             "compare": Object {
               "$type": "Variable",
               "children": undefined,
-              "end": 32,
+              "end": 31,
               "keyVariable": Object {
                 "$type": "VariableKey",
                 "children": undefined,
@@ -87,7 +87,7 @@ describe("diff", () => {
               "valueVariable": Object {
                 "$type": "VariableValue",
                 "children": undefined,
-                "end": 32,
+                "end": 31,
                 "pos": 28,
                 "value": "jjj",
               },
@@ -98,7 +98,7 @@ describe("diff", () => {
             "compare": Object {
               "$type": "Variable",
               "children": undefined,
-              "end": 24,
+              "end": 23,
               "keyVariable": Object {
                 "$type": "VariableKey",
                 "children": undefined,
@@ -111,7 +111,7 @@ describe("diff", () => {
               "valueVariable": Object {
                 "$type": "VariableValue",
                 "children": undefined,
-                "end": 24,
+                "end": 23,
                 "pos": 20,
                 "value": "fff",
               },
