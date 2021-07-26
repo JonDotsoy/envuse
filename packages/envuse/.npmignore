@@ -12,3 +12,6 @@ jest.config.js
 **/*.spec.js
 **/*.spec.js.map
 .environment/
+.__environment_demo__/
+.vscode/
+scripts/

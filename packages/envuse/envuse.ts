@@ -2,8 +2,8 @@ import fs from "fs";
 import { DataSource, Option, Values } from "./data-source/data-source";
 import { BlockType } from "./data-source/statements/comps/Block";
 import { SymbolEqual } from "./data-source/statements/comps/SymbolEqual";
-import { VariableValue } from "./data-source/statements/comps/VariableValue";
-import { prepareTypeScriptDefinition, EnvuseDefinition } from "./global-envuse-loaded";
+import { Variable } from "./data-source/statements/comps/Variable";
+import { createTypeScriptDefinition, EnvuseDefinition } from "./global-envuse-loaded";
 
 const variableLoader: { [k: string]: any } = {}
 
@@ -45,18 +45,19 @@ export const register = (opts?: { filepath?: string, lockFilepath?: string }) =>
       variableLoader[key] = value;
     }
 
-    prepareTypeScriptDefinition(r);
+    createTypeScriptDefinition(r);
 
-    const bodyLock: number[] = [...ast.body]
-    ast.elementList.map(el => {
-      if (el instanceof SymbolEqual || el instanceof VariableValue) {
-        bodyLock.fill(0, el.pos, el.end)
-      }
-
-      // bodyLock.push(...ast.body.subarray(el.pos, el.end))
-
-    })
-    fs.writeFileSync(lockFilepath, Buffer.from(bodyLock.filter(e => e !== 0)));
+    // Check if not there is a lock file
+    if (!fs.existsSync(lockFilepath)) {
+      const bodyLock: number[] = [...ast.body]
+      ast.elementList.map(el => {
+        if (el instanceof Variable) {
+          const pos = el.elementList.find(el => el instanceof SymbolEqual)?.pos ?? el.valueVariable.pos
+          bodyLock.fill(0, pos, el.valueVariable.end)
+        }
+      })
+      fs.writeFileSync(lockFilepath, Buffer.from(bodyLock.filter(e => e !== 0)));
+    }
 
     for (const key in parsed) {
       if (parsed.hasOwnProperty(key)) {

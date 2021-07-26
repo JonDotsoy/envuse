@@ -4,18 +4,30 @@ import { takeDemoFile } from "./data-source/statements/lib/takeDemoFile";
 
 // describe test with title "Register env use"
 describe("Register envuse", () => {
-  const folderEnvironmentTest1 = `${__dirname}/.environment/test1`;
+  const folderEnvironmentTest1 = `${__dirname}/.__environment_demo__/test1`;
   const fileScriptDemo = `${folderEnvironmentTest1}/console.log.js`;
   const fileEnvuse = `${folderEnvironmentTest1}/.envuse`;
   const fileEnvuseLock = `${folderEnvironmentTest1}/.envuse-lock`;
 
   beforeAll(() => {
-    const [fl, body] = takeDemoFile("Register: Demo Envuse");
+    // files to remove
+    const filesToRemove = [
+      fileScriptDemo,
+      fileEnvuse,
+      fileEnvuseLock
+    ];
+
+    // remove files
+    filesToRemove.forEach(file => {
+      if (fs.existsSync(file)) {
+        fs.unlinkSync(file);
+      }
+    });
+
+    const [_fl, body] = takeDemoFile("Register: Demo Envuse");
 
     fs.mkdirSync(folderEnvironmentTest1, { recursive: true });
-
     fs.writeFileSync(fileEnvuse, body);
-
     fs.writeFileSync(fileScriptDemo, `console.log(process.env["API_KEY"])`);
   });
 
@@ -59,24 +71,24 @@ describe("Register envuse", () => {
       ###
       # Comment descriptive
       ###
-      API_KEY             # API key UUIDv4
-      DB_HOST            
-      DB_PORT : number    # Database port
-      DB_USER            
-      DB_PASSWORD        
-      DB_NAME            
+      API_KEY            # API key UUIDv4
+      DB_HOST           
+      DB_PORT : number   # Database port
+      DB_USER           
+      DB_PASSWORD       
+      DB_NAME           
 
       #; if SHELL_SYSTEM  ===  'windows'  ===  1_232.3_21_12 === A.D.V
-        COLOR_TERM : boolean  
+        COLOR_TERM : boolean 
 
         #; if SHELL_SYSTEM  ===  'windows'  ===  1_232.3_21_12 === A.D.V
-          ssl : boolean  
+          ssl : boolean 
         #; fi
 
       #; fi
 
       #; if true
-        FORCE_URL_SSL   
+        FORCE_URL_SSL 
       #; fi
 
       # single comment

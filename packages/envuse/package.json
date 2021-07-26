@@ -5,14 +5,14 @@
   "main": "envuse.js",
   "publishConfig": {
     "access": "public",
-    "tag": "latest"
+    "tag": "beta"
   },
   "scripts": {
     "clean": "tsc --build --clean",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "dev": "tsc -w",
-    "prepare": "tsc",
+    "prepare": "tsc && node ./scripts/initialize_envuse-definition_file.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "git-tag-current": "git tag $npm_package_name@v$npm_package_version"
