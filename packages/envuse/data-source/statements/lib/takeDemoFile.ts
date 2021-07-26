@@ -81,12 +81,18 @@ const charAllow = Buffer.from([
   ...Array.from(range(0x30, 0x39)),
 ]);
 
-export function takeDemoFile(sufixt?: string) {
+export function takeDemoFile(name?: string) {
   const { demoPath, jestExpectState } = getState();
   const relativeDemoPath = path.relative(process.cwd(), demoPath);
   const bodyDemofile = readDemoFile(demoPath);
 
-  const testName = `${jestExpectState.currentTestName}${sufixt ?? ''}`;
+  if (!jestExpectState.currentTestName && !name) {
+    const err = new Error("No test name provided");
+    Error.captureStackTrace(err, takeDemoFile);
+    throw err;
+  }
+
+  const testName = `${jestExpectState.currentTestName ?? ""}${name ?? ''}`;
   const demo = bodyDemofile?.[testName];
 
   if (typeof demo === "object" && demo.path) {

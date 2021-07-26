@@ -109,6 +109,8 @@ export class Block extends Base {
           return Comment.serialize(child);
         case "Variable":
           return Variable.serialize(child);
+        case "BlockComment":
+          return BlockComment.serialize(child);
         default: {
           // @ts-ignore
           throw new Error(`type unsupported ${child.$type}`);

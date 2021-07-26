@@ -2,6 +2,13 @@ import { BufferCursor } from "../lib/BufferCursor";
 import { CharactersKey } from "../tdo/CharactersKey";
 import { Base } from "./Base";
 
+
+export type SymbolColonType = {
+  $type: "SymbolColon";
+  [k: string]: any;
+};
+
+
 export class SymbolColon extends Base {
   $type = "SymbolColon" as const;
 
@@ -15,5 +22,9 @@ export class SymbolColon extends Base {
         this.rejectUnexpectedTokenError();
       }
     }
+  }
+
+  static serialize(comp: SymbolColonType) {
+    return Buffer.from(":");
   }
 }

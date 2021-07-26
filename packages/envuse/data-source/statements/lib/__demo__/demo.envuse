@@ -1,0 +1,30 @@
+# .envuse
+##############################
+# Demo file for .envuse
+##############################
+###
+# Comment descriptive
+###
+API_KEY : string
+# API key UUIDv4
+DB_HOST : string
+DB_PORT : number
+# Database port
+DB_USER : string
+DB_PASSWORD : string
+DB_NAME : string
+#; if SHELL_SYSTEM === "windows" === 1232.32112 === A.D.V
+COLOR_TERM : boolean
+#; if SHELL_SYSTEM === "windows" === 1232.32112 === A.D.V
+ssl : boolean
+#; fi
+#; fi
+#; if true
+FORCE_URL_SSL : string
+#; fi
+#  single comment
+A : string
+# # asd
+###
+No 123
+###

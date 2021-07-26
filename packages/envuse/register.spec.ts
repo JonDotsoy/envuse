@@ -1,17 +1,22 @@
 import fs from "fs";
 import childProcess from "child_process";
+import { takeDemoFile } from "./data-source/statements/lib/takeDemoFile";
 
 // describe test with title "Register env use"
 describe("Register envuse", () => {
   const folderEnvironmentTest1 = `${__dirname}/.environment/test1`;
   const fileScriptDemo = `${folderEnvironmentTest1}/console.log.js`;
+  const fileEnvuse = `${folderEnvironmentTest1}/.envuse`;
+  const fileEnvuseLock = `${folderEnvironmentTest1}/.envuse-lock`;
 
   beforeAll(() => {
+    const [fl, body] = takeDemoFile("Register: Demo Envuse");
+
     fs.mkdirSync(folderEnvironmentTest1, { recursive: true });
 
-    fs.writeFileSync(`${folderEnvironmentTest1}/.envuse`, `TEST=test1`);
+    fs.writeFileSync(fileEnvuse, body);
 
-    fs.writeFileSync(fileScriptDemo, `console.log(process.env["TEST"])`);
+    fs.writeFileSync(fileScriptDemo, `console.log(process.env["API_KEY"])`);
   });
 
   it("should register load env", () => {
@@ -43,6 +48,42 @@ describe("Register envuse", () => {
         })
     ).toString();
 
-    expect(out).toBe("test1\n");
+    expect(out).toBe("cf7d6f43-bb85-4045-a23f-7fb94bfac745\n");
+
+    expect(fs.readFileSync(fileEnvuseLock, "utf8")).toMatchInlineSnapshot(`
+      "# .envuse
+      ##############################
+      # Demo file for .envuse
+      ##############################
+
+      ###
+      # Comment descriptive
+      ###
+      API_KEY             # API key UUIDv4
+      DB_HOST            
+      DB_PORT : number    # Database port
+      DB_USER            
+      DB_PASSWORD        
+      DB_NAME            
+
+      #; if SHELL_SYSTEM  ===  'windows'  ===  1_232.3_21_12 === A.D.V
+        COLOR_TERM : boolean  
+
+        #; if SHELL_SYSTEM  ===  'windows'  ===  1_232.3_21_12 === A.D.V
+          ssl : boolean  
+        #; fi
+
+      #; fi
+
+      #; if true
+        FORCE_URL_SSL   
+      #; fi
+
+      # single comment
+        A # # asd
+            ###
+      No 123
+      ###"
+    `);
   });
 });

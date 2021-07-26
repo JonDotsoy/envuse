@@ -1,6 +1,7 @@
-import { Base, BaseType } from "../comps/Base";
 import { BlockType } from "../comps/Block";
 import * as comps from "../comps/_compsList";
+import { stringifyCtx } from "./stringifyCtx";
+import { StringifyOptions } from "./StringifyOptions";
 
 const serialize_comp = (comp: BlockType) => {
   switch (comp.$type) {
@@ -13,6 +14,9 @@ const serialize_comp = (comp: BlockType) => {
   }
 };
 
-export const stringify = (comp: BlockType) => {
-  return serialize_comp(comp);
+export const stringify = (comp: BlockType, options?: StringifyOptions) => {
+  stringifyCtx.start(options);
+  const res = serialize_comp(comp);
+  stringifyCtx.end();
+  return res;
 };

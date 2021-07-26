@@ -1,5 +1,5 @@
 import { Base } from "./statements/comps/Base";
-import { Block } from "./statements/comps/Block";
+import { Block, BlockType } from "./statements/comps/Block";
 import { ArrCursor } from "./statements/lib/ArrCursor";
 import { CommentOperator } from "./statements/comps/CommentOperator";
 import { UnexpectedTokenError } from "./statements/tdo/UnexpectedTokenError";
@@ -9,6 +9,8 @@ import fs from "fs";
 import { BlockComment } from "./statements/comps/BlockComment";
 import { Comment } from "./statements/comps/Comment";
 import { inspect } from "util";
+import { stringify as DataSourceStringify } from "./statements/lib/stringify";
+import { StringifyOptions } from "./statements/lib/StringifyOptions";
 
 
 export type CustomType = {
@@ -259,5 +261,9 @@ export class DataSource {
       return new DataSource(null, options).toAstBody();
     }
     return new DataSource(options.filename ?? null, options.body).toAstBody();
+  }
+
+  static stringify(comp: BlockType, options?: StringifyOptions) {
+    return DataSourceStringify(comp, options);
   }
 }

@@ -18,14 +18,14 @@ create a `.envuse` (encoded on UTF8) file in the root of your project, into this
 
 > preferebly add the `.envuse` file to your `.gitignore` file so that it is not checked into your version control system
 
-Define a variable with a format `VARIABLE_NAME=value`, look at the example below:
+Define a variable with a format `VARIABLE_NAME=value` with type definition use `VARIABLE_NAME:type=value`, look at the example below:
 
 ```envuse
 # .envuse
 
 API_KEY=1234567890
 DB_HOST=127.0.0.1
-DB_PORT=5432
+DB_PORT:number=5432
 DB_USER=postgres
 DB_PASSWORD=postgres
 ```
@@ -38,7 +38,7 @@ In the `.envuse` file can use if sentences to define the variables to be loaded 
 API_KEY=1234567890
 
 #; if SHELL_SYSTEM === 'windows'
-COLOR_TERM=false
+COLOR_TERM:boolean=false
 #; fi
 ```
 

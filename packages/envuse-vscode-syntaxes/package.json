@@ -24,7 +24,8 @@
           "envuse"
         ],
         "extensions": [
-          ".envuse"
+          ".envuse",
+          ".envuse-lock"
         ],
         "configuration": "./language-configuration.json"
       }

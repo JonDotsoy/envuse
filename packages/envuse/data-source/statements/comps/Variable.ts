@@ -9,6 +9,7 @@ import { VariableValue, VariableValueType } from "./VariableValue";
 import { BaseSerializeOption } from "../tdo/BaseSerializeOption";
 import { CharactersKey } from "../tdo/CharactersKey";
 import { SymbolColon } from "./SymbolColon";
+import { stringifyCtx } from "../lib/stringifyCtx";
 
 export type VariableType = {
   $type: "Variable";
@@ -73,10 +74,41 @@ export class Variable extends Base {
   static charactersKey = charactersKeys;
 
   static serialize(comp: VariableType) {
-    return Buffer.from(
-      `${VariableKey.serialize(comp.keyVariable)}=${VariableValue.serialize(
-        comp.valueVariable
-      )}\n`
-    );
+    const variableWithoutValue = stringifyCtx.options?.variableWithoutValue ?? false;
+
+    let partialVariableOut = Buffer.from(`${VariableKey.serialize(comp.keyVariable)}`);
+
+    if (comp.typeVariable) {
+      partialVariableOut = Buffer.concat([
+        partialVariableOut,
+        Buffer.from(` : `),
+        Buffer.from(`${VariableKey.serialize(comp.typeVariable)}`),
+      ]);
+    } else {
+      partialVariableOut = Buffer.concat([
+        partialVariableOut,
+        Buffer.from(` : `),
+        Buffer.from(`${VariableKey.serialize({
+          $type: "VariableKey",
+          value: "string",
+        })}`),
+      ]);
+    }
+
+    if (variableWithoutValue) {
+      return Buffer.concat([
+        partialVariableOut,
+        Buffer.from(`\n`),
+      ]);
+    }
+
+    partialVariableOut = Buffer.concat([
+      partialVariableOut,
+      Buffer.from(" = "),
+      VariableValue.serialize(comp.valueVariable),
+      Buffer.from("\n"),
+    ]);
+
+    return partialVariableOut;
   }
 }

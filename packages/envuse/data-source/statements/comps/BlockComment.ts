@@ -6,7 +6,7 @@ import { Base } from "./Base";
 
 export type BlockCommentType = {
   $type: "BlockComment";
-  // value: string;
+  value: string;
   [k: string]: any;
 };
 
@@ -59,5 +59,12 @@ export class BlockComment extends Base {
       ...super.toJSON(),
       // value: this.value,
     };
+  }
+
+  static serialize(blockComment: BlockCommentType) {
+    return Buffer.concat([
+      Buffer.from(blockComment.value),
+      Buffer.from("\n"),
+    ]);
   }
 }

@@ -4,7 +4,7 @@ import { BCharType } from "../tdo/BCharType";
 import { Space } from "./Space";
 import { VariableKey, VariableKeyType } from "./VariableKey";
 import { Block, BlockType } from "./Block";
-import { CharactersKey as K } from "../tdo/CharactersKey";
+import { CharactersKey, CharactersKey as K } from "../tdo/CharactersKey";
 import { b } from "../lib/toBuffer";
 import {
   CommentOperatorStatement,
@@ -77,15 +77,15 @@ export class CommentOperator extends Base {
   }
 
   static serialize(comp: CommentOperatorType) {
-    const buff: Buffer[] = [];
+    const buff: Buffer[] = [b("")];
 
     buff.push(
       comp.statement
         ? b(
-            `#; ${VariableKey.serialize(
-              comp.operator
-            )} ${CommentOperatorStatement.serialize(comp.statement)}\n`
-          )
+          `#; ${VariableKey.serialize(
+            comp.operator
+          )} ${CommentOperatorStatement.serialize(comp.statement)}\n`
+        )
         : b(`#; ${VariableKey.serialize(comp.operator)}\n`)
     );
 
