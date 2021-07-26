@@ -53,20 +53,20 @@ var EnvConfigStore_1 = require("./EnvConfigStore");
 //     return configFound;
 // }
 var getConfigStore = function (cwd) {
-    var pathconfig = path_1.resolve(os_1.homedir(), ".envuse");
-    var bodyConfig = fs_1.existsSync(pathconfig)
-        ? JSON.parse(fs_1.readFileSync(pathconfig, "utf8"))
-        : {};
-    var configStore = new EnvConfigStore_1.EnvuseConfigStore(cwd, bodyConfig);
-    return {
-        pathconfig: pathconfig,
-        configStore: configStore,
-        saveConfigStore: function () {
-            return fs_1.writeFileSync(
-                pathconfig,
-                JSON.stringify(configStore.toJSON(), null, 2)
-            );
-        },
-    };
+  var pathconfig = path_1.resolve(os_1.homedir(), ".envuse");
+  var bodyConfig = fs_1.existsSync(pathconfig)
+    ? JSON.parse(fs_1.readFileSync(pathconfig, "utf8"))
+    : {};
+  var configStore = new EnvConfigStore_1.EnvuseConfigStore(cwd, bodyConfig);
+  return {
+    pathconfig: pathconfig,
+    configStore: configStore,
+    saveConfigStore: function () {
+      return fs_1.writeFileSync(
+        pathconfig,
+        JSON.stringify(configStore.toJSON(), null, 2)
+      );
+    },
+  };
 };
 exports.getConfigStore = getConfigStore;
