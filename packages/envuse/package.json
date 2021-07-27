@@ -1,6 +1,6 @@
 {
   "name": "envuse",
-  "version": "2.1.1",
+  "version": "2.3.0",
   "description": "Load environment variables from a `.envuse` file into the `process.env`",
   "main": "envuse.js",
   "publishConfig": {
@@ -8,6 +8,7 @@
     "tag": "beta"
   },
   "scripts": {
+    "release": "standard-version -t envuse@v",
     "clean": "tsc --build --clean",
     "build": "tsc",
     "build:watch": "tsc --watch",
@@ -29,6 +30,7 @@
     "@types/node": "^12.7.5",
     "@types/yaml": "^1.9.7",
     "jest": "^27.0.6",
+    "standard-version": "^9.3.1",
     "ts-jest": "^27.0.3",
     "ts-node": "^10.0.0",
     "typescript": "^3.6.3",
