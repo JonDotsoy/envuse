@@ -50,6 +50,9 @@ export namespace CharactersKey {
   export const newLineCRLF = [carriageReturn, newLineLF];
   /** symbol: "\t" */
   export const horizontalTab = 0x09;
-  /** symbol: : */
+  /** symbol: ":" */
   export const colon = 0x3A;
+
+  /** symbol: ! */
+  export const exclamationMark = 0x21;
 }

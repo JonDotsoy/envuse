@@ -1,7 +1,7 @@
 import { BufferCursor } from "../lib/BufferCursor";
 import { UnexpectedTokenError } from "../tdo/UnexpectedTokenError";
 import { EventEmitter } from "events";
-import util from "util";
+import util, { inspect, InspectOptions } from "util";
 import { BaseSerializeOption as BaseSerializeOption } from "../tdo/BaseSerializeOption";
 import { TypeNamesList } from "../tdo/TypeNamesList";
 
@@ -19,10 +19,34 @@ export type BaseExportTypeJSON<T = TypeNamesList> = BaseExportType & {
   $type: T;
 };
 
-export const printElement = (element: Base) =>
-  `${element.toObjectName()} (${element.pos}, ${element.end}): ${JSON.stringify(
+const elmPrefix = (elm: Base) => {
+  let countPrefix = 0;
+  let currentElement = elm;
+
+  while (currentElement.parent) {
+    countPrefix += 1;
+    currentElement = currentElement.parent;
+  }
+
+  if (elm.parent) {
+    return `${`  `.repeat(countPrefix)}`
+  }
+
+  return ''
+}
+
+export const printBodyElement = (element: Base) => {
+  const str = JSON.stringify(
     element.body.slice(element.pos, element.end).toString()
-  )}`;
+  );
+  if (element.elementList.length > 1) {
+    return str.length > 10 ? `${str.substring(0, 10)}...` : str
+  }
+  return str
+}
+
+export const printElement = (element: Base) =>
+  `${element.toObjectName()} (${element.pos}, ${element.end}): ${printBodyElement(element)}`;
 
 type BodyAssigned<T> = T extends { propsMutable: infer R }
   ? R extends keyof T
@@ -48,8 +72,11 @@ export abstract class Base {
 
   #events = new EventEmitter();
 
+  #parent: Base | null = null;
+
   end: number = this.pos;
   children: Base[] = [];
+  oChildren: Base[] = [];
   #elementList: Base[] = [this];
 
   raw = Buffer.from([]);
@@ -69,6 +96,10 @@ export abstract class Base {
     this.#body = body;
   }
 
+  get parent() {
+    return this.#parent;
+  }
+
   toObjectName() {
     return this.constructor.name;
   }
@@ -77,8 +108,24 @@ export abstract class Base {
     return printElement(this);
   }
 
-  [util.inspect.custom]() {
-    return printElement(this);
+  [util.inspect.custom](depth: number, inspectOptions: InspectOptions) {
+    let out = `${printElement(this)}`;
+
+    if (depth <= 0) {
+      return `${out}${this.oChildren.length ? `\n  ...` : ``}`
+    }
+
+    // console.log(inspectOptions)
+    if (this.oChildren.length) {
+      for (const child of this.oChildren) {
+        out += `\n`
+        out += inspect(child, { ...inspectOptions, depth: depth - 1 })
+          .replace(/(^)/, '  ')
+          .replace(/\n/g, "\n  ");
+      }
+      // out += `\n${this.oChildren.map(el => el[util.inspect.custom](depth, inspectOptions)).join("\n")}`;
+    }
+    return out;
   }
 
   on<T extends keyof BaseEvents>(event: T, listener: BaseEvents[T]) {
@@ -149,9 +196,12 @@ export abstract class Base {
     this.emit("create_element", comp);
     Base.createElement(comp, assign);
 
+    comp.#parent = this;
+
     const [, ...elements] = comp.elementList;
 
     this.elementList.push(...elements);
+    this.oChildren.push(comp)
 
     return comp;
   }
@@ -166,17 +216,6 @@ export abstract class Base {
 
   abstract prepare(bufferCursor: BufferCursor): void;
 
-  // f(cb: (gen: Iter, ) => void) {
-  //   const gen = this.ngen();envuseFileParser.toAstBody()
-  //   while (true) {
-  //     const { done, value } = gen.next();
-  //     if (done || !value) return;
-  //     const [index, current_char, { prev, next }] = value;
-
-  //     cb
-  //   }
-  // }
-
   appendRaw(raw: Buffer | number) {
     this.raw = Buffer.concat([
       this.raw,
@@ -185,37 +224,6 @@ export abstract class Base {
     this._raw = this.raw.toString();
 
     return this;
-  }
-
-  /** @deprecated */
-  *iter() {
-    let index = this.pos;
-
-    while (true) {
-      const char = this.body[index];
-      if (char === undefined) break;
-
-      const current_index = index;
-      const current_char = Buffer.from([char]);
-      const prev = (len: number) => {
-        const begin = Math.max(index - len + 1, 0);
-        const end = Math.min(index + 1, this.body.length);
-        return this.body.slice(begin, end);
-      };
-      const next = (len: number) => {
-        const begin = Math.max(index, 0);
-        const end = Math.min(index + len, this.body.length);
-        return this.body.slice(begin, end);
-      };
-
-      yield [
-        index,
-        current_char,
-        { current_char, current_index, prev, next },
-      ] as const;
-
-      index += 1;
-    }
   }
 
   rejectUnexpectedTokenError(options?: RejectOptions): never {

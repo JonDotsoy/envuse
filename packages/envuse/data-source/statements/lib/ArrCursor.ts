@@ -25,7 +25,7 @@ export class ArrCursor<T, B extends T | undefined = T | undefined> {
 
   printDescriptor() {
     const current = this.current();
-    const isNumber = (v:any): v is number => typeof current === "number";
+    const isNumber = (v: any): v is number => typeof current === "number";
     const txt = `position: ${this.position} current: ${current} json preview: ${isNumber(current) ? JSON.stringify(Buffer.from([current]).toString()) : ""}`
     console.log(txt)
     return txt
@@ -73,6 +73,10 @@ export class ArrCursor<T, B extends T | undefined = T | undefined> {
 
   current() {
     return this.body[this.position] as unknown as B;
+  }
+
+  currentIs(v: B) {
+    return this.current() === v;
   }
 
   forward(steps: number = 1) {

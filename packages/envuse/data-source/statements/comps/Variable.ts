@@ -10,9 +10,12 @@ import { BaseSerializeOption } from "../tdo/BaseSerializeOption";
 import { CharactersKey } from "../tdo/CharactersKey";
 import { SymbolColon } from "./SymbolColon";
 import { stringifyCtx } from "../lib/stringifyCtx";
+import { Comment } from "./Comment";
+import { SymbolExclamationMark } from "./SymbolExclamationMark";
 
 export type VariableType = {
   $type: "Variable";
+  required?: boolean;
   keyVariable: VariableKeyType;
   typeVariable?: VariableKeyType;
   valueVariable: VariableValueType;
@@ -22,6 +25,7 @@ export type VariableType = {
 export class Variable extends Base {
   $type = "Variable" as const;
 
+  required?: boolean;
   keyVariable!: VariableKey;
   typeVariable?: VariableKey;
   valueVariable!: VariableValue;
@@ -29,6 +33,16 @@ export class Variable extends Base {
   prepare(bufferCursor: BufferCursor): void {
     const keyVariable = this.createElement(VariableKey);
     this.keyVariable = keyVariable;
+
+    if (bufferCursor.currentIs(CharactersKey.space)) {
+      this.createElement(Space);
+    }
+
+    // Next cursor is an exclamation mark
+    if (bufferCursor.currentIs(CharactersKey.exclamationMark)) {
+      this.createElement(SymbolExclamationMark);
+      this.required = true;
+    }
 
     if (bufferCursor.current() === CharactersKey.space) {
       this.createElement(Space);
@@ -49,16 +63,31 @@ export class Variable extends Base {
       }
     }
 
-    this.createElement(SymbolEqual);
+    if (bufferCursor.current() === CharactersKey.equalsSign) {
 
-    if (bufferCursor.current() === CharactersKey.space) {
-      this.createElement(Space);
+      this.createElement(SymbolEqual);
+
+      if (bufferCursor.current() === CharactersKey.space) {
+        this.createElement(Space);
+      }
+
+      const valueVariable = this.createElement(VariableValue);
+      this.valueVariable = valueVariable;
+
+      if (bufferCursor.current() === CharactersKey.space) {
+        this.createElement(Space);
+      }
     }
 
-    const valueVariable = this.createElement(VariableValue);
-    this.valueVariable = valueVariable;
+    if (bufferCursor.current() === CharactersKey.numberSign) {
+      this.createElement(Comment);
+    }
 
-    return;
+    if (bufferCursor.current() === CharactersKey.newLineLF || bufferCursor.isClosed()) {
+      return
+    }
+
+    this.rejectUnexpectedTokenError();
   }
 
   toJSON() {
@@ -77,6 +106,13 @@ export class Variable extends Base {
     const variableWithoutValue = stringifyCtx.options?.variableWithoutValue ?? false;
 
     let partialVariableOut = Buffer.from(`${VariableKey.serialize(comp.keyVariable)}`);
+
+    if (comp.required) {
+      partialVariableOut = Buffer.concat([
+        partialVariableOut,
+        Buffer.from(`!`),
+      ]);
+    }
 
     if (comp.typeVariable) {
       partialVariableOut = Buffer.concat([
