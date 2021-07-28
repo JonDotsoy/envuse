@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/JonDotsoy/envuse/compare/envuse@v2.3.0...envuse@v2.4.0) (2021-07-28)
+
+### Features
+
+- **envuse:** add file envuse-definition.ts ([2ec78bb](https://github.com/JonDotsoy/envuse/commit/2ec78bbb6e4a1fed8e213f954092ba52e275db95))
+
 ## [2.3.0](https://github.com/JonDotsoy/envuse/compare/envuse@v2.1.1...envuse@v2.3.0) (2021-07-27)
 
 ### Features

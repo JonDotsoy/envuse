@@ -1,6 +1,6 @@
 {
   "name": "envuse",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Load environment variables from a `.envuse` file into the `process.env`",
   "main": "envuse.js",
   "publishConfig": {
