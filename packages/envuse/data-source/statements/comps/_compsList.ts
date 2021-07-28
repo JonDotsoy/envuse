@@ -1,5 +1,5 @@
 export { Block } from "./Block";
-export { Comment } from "./Comment";
+export { CommentInline as Comment } from "./CommentInline";
 export { CommentOperator } from "./CommentOperator";
 export { CommentOperatorStatement } from "./CommentOperatorStatement";
 export { Space } from "./Space";

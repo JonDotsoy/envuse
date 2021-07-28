@@ -8,35 +8,35 @@ describe("parse ast", () => {
     const body = DataSource.createDataSource(Buffer.concat([b(`a=3\n`)]));
 
     expect(JSON.stringify(body, null, 2)).toMatchInlineSnapshot(`
-      "{
-        \\"$type\\": \\"Block\\",
-        \\"pos\\": 0,
-        \\"end\\": 4,
-        \\"children\\": [
-          {
-            \\"$type\\": \\"Variable\\",
+    "{
+      \\"$type\\": \\"Block\\",
+      \\"pos\\": 0,
+      \\"end\\": 4,
+      \\"children\\": [
+        {
+          \\"$type\\": \\"Variable\\",
+          \\"pos\\": 0,
+          \\"end\\": 3,
+          \\"keyVariable\\": {
+            \\"$type\\": \\"VariableKey\\",
             \\"pos\\": 0,
-            \\"end\\": 3,
-            \\"keyVariable\\": {
-              \\"$type\\": \\"VariableKey\\",
-              \\"pos\\": 0,
-              \\"end\\": 1,
-              \\"value\\": \\"a\\"
-            },
-            \\"valueVariable\\": {
-              \\"$type\\": \\"VariableValue\\",
-              \\"pos\\": 2,
-              \\"end\\": 3,
-              \\"value\\": \\"3\\"
-            }
+            \\"end\\": 1,
+            \\"value\\": \\"a\\"
           },
-          {
-            \\"$type\\": \\"SpaceNewLine\\",
-            \\"pos\\": 3,
-            \\"end\\": 4
+          \\"valueVariable\\": {
+            \\"$type\\": \\"VariableValue\\",
+            \\"pos\\": 2,
+            \\"end\\": 3,
+            \\"value\\": \\"3\\"
           }
-        ]
-      }"
+        },
+        {
+          \\"$type\\": \\"SpaceNewLine\\",
+          \\"pos\\": 3,
+          \\"end\\": 4
+        }
+      ]
+    }"
     `);
   });
 
@@ -136,8 +136,8 @@ describe("serialize", () => {
     };
 
     expect(stringify(block).toString()).toMatchInlineSnapshot(`
-      "aa=\\"bbb\\"
-      "
+    "aa : string = \\"bbb\\"
+    "
     `);
   });
 
@@ -164,9 +164,9 @@ describe("serialize", () => {
     };
 
     expect(stringify(block).toString()).toMatchInlineSnapshot(`
-      "# Iam comment
-      aaa=\\"bbb\\"
-      "
+    "# Iam comment
+    aaa : string = \\"bbb\\"
+    "
     `);
   });
 
@@ -176,10 +176,10 @@ describe("serialize", () => {
     );
 
     expect(stringify(block).toString()).toMatchInlineSnapshot(`
-      "#; if true === true
-      aaa=\\"bbb\\"
-      #; fi
-      "
+    "#; if true === true
+    aaa : string = \\"bbb\\"
+    #; fi
+    "
     `);
   });
 
@@ -200,13 +200,13 @@ describe("serialize", () => {
 
     expect(stringify(block).toString()).toMatchInlineSnapshot(`
       "# single comment
-      abc=\\"abc\\"
-      c=\\"abnc\\\\nasd\\"
+      abc : string = \\"abc\\"
+      c : string = \\"abnc\\\\nasd\\"
       #; if true === 12 === abc.def === \\"abc\\"
-      cde=\\"321\\"
+      cde : string = \\"321\\"
       #; fi
       # Comment
-      other=\\"true\\"
+      other : string = \\"true\\"
       "
     `);
   });

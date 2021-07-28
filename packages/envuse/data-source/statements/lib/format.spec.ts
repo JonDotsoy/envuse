@@ -10,7 +10,7 @@ describe("format", () => {
 
     const res = singleFormt(buf)
 
-    console.log(inspect(res))
+    // console.log(inspect(res))
 
   })
 

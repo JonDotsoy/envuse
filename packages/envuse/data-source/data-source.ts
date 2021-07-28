@@ -7,7 +7,7 @@ import { Variable } from "./statements/comps/Variable";
 import { StatementObject } from "./statements/comps/StatementObject";
 import fs from "fs";
 import { BlockComment } from "./statements/comps/BlockComment";
-import { Comment } from "./statements/comps/Comment";
+import { CommentInline } from "./statements/comps/CommentInline";
 import { inspect } from "util";
 import { stringify as DataSourceStringify } from "./statements/lib/stringify";
 import { StringifyOptions } from "./statements/lib/StringifyOptions";
@@ -88,7 +88,7 @@ export type CompileOptions = {
 
 /** AST Parser */
 export class DataSource {
-  constructor(private filename: string | null, private body: Buffer) { }
+  private constructor(private filename: string | null, private body: Buffer) { }
 
   toAstBody() {
     try {
@@ -169,7 +169,7 @@ export class DataSource {
 
     const isVariable = (element: Base): element is Variable => element instanceof Variable
     const isDescriptor = (element: Base): element is BlockComment => element instanceof BlockComment
-    const isComment = (element: Base): element is Comment => element instanceof Comment
+    const isComment = (element: Base): element is CommentInline => element instanceof CommentInline
 
     // const variableList = ast.elementList.filter(
     //   (element): element is Variable => element instanceof Variable

@@ -1,0 +1,7 @@
+C=C
+#;if true
+a=a
+#;if false
+b=b
+#;fi
+#;fi

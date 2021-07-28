@@ -1,6 +1,6 @@
 import { Base } from "./Base";
 import { BufferCursor } from "../lib/BufferCursor";
-import { Comment, CommentType } from "./Comment";
+import { CommentInline, CommentType } from "./CommentInline";
 import { CommentOperator, CommentOperatorType } from "./CommentOperator";
 import { Variable, VariableType } from "./Variable";
 import { SpaceNewLine, SpaceNewLineType } from "./SpaceNewLine";
@@ -22,7 +22,7 @@ export type BlockType = {
 export class Block extends Base {
   $type = "Block" as const;
 
-  children: (SpaceNewLine | Variable | CommentOperator | Comment | BlockComment)[] = [];
+  children: (SpaceNewLine | Variable | CommentOperator | CommentInline | BlockComment)[] = [];
   propsMutable!: "handleCheckCloseBlock";
 
   prepare(bufferCursor: BufferCursor) {
@@ -80,7 +80,7 @@ export class Block extends Base {
 
     // Push a Comment
     if (bufferCursor.current() === 0x23) {
-      this.children.push(this.createElement(Comment));
+      this.children.push(this.createElement(CommentInline));
       return true;
     }
 
@@ -106,7 +106,7 @@ export class Block extends Base {
         case "CommentOperator":
           return CommentOperator.serialize(child);
         case "Comment":
-          return Comment.serialize(child);
+          return CommentInline.serialize(child);
         case "Variable":
           return Variable.serialize(child);
         case "BlockComment":

@@ -1,0 +1,6 @@
+FOO=BAR
+#; if true
+aaa="bbb"
+#; fi
+
+ccc=ddd

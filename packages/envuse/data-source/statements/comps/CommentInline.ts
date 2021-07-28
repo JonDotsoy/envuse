@@ -12,13 +12,13 @@ export type CommentType = {
   [k: string]: any;
 };
 
-export class Comment extends Base {
+export class CommentInline extends Base {
   $type = "Comment" as const;
 
-  private valueRaw: number[] = [];
+  #valueRaw: number[] = [];
 
   get value() {
-    return Buffer.from(this.valueRaw).toString();
+    return Buffer.from(this.#valueRaw).toString();
   }
 
   prepare(bufferCursor: BufferCursor<BCharType>): void {
@@ -29,12 +29,12 @@ export class Comment extends Base {
     }
 
     while (bufferCursor.has()) {
-      if (bufferCursor.current() === 0x0a) {
+      if (bufferCursor.currentIs(CharactersKey.newLineLF) || bufferCursor.isClosed()) {
         bufferCursor.forward();
         return;
       }
 
-      this.valueRaw.push(bufferCursor.current());
+      this.#valueRaw.push(bufferCursor.current());
       bufferCursor.forward();
     }
   }

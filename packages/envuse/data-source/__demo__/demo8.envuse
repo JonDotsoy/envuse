@@ -1,0 +1,28 @@
+# .envuse
+##############################
+# Demo file for .envuse
+##############################
+
+###
+# Comment descriptive
+###
+API_KEY           = cf7d6f43-bb85-4045-a23f-7fb94bfac745 # API key UUIDv4
+DB_HOST           = 127.7.0.1
+DB_PORT : number  = 5432 # Database port
+DB_USER           = postgres
+DB_PASSWORD       = postgres
+DB_NAME           = postgres
+
+#; if SHELL_SYSTEM  ===  'windows'  ===  1_232.3_21_12 === A.D.V
+COLOR_TERM : boolean = false
+#; fi
+
+#; if NODE_ENV  ===  'production'
+FORCE_URL_SSL =  true
+#; fi
+
+# single comment
+A=3
+      ###
+No 123
+###

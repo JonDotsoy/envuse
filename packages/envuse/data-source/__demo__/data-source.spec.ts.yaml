@@ -1,84 +1,15 @@
-
-"DataSource shoud make a ast out": |
-  abc=def # a comment
-  foo=bar
-
-      
-  abc    ="d\"ef" # comented
-
-"DataSource shoud make a ast with operators": |
-  FOO=BAR
-  #; if true
-  aaa="bbb"
-  #; fi
-
-  ccc=ddd
-
-"DataSource shoud make a ast with multiple blocks.env": |
-  C=C
-  #;if true
-  a=a
-  #;if false
-  b=b
-  #;fi
-  #;fi
-
-"DataSource parse statement should parse StatementObject string": |
-  "\\"" # Comment
-
-"DataSource parse statement should parse statement with string": |
-  "i am a \"string" ===   "Other string\\" # comment
+"DataSource shoud make a ast out": !file ./demo1.envuse
+"DataSource shoud make a ast with operators": !file ./demo2.envuse
+"DataSource shoud make a ast with multiple blocks.env": !file ./demo3.envuse
+"DataSource parse statement should parse StatementObject string": !file ./demo4.envuse
+"DataSource parse statement should parse statement with string": !file ./demo5.envuse
 
 "DataSource parse statement should parse statement with string and special characters.special-characters.txt": |
   "\n\t"
 
-"DataSource parse statement should read property list children": |
-  ABC=def
-  #; if true
-
-  ghi=jkl
-
-  #; fi
-
-"DataSource parse statement should parse block descriptive comment": |
-  # single comment
-
-  ###
-  No 123
-  ###    
-
-  FOO=BAR
-
-"DataSource should parse data source full demo": |
-  # .envuse
-  ##############################
-  # Demo file for .envuse
-  ##############################
-
-  ###
-  # Comment descriptive
-  ###
-  API_KEY           = cf7d6f43-bb85-4045-a23f-7fb94bfac745 # API key UUIDv4
-  DB_HOST           = 127.7.0.1
-  DB_PORT : number  = 5432 # Database port
-  DB_USER           = postgres
-  DB_PASSWORD       = postgres
-  DB_NAME           = postgres
-
-  #; if SHELL_SYSTEM  ===  'windows'  ===  1_232.3_21_12 === A.D.V
-  COLOR_TERM : boolean = false
-  #; fi
-
-  #; if NODE_ENV  ===  'production'
-  FORCE_URL_SSL =  true
-  #; fi
-
-  # single comment
-  A=3
-        ###
-  No 123
-  ###
-
+"DataSource parse statement should read property list children": !file demo6.envuse
+"DataSource parse statement should parse block descriptive comment": !file demo7.envuse
+"DataSource should parse data source full demo": !file ./demo8.envuse
 "DataSource file stringify should parse envuse file and return definition": !file ./demo.envuse
 "DataSource file stringify should compile custom type": !file ./demo-custom-type.envuse
 

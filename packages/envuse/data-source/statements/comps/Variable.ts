@@ -1,16 +1,14 @@
 import { Base } from "./Base";
 import { BufferCursor } from "../lib/BufferCursor";
 import { Space } from "./Space";
-import { SpaceNewLine } from "./SpaceNewLine";
 import { VariableKey, VariableKeyType } from "./VariableKey";
 import { charactersKeys } from "../tdo/charactersKeys";
 import { SymbolEqual } from "./SymbolEqual";
 import { VariableValue, VariableValueType } from "./VariableValue";
-import { BaseSerializeOption } from "../tdo/BaseSerializeOption";
 import { CharactersKey } from "../tdo/CharactersKey";
 import { SymbolColon } from "./SymbolColon";
 import { stringifyCtx } from "../lib/stringifyCtx";
-import { Comment } from "./Comment";
+import { CommentInline } from "./CommentInline";
 import { SymbolExclamationMark } from "./SymbolExclamationMark";
 
 export type VariableType = {
@@ -80,10 +78,12 @@ export class Variable extends Base {
     }
 
     if (bufferCursor.current() === CharactersKey.numberSign) {
-      this.createElement(Comment);
+      this.createElement(CommentInline);
+      return
     }
 
-    if (bufferCursor.current() === CharactersKey.newLineLF || bufferCursor.isClosed()) {
+    if (bufferCursor.currentIs(CharactersKey.newLineLF) || bufferCursor.isClosed()) {
+      bufferCursor.forward();
       return
     }
 

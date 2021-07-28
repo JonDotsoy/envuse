@@ -12,26 +12,21 @@ describe("DataSource", () => {
   it("shoud make a ast out", () => {
     const [filename1, body1] = takeDemoFile();
 
-    const envuseFileParser = new DataSource(filename1, body1);
+    const envuseFileParser = DataSource.createDataSource({
+      filename: filename1,
+      body: body1,
+    });
     expect(
-      util.formatWithOptions(
-        { depth: Infinity },
-        "",
-        envuseFileParser.toAstBody()
-      )
+      util.formatWithOptions({ depth: Infinity }, "", envuseFileParser)
     ).toMatchSnapshot();
   });
 
   it("shoud make a ast with operators", () => {
     const [filename, body] = takeDemoFile();
 
-    const envuseFileParser = new DataSource(filename, body);
+    const envuseFileParser = DataSource.createDataSource({ filename, body });
     expect(
-      util.formatWithOptions(
-        { depth: Infinity },
-        "",
-        envuseFileParser.toAstBody()
-      )
+      util.formatWithOptions({ depth: Infinity }, "", envuseFileParser)
     ).toMatchSnapshot();
     // console.log(util.formatWithOptions({ depth: Infinity }, '', envuseFileParser.toAstBody()))
   });
@@ -39,13 +34,9 @@ describe("DataSource", () => {
   it("shoud make a ast with multiple blocks", () => {
     const [filename, body] = takeDemoFile(".env");
 
-    const envuseFileParser = new DataSource(filename, body);
+    const envuseFileParser = DataSource.createDataSource({ filename, body });
     expect(
-      util.formatWithOptions(
-        { depth: Infinity },
-        "",
-        envuseFileParser.toAstBody()
-      )
+      util.formatWithOptions({ depth: Infinity }, "", envuseFileParser)
     ).toMatchSnapshot();
     // console.log(util.formatWithOptions({ depth: Infinity }, '', envuseFileParser.toAstBody()))
   });
@@ -134,7 +125,7 @@ describe("DataSource", () => {
 
       expect(cmp.elementList.map((e) => e.toString())).toMatchInlineSnapshot(`
         Array [
-          "CommentOperatorStatement (0, 25): \\"VAL1 ===   obj.a.b.VAL2 #\\"",
+          "CommentOperatorStatement (0, 25): \\"VAL1 === ...",
           "StatementObject<NameInstance> (0, 4): \\"VAL1\\"",
           "Space (4, 5): \\" \\"",
           "StatementObject<StrictEqualitySymbol> (5, 8): \\"===\\"",
@@ -158,9 +149,12 @@ describe("DataSource", () => {
     it("should read property list children", () => {
       const [fl, body] = takeDemoFile();
 
-      const envuseFileParser = new DataSource(fl, body);
+      const envuseFileParser = DataSource.createDataSource({
+        filename: fl,
+        body,
+      });
 
-      const b = envuseFileParser.toAstBody();
+      const b = envuseFileParser;
 
       for (const elem of b.elementList) {
         expect(elem).toBeInstanceOf(Base);
@@ -171,11 +165,10 @@ describe("DataSource", () => {
       ).toMatchInlineSnapshot(`
         Array [
           "Block <0, 35>",
-          "Variable <0, 7>",
+          "Variable <0, 8>",
           "VariableKey <0, 3>",
           "SymbolEqual <3, 4>",
           "VariableValue <4, 7>",
-          "SpaceNewLine <7, 8>",
           "CommentOperator <8, 34>",
           "Space <10, 11>",
           "VariableKey <11, 13>",
@@ -184,11 +177,11 @@ describe("DataSource", () => {
           "StatementObject <14, 18>",
           "Block <19, 34>",
           "SpaceNewLine <19, 20>",
-          "Variable <20, 27>",
+          "Variable <20, 28>",
           "VariableKey <20, 23>",
           "SymbolEqual <23, 24>",
           "VariableValue <24, 27>",
-          "SpaceNewLine <27, 29>",
+          "SpaceNewLine <28, 29>",
           "CommentOperator <29, 34>",
           "Space <31, 32>",
           "VariableKey <32, 34>",
@@ -241,16 +234,24 @@ describe("DataSource", () => {
       // inspect envuseFileParser
       expect(inspect(envuseFileParser.elementList)).toMatchInlineSnapshot(`
         "[
-          Block (0, 47): \\"# single comment\\\\n\\\\n###\\\\nNo 123\\\\n###    \\\\n\\\\nFOO=BAR\\\\n\\",
-          Comment (0, 18): \\"# single comment\\\\n\\",
+          Block (0, 47): \\"# single ...
+            CommentInline (0, 18): \\"# single comment\\\\n\\"
+            SpaceNewLine (18, 19): \\"\\\\n\\"
+            BlockComment (19, 33): \\"###\\\\nNo 123\\\\n###\\"
+            SpaceNewLine (33, 39): \\"    \\\\n\\\\n\\"
+            Variable (39, 47): \\"FOO=BAR\\\\n...
+              ...,
+          CommentInline (0, 18): \\"# single comment\\\\n\\",
           SpaceNewLine (18, 19): \\"\\\\n\\",
           BlockComment (19, 33): \\"###\\\\nNo 123\\\\n###\\",
           SpaceNewLine (33, 39): \\"    \\\\n\\\\n\\",
-          Variable (39, 46): \\"FOO=BAR\\",
+          Variable (39, 47): \\"FOO=BAR\\\\n...
+            VariableKey (39, 42): \\"FOO\\"
+            SymbolEqual (42, 43): \\"=\\"
+            VariableValue (43, 46): \\"BAR\\",
           VariableKey (39, 42): \\"FOO\\",
           SymbolEqual (42, 43): \\"=\\",
-          VariableValue (43, 46): \\"BAR\\",
-          SpaceNewLine (46, 47): \\"\\\\n\\"
+          VariableValue (43, 46): \\"BAR\\"
         ]"
       `);
     });
@@ -262,8 +263,19 @@ describe("DataSource", () => {
 
       expect(inspect(envuseParser.elementList)).toMatchInlineSnapshot(`
         "[
-          Block (0, 18): \\"FOO : number = 123\\",
-          Variable (0, 18): \\"FOO : number = 123\\",
+          Block (0, 19): \\"FOO : num...
+            Variable (0, 19): \\"FOO : num...
+              ...,
+          Variable (0, 19): \\"FOO : num...
+            VariableKey (0, 3): \\"FOO\\"
+            Space (3, 4): \\" \\"
+            SymbolColon (4, 5): \\":\\"
+            Space (5, 6): \\" \\"
+            VariableKey (6, 12): \\"number\\"
+            Space (12, 13): \\" \\"
+            SymbolEqual (13, 14): \\"=\\"
+            Space (14, 15): \\" \\"
+            VariableValue (15, 18): \\"123\\",
           VariableKey (0, 3): \\"FOO\\",
           Space (3, 4): \\" \\",
           SymbolColon (4, 5): \\":\\",
@@ -284,8 +296,22 @@ describe("DataSource", () => {
 
       expect(inspect(envuseParser.elementList)).toMatchInlineSnapshot(`
         "[
-          Block (0, 30): \\"FOO : number = \\\\\\"123\\\\\\" # comment\\",
-          Variable (0, 20): \\"FOO : number = \\\\\\"123\\\\\\"\\",
+          Block (0, 30): \\"FOO : num...
+            Variable (0, 30): \\"FOO : num...
+              ...,
+          Variable (0, 30): \\"FOO : num...
+            VariableKey (0, 3): \\"FOO\\"
+            Space (3, 4): \\" \\"
+            SymbolColon (4, 5): \\":\\"
+            Space (5, 6): \\" \\"
+            VariableKey (6, 12): \\"number\\"
+            Space (12, 13): \\" \\"
+            SymbolEqual (13, 14): \\"=\\"
+            Space (14, 15): \\" \\"
+            VariableValue (15, 20): \\"\\\\\\"123\\\\\\"\\"
+            Space (20, 21): \\" \\"
+            CommentInline (21, 30): \\"# comment...
+              ...,
           VariableKey (0, 3): \\"FOO\\",
           Space (3, 4): \\" \\",
           SymbolColon (4, 5): \\":\\",
@@ -295,8 +321,9 @@ describe("DataSource", () => {
           SymbolEqual (13, 14): \\"=\\",
           Space (14, 15): \\" \\",
           VariableValue (15, 20): \\"\\\\\\"123\\\\\\"\\",
-          SpaceNewLine (20, 21): \\" \\",
-          Comment (21, 30): \\"# comment\\",
+          Space (20, 21): \\" \\",
+          CommentInline (21, 30): \\"# comment...
+            Space (22, 23): \\" \\",
           Space (22, 23): \\" \\"
         ]"
       `);
@@ -315,8 +342,22 @@ describe("DataSource", () => {
 
       expect(inspect(envuseParser.elementList)).toMatchInlineSnapshot(`
         "[
-          Block (0, 31): \\"FOO : number = '12#3' # comment\\",
-          Variable (0, 21): \\"FOO : number = '12#3'\\",
+          Block (0, 31): \\"FOO : num...
+            Variable (0, 31): \\"FOO : num...
+              ...,
+          Variable (0, 31): \\"FOO : num...
+            VariableKey (0, 3): \\"FOO\\"
+            Space (3, 4): \\" \\"
+            SymbolColon (4, 5): \\":\\"
+            Space (5, 6): \\" \\"
+            VariableKey (6, 12): \\"number\\"
+            Space (12, 13): \\" \\"
+            SymbolEqual (13, 14): \\"=\\"
+            Space (14, 15): \\" \\"
+            VariableValue (15, 21): \\"'12#3'\\"
+            Space (21, 22): \\" \\"
+            CommentInline (22, 31): \\"# comment...
+              ...,
           VariableKey (0, 3): \\"FOO\\",
           Space (3, 4): \\" \\",
           SymbolColon (4, 5): \\":\\",
@@ -326,8 +367,9 @@ describe("DataSource", () => {
           SymbolEqual (13, 14): \\"=\\",
           Space (14, 15): \\" \\",
           VariableValue (15, 21): \\"'12#3'\\",
-          SpaceNewLine (21, 22): \\" \\",
-          Comment (22, 31): \\"# comment\\",
+          Space (21, 22): \\" \\",
+          CommentInline (22, 31): \\"# comment...
+            Space (23, 24): \\" \\",
           Space (23, 24): \\" \\"
         ]"
       `);
@@ -339,23 +381,21 @@ describe("DataSource", () => {
       const envuseParser = DataSource.createDataSource(buff);
 
       // console.log(inspect(envuseParser.elementList))
-      expect(inspect(envuseParser.elementList)).toMatchInlineSnapshot(`
-        "[
-          Block (0, 35): \\"FOO : number = HOLA HI    # comment\\",
-          Variable (0, 22): \\"FOO : number = HOLA HI\\",
-          VariableKey (0, 3): \\"FOO\\",
-          Space (3, 4): \\" \\",
-          SymbolColon (4, 5): \\":\\",
-          Space (5, 6): \\" \\",
-          VariableKey (6, 12): \\"number\\",
-          Space (12, 13): \\" \\",
-          SymbolEqual (13, 14): \\"=\\",
-          Space (14, 15): \\" \\",
-          VariableValue (15, 22): \\"HOLA HI\\",
-          SpaceNewLine (22, 26): \\"    \\",
-          Comment (26, 35): \\"# comment\\",
-          Space (27, 28): \\" \\"
-        ]"
+      expect(inspect(envuseParser, { depth: Infinity })).toMatchInlineSnapshot(`
+        "Block (0, 35): \\"FOO : num...
+          Variable (0, 35): \\"FOO : num...
+            VariableKey (0, 3): \\"FOO\\"
+            Space (3, 4): \\" \\"
+            SymbolColon (4, 5): \\":\\"
+            Space (5, 6): \\" \\"
+            VariableKey (6, 12): \\"number\\"
+            Space (12, 13): \\" \\"
+            SymbolEqual (13, 14): \\"=\\"
+            Space (14, 15): \\" \\"
+            VariableValue (15, 22): \\"HOLA HI\\"
+            Space (22, 26): \\"    \\"
+            CommentInline (26, 35): \\"# comment...
+              Space (27, 28): \\" \\""
       `);
     });
 
@@ -367,28 +407,26 @@ describe("DataSource", () => {
       const envuseParser = DataSource.createDataSource(buff);
 
       // console.log(inspect(envuseParser.elementList))
-      expect(inspect(envuseParser.elementList)).toMatchInlineSnapshot(`
-        "[
-          Block (0, 45): \\"FOO : number = HOLA HI    # comment\\\\nA='B#'#sa\\",
-          Variable (0, 22): \\"FOO : number = HOLA HI\\",
-          VariableKey (0, 3): \\"FOO\\",
-          Space (3, 4): \\" \\",
-          SymbolColon (4, 5): \\":\\",
-          Space (5, 6): \\" \\",
-          VariableKey (6, 12): \\"number\\",
-          Space (12, 13): \\" \\",
-          SymbolEqual (13, 14): \\"=\\",
-          Space (14, 15): \\" \\",
-          VariableValue (15, 22): \\"HOLA HI\\",
-          SpaceNewLine (22, 26): \\"    \\",
-          Comment (26, 36): \\"# comment\\\\n\\",
-          Space (27, 28): \\" \\",
-          Variable (36, 42): \\"A='B#'\\",
-          VariableKey (36, 37): \\"A\\",
-          SymbolEqual (37, 38): \\"=\\",
-          VariableValue (38, 42): \\"'B#'\\",
-          Comment (42, 45): \\"#sa\\"
-        ]"
+      expect(inspect(envuseParser, { depth: Infinity })).toMatchInlineSnapshot(`
+        "Block (0, 45): \\"FOO : num...
+          Variable (0, 36): \\"FOO : num...
+            VariableKey (0, 3): \\"FOO\\"
+            Space (3, 4): \\" \\"
+            SymbolColon (4, 5): \\":\\"
+            Space (5, 6): \\" \\"
+            VariableKey (6, 12): \\"number\\"
+            Space (12, 13): \\" \\"
+            SymbolEqual (13, 14): \\"=\\"
+            Space (14, 15): \\" \\"
+            VariableValue (15, 22): \\"HOLA HI\\"
+            Space (22, 26): \\"    \\"
+            CommentInline (26, 36): \\"# comment...
+              Space (27, 28): \\" \\"
+          Variable (36, 45): \\"A='B#'#sa...
+            VariableKey (36, 37): \\"A\\"
+            SymbolEqual (37, 38): \\"=\\"
+            VariableValue (38, 42): \\"'B#'\\"
+            CommentInline (42, 45): \\"#sa\\""
       `);
     });
   });
@@ -399,15 +437,12 @@ describe("DataSource", () => {
     const envuseParser = DataSource.createDataSource(buff);
 
     // console.log(inspect(envuseParser.elementList))
-    expect(inspect(envuseParser.elementList)).toMatchInlineSnapshot(`
-      "[
-        Block (0, 7): \\"A='\\\\\\\\''\\\\n\\",
-        Variable (0, 6): \\"A='\\\\\\\\''\\",
-        VariableKey (0, 1): \\"A\\",
-        SymbolEqual (1, 2): \\"=\\",
-        VariableValue (2, 6): \\"'\\\\\\\\''\\",
-        SpaceNewLine (6, 7): \\"\\\\n\\"
-      ]"
+    expect(inspect(envuseParser, { depth: Infinity })).toMatchInlineSnapshot(`
+      "Block (0, 7): \\"A='\\\\\\\\''\\\\n...
+        Variable (0, 7): \\"A='\\\\\\\\''\\\\n...
+          VariableKey (0, 1): \\"A\\"
+          SymbolEqual (1, 2): \\"=\\"
+          VariableValue (2, 6): \\"'\\\\\\\\''\\""
     `);
   });
 
@@ -417,15 +452,12 @@ describe("DataSource", () => {
     const envuseParser = DataSource.createDataSource(buff);
 
     // console.log(inspect(envuseParser.elementList))
-    expect(inspect(envuseParser.elementList)).toMatchInlineSnapshot(`
-      "[
-        Block (0, 7): \\"A=\\\\\\"\\\\\\\\\\\\\\"\\\\\\"\\\\n\\",
-        Variable (0, 6): \\"A=\\\\\\"\\\\\\\\\\\\\\"\\\\\\"\\",
-        VariableKey (0, 1): \\"A\\",
-        SymbolEqual (1, 2): \\"=\\",
-        VariableValue (2, 6): \\"\\\\\\"\\\\\\\\\\\\\\"\\\\\\"\\",
-        SpaceNewLine (6, 7): \\"\\\\n\\"
-      ]"
+    expect(inspect(envuseParser, { depth: Infinity })).toMatchInlineSnapshot(`
+      "Block (0, 7): \\"A=\\\\\\"\\\\\\\\\\\\\\"\\\\...
+        Variable (0, 7): \\"A=\\\\\\"\\\\\\\\\\\\\\"\\\\...
+          VariableKey (0, 1): \\"A\\"
+          SymbolEqual (1, 2): \\"=\\"
+          VariableValue (2, 6): \\"\\\\\\"\\\\\\\\\\\\\\"\\\\\\"\\""
     `);
   });
 
@@ -608,12 +640,12 @@ describe("DataSource file stringify", () => {
       "{
         \\"$type\\": \\"Block\\",
         \\"pos\\": 0,
-        \\"end\\": 7,
+        \\"end\\": 8,
         \\"children\\": [
           {
             \\"$type\\": \\"Variable\\",
             \\"pos\\": 0,
-            \\"end\\": 7,
+            \\"end\\": 8,
             \\"keyVariable\\": {
               \\"$type\\": \\"VariableKey\\",
               \\"pos\\": 0,
@@ -707,7 +739,8 @@ describe("DataSource file stringify", () => {
           valueStr: 'bash',
           description: null,
           value: 'bash',
-          elementVariable: Variable (99, 129): \\"SHELL_SYSTEM          = \\\\\\"bash\\\\\\"\\",
+          elementVariable: Variable (99, 130): \\"SHELL_SYS...
+            ...,
           elementDescription: null
         },
         API_KEY: {
@@ -715,7 +748,8 @@ describe("DataSource file stringify", () => {
           valueStr: 'cf7d6f43-bb85-4045-a23f-7fb94bfac745',
           description: '###\\\\n# Comment descriptive\\\\n###',
           value: 'cf7d6f43-bb85-4045-a23f-7fb94bfac745',
-          elementVariable: Variable (161, 221): \\"API_KEY               = cf7d6f43-bb85-4045-a23f-7fb94bfac745\\",
+          elementVariable: Variable (161, 239): \\"API_KEY  ...
+            ...,
           elementDescription: BlockComment (131, 160): \\"###\\\\n# Comment descriptive\\\\n###\\"
         },
         DB_HOST: {
@@ -723,7 +757,8 @@ describe("DataSource file stringify", () => {
           valueStr: '127.7.0.1',
           description: null,
           value: '127.7.0.1',
-          elementVariable: Variable (239, 272): \\"DB_HOST               = 127.7.0.1\\",
+          elementVariable: Variable (239, 273): \\"DB_HOST  ...
+            ...,
           elementDescription: null
         },
         DB_PORT: {
@@ -731,7 +766,8 @@ describe("DataSource file stringify", () => {
           valueStr: '5432',
           description: null,
           value: 5432,
-          elementVariable: Variable (273, 301): \\"DB_PORT : number      = 5432\\",
+          elementVariable: Variable (273, 318): \\"DB_PORT :...
+            ...,
           elementDescription: null
         },
         DB_USER: {
@@ -739,7 +775,8 @@ describe("DataSource file stringify", () => {
           valueStr: 'postgres',
           description: null,
           value: 'postgres',
-          elementVariable: Variable (318, 350): \\"DB_USER               = postgres\\",
+          elementVariable: Variable (318, 351): \\"DB_USER  ...
+            ...,
           elementDescription: null
         },
         DB_PASSWORD: {
@@ -747,7 +784,8 @@ describe("DataSource file stringify", () => {
           valueStr: 'postgres',
           description: null,
           value: 'postgres',
-          elementVariable: Variable (351, 383): \\"DB_PASSWORD           = postgres\\",
+          elementVariable: Variable (351, 384): \\"DB_PASSWO...
+            ...,
           elementDescription: null
         },
         DB_NAME: {
@@ -755,7 +793,8 @@ describe("DataSource file stringify", () => {
           valueStr: 'postgres',
           description: null,
           value: 'postgres',
-          elementVariable: Variable (384, 416): \\"DB_NAME               = postgres\\",
+          elementVariable: Variable (384, 417): \\"DB_NAME  ...
+            ...,
           elementDescription: null
         },
         COLOR_TERM: {
@@ -763,7 +802,8 @@ describe("DataSource file stringify", () => {
           valueStr: 'false',
           description: null,
           value: false,
-          elementVariable: Variable (474, 502): \\"COLOR_TERM : boolean = false\\",
+          elementVariable: Variable (474, 503): \\"COLOR_TER...
+            ...,
           elementDescription: null
         },
         FORCE_URL_SSL: {
@@ -771,7 +811,8 @@ describe("DataSource file stringify", () => {
           valueStr: 'true',
           description: null,
           value: true,
-          elementVariable: Variable (532, 563): \\"FORCE_URL_SSL : boolean =  true\\",
+          elementVariable: Variable (532, 564): \\"FORCE_URL...
+            ...,
           elementDescription: null
         },
         A: {
@@ -779,7 +820,8 @@ describe("DataSource file stringify", () => {
           valueStr: '3',
           description: '###\\\\nNo 123\\\\n###',
           value: 3,
-          elementVariable: Variable (605, 615): \\"A:number=3\\",
+          elementVariable: Variable (605, 616): \\"A:number=...
+            ...,
           elementDescription: BlockComment (590, 604): \\"###\\\\nNo 123\\\\n###\\"
         }
       }"
@@ -809,7 +851,8 @@ describe("DataSource file stringify", () => {
           valueStr: \\"{foo: 'bar'}\\",
           description: null,
           value: { foo: 'bar' },
-          elementVariable: Variable (1, 30): \\"FOO: custom_js = {foo: 'bar'}\\",
+          elementVariable: Variable (1, 31): \\"FOO: cust...
+            ...,
           elementDescription: null
         }
       }"

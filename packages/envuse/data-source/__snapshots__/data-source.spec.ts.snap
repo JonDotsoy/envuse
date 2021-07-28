@@ -37,20 +37,19 @@ Object {
 
 exports[`DataSource parse statement should parse comment operator correctly 1`] = `
 Array [
-  "Block (0, 32): \\"#;if a.b.c.d ===\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\\\n\\"",
-  "CommentOperator (0, 31): \\"#;if a.b.c.d ===\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
+  "Block (0, 32): \\"#;if a.b....",
+  "CommentOperator (0, 31): \\"#;if a.b....",
   "VariableKey (2, 4): \\"if\\"",
   "Space (4, 5): \\" \\"",
-  "CommentOperatorStatement (5, 17): \\"a.b.c.d ===\\\\n\\"",
+  "CommentOperatorStatement (5, 17): \\"a.b.c.d =...",
   "StatementObject<NameInstance> (5, 12): \\"a.b.c.d\\"",
   "Space (12, 13): \\" \\"",
   "StatementObject<StrictEqualitySymbol> (13, 16): \\"===\\"",
-  "Block (17, 31): \\"foo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
-  "Variable (17, 26): \\"foo=\\\\\\"bar\\\\\\"\\"",
+  "Block (17, 31): \\"foo=\\\\\\"bar...",
+  "Variable (17, 27): \\"foo=\\\\\\"bar...",
   "VariableKey (17, 20): \\"foo\\"",
   "SymbolEqual (20, 21): \\"=\\"",
   "VariableValue (21, 26): \\"\\\\\\"bar\\\\\\"\\"",
-  "SpaceNewLine (26, 27): \\"\\\\n\\"",
   "CommentOperator (27, 31): \\"#;fi\\"",
   "VariableKey (29, 31): \\"fi\\"",
   "SpaceNewLine (31, 32): \\"\\\\n\\"",
@@ -59,18 +58,17 @@ Array [
 
 exports[`DataSource parse statement should parse comment operator correctly 2`] = `
 Array [
-  "Block (0, 25): \\"#;if true\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\\\n\\"",
-  "CommentOperator (0, 24): \\"#;if true\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
+  "Block (0, 25): \\"#;if true...",
+  "CommentOperator (0, 24): \\"#;if true...",
   "VariableKey (2, 4): \\"if\\"",
   "Space (4, 5): \\" \\"",
   "CommentOperatorStatement (5, 10): \\"true\\\\n\\"",
   "StatementObject<Boolean> (5, 9): \\"true\\"",
-  "Block (10, 24): \\"foo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
-  "Variable (10, 19): \\"foo=\\\\\\"bar\\\\\\"\\"",
+  "Block (10, 24): \\"foo=\\\\\\"bar...",
+  "Variable (10, 20): \\"foo=\\\\\\"bar...",
   "VariableKey (10, 13): \\"foo\\"",
   "SymbolEqual (13, 14): \\"=\\"",
   "VariableValue (14, 19): \\"\\\\\\"bar\\\\\\"\\"",
-  "SpaceNewLine (19, 20): \\"\\\\n\\"",
   "CommentOperator (20, 24): \\"#;fi\\"",
   "VariableKey (22, 24): \\"fi\\"",
   "SpaceNewLine (24, 25): \\"\\\\n\\"",
@@ -79,18 +77,17 @@ Array [
 
 exports[`DataSource parse statement should parse comment operator correctly 3`] = `
 Array [
-  "Block (0, 24): \\"#;if 123\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\\\n\\"",
-  "CommentOperator (0, 23): \\"#;if 123\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
+  "Block (0, 24): \\"#;if 123\\\\...",
+  "CommentOperator (0, 23): \\"#;if 123\\\\...",
   "VariableKey (2, 4): \\"if\\"",
   "Space (4, 5): \\" \\"",
   "CommentOperatorStatement (5, 9): \\"123\\\\n\\"",
   "StatementObject<Number> (5, 8): \\"123\\"",
-  "Block (9, 23): \\"foo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
-  "Variable (9, 18): \\"foo=\\\\\\"bar\\\\\\"\\"",
+  "Block (9, 23): \\"foo=\\\\\\"bar...",
+  "Variable (9, 19): \\"foo=\\\\\\"bar...",
   "VariableKey (9, 12): \\"foo\\"",
   "SymbolEqual (12, 13): \\"=\\"",
   "VariableValue (13, 18): \\"\\\\\\"bar\\\\\\"\\"",
-  "SpaceNewLine (18, 19): \\"\\\\n\\"",
   "CommentOperator (19, 23): \\"#;fi\\"",
   "VariableKey (21, 23): \\"fi\\"",
   "SpaceNewLine (23, 24): \\"\\\\n\\"",
@@ -99,18 +96,17 @@ Array [
 
 exports[`DataSource parse statement should parse comment operator correctly 4`] = `
 Array [
-  "Block (0, 24): \\"#;if var\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\\\n\\"",
-  "CommentOperator (0, 23): \\"#;if var\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
+  "Block (0, 24): \\"#;if var\\\\...",
+  "CommentOperator (0, 23): \\"#;if var\\\\...",
   "VariableKey (2, 4): \\"if\\"",
   "Space (4, 5): \\" \\"",
   "CommentOperatorStatement (5, 9): \\"var\\\\n\\"",
   "StatementObject<NameInstance> (5, 8): \\"var\\"",
-  "Block (9, 23): \\"foo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
-  "Variable (9, 18): \\"foo=\\\\\\"bar\\\\\\"\\"",
+  "Block (9, 23): \\"foo=\\\\\\"bar...",
+  "Variable (9, 19): \\"foo=\\\\\\"bar...",
   "VariableKey (9, 12): \\"foo\\"",
   "SymbolEqual (12, 13): \\"=\\"",
   "VariableValue (13, 18): \\"\\\\\\"bar\\\\\\"\\"",
-  "SpaceNewLine (18, 19): \\"\\\\n\\"",
   "CommentOperator (19, 23): \\"#;fi\\"",
   "VariableKey (21, 23): \\"fi\\"",
   "SpaceNewLine (23, 24): \\"\\\\n\\"",
@@ -119,22 +115,21 @@ Array [
 
 exports[`DataSource parse statement should parse comment operator correctly 5`] = `
 Array [
-  "Block (0, 32): \\"#;if foo === bar\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\\\n\\"",
-  "CommentOperator (0, 31): \\"#;if foo === bar\\\\nfoo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
+  "Block (0, 32): \\"#;if foo ...",
+  "CommentOperator (0, 31): \\"#;if foo ...",
   "VariableKey (2, 4): \\"if\\"",
   "Space (4, 5): \\" \\"",
-  "CommentOperatorStatement (5, 17): \\"foo === bar\\\\n\\"",
+  "CommentOperatorStatement (5, 17): \\"foo === b...",
   "StatementObject<NameInstance> (5, 8): \\"foo\\"",
   "Space (8, 9): \\" \\"",
   "StatementObject<StrictEqualitySymbol> (9, 12): \\"===\\"",
   "Space (12, 13): \\" \\"",
   "StatementObject<NameInstance> (13, 16): \\"bar\\"",
-  "Block (17, 31): \\"foo=\\\\\\"bar\\\\\\"\\\\n#;fi\\"",
-  "Variable (17, 26): \\"foo=\\\\\\"bar\\\\\\"\\"",
+  "Block (17, 31): \\"foo=\\\\\\"bar...",
+  "Variable (17, 27): \\"foo=\\\\\\"bar...",
   "VariableKey (17, 20): \\"foo\\"",
   "SymbolEqual (20, 21): \\"=\\"",
   "VariableValue (21, 26): \\"\\\\\\"bar\\\\\\"\\"",
-  "SpaceNewLine (26, 27): \\"\\\\n\\"",
   "CommentOperator (27, 31): \\"#;fi\\"",
   "VariableKey (29, 31): \\"fi\\"",
   "SpaceNewLine (31, 32): \\"\\\\n\\"",
@@ -176,8 +171,87 @@ Object {
 }
 `;
 
-exports[`DataSource shoud make a ast out 1`] = `" Block (0, 61): \\"abc=def # a comment\\\\nfoo=bar\\\\n\\\\n    \\\\nabc    =\\\\\\"d\\\\\\\\\\\\\\"ef\\\\\\" # comented\\\\n\\""`;
+exports[`DataSource shoud make a ast out 1`] = `
+" Block (0, 60): \\"abc=def #...
+  Variable (0, 20): \\"abc=def #...
+    VariableKey (0, 3): \\"abc\\"
+    SymbolEqual (3, 4): \\"=\\"
+    VariableValue (4, 7): \\"def\\"
+    Space (7, 8): \\" \\"
+    CommentInline (8, 20): \\"# a comme...
+      Space (9, 10): \\" \\"
+  Variable (20, 28): \\"foo=bar\\\\n...
+    VariableKey (20, 23): \\"foo\\"
+    SymbolEqual (23, 24): \\"=\\"
+    VariableValue (24, 27): \\"bar\\"
+  SpaceNewLine (28, 34): \\"\\\\n    \\\\n\\"
+  Variable (34, 60): \\"abc    =\\\\...
+    VariableKey (34, 37): \\"abc\\"
+    Space (37, 41): \\"    \\"
+    SymbolEqual (41, 42): \\"=\\"
+    VariableValue (42, 49): \\"\\\\\\"d\\\\\\\\\\\\\\"ef\\\\\\"\\"
+    Space (49, 50): \\" \\"
+    CommentInline (50, 60): \\"# comente...
+      Space (51, 52): \\" \\""
+`;
 
-exports[`DataSource shoud make a ast with multiple blocks 1`] = `" Block (0, 43): \\"C=C\\\\n#;if true\\\\na=a\\\\n#;if false\\\\nb=b\\\\n#;fi\\\\n#;fi\\\\n\\""`;
+exports[`DataSource shoud make a ast with multiple blocks 1`] = `
+" Block (0, 43): \\"C=C\\\\n#;if...
+  Variable (0, 4): \\"C=C\\\\n\\"
+    VariableKey (0, 1): \\"C\\"
+    SymbolEqual (1, 2): \\"=\\"
+    VariableValue (2, 3): \\"C\\"
+  CommentOperator (4, 42): \\"#;if true...
+    VariableKey (6, 8): \\"if\\"
+    Space (8, 9): \\" \\"
+    CommentOperatorStatement (9, 14): \\"true\\\\n\\"
+      StatementObject<Boolean> (9, 13): \\"true\\"
+    Block (14, 42): \\"a=a\\\\n#;if...
+      Variable (14, 18): \\"a=a\\\\n\\"
+        VariableKey (14, 15): \\"a\\"
+        SymbolEqual (15, 16): \\"=\\"
+        VariableValue (16, 17): \\"a\\"
+      CommentOperator (18, 37): \\"#;if fals...
+        VariableKey (20, 22): \\"if\\"
+        Space (22, 23): \\" \\"
+        CommentOperatorStatement (23, 29): \\"false\\\\n\\"
+          StatementObject<Boolean> (23, 28): \\"false\\"
+        Block (29, 37): \\"b=b\\\\n#;fi...
+          Variable (29, 33): \\"b=b\\\\n\\"
+            VariableKey (29, 30): \\"b\\"
+            SymbolEqual (30, 31): \\"=\\"
+            VariableValue (31, 32): \\"b\\"
+          CommentOperator (33, 37): \\"#;fi\\"
+            VariableKey (35, 37): \\"fi\\"
+      SpaceNewLine (37, 38): \\"\\\\n\\"
+      CommentOperator (38, 42): \\"#;fi\\"
+        VariableKey (40, 42): \\"fi\\"
+  SpaceNewLine (42, 43): \\"\\\\n\\""
+`;
 
-exports[`DataSource shoud make a ast with operators 1`] = `" Block (0, 44): \\"FOO=BAR\\\\n#; if true\\\\naaa=\\\\\\"bbb\\\\\\"\\\\n#; fi\\\\n\\\\nccc=ddd\\\\n\\""`;
+exports[`DataSource shoud make a ast with operators 1`] = `
+" Block (0, 44): \\"FOO=BAR\\\\n...
+  Variable (0, 8): \\"FOO=BAR\\\\n...
+    VariableKey (0, 3): \\"FOO\\"
+    SymbolEqual (3, 4): \\"=\\"
+    VariableValue (4, 7): \\"BAR\\"
+  CommentOperator (8, 34): \\"#; if tru...
+    Space (10, 11): \\" \\"
+    VariableKey (11, 13): \\"if\\"
+    Space (13, 14): \\" \\"
+    CommentOperatorStatement (14, 19): \\"true\\\\n\\"
+      StatementObject<Boolean> (14, 18): \\"true\\"
+    Block (19, 34): \\"aaa=\\\\\\"bbb...
+      Variable (19, 29): \\"aaa=\\\\\\"bbb...
+        VariableKey (19, 22): \\"aaa\\"
+        SymbolEqual (22, 23): \\"=\\"
+        VariableValue (23, 28): \\"\\\\\\"bbb\\\\\\"\\"
+      CommentOperator (29, 34): \\"#; fi\\"
+        Space (31, 32): \\" \\"
+        VariableKey (32, 34): \\"fi\\"
+  SpaceNewLine (34, 36): \\"\\\\n\\\\n\\"
+  Variable (36, 44): \\"ccc=ddd\\\\n...
+    VariableKey (36, 39): \\"ccc\\"
+    SymbolEqual (39, 40): \\"=\\"
+    VariableValue (40, 43): \\"ddd\\""
+`;
