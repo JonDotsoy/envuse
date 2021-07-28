@@ -2,6 +2,7 @@
 !.husky
 !.github
 !.editorconfig
+demo.txt
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,windows,linux,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,windows,linux,macos

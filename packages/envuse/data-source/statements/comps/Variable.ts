@@ -84,6 +84,7 @@ export class Variable extends Base {
 
     if (bufferCursor.currentIs(CharactersKey.newLineLF) || bufferCursor.isClosed()) {
       bufferCursor.forward();
+
       return
     }
 
