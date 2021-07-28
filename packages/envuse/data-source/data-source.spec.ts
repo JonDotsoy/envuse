@@ -123,17 +123,7 @@ describe("DataSource", () => {
         new CommentOperatorStatement("a", body, 0)
       );
 
-      expect(cmp.elementList.map((e) => e.toString())).toMatchInlineSnapshot(`
-        Array [
-          "CommentOperatorStatement (0, 25): \\"VAL1 === ...",
-          "StatementObject<NameInstance> (0, 4): \\"VAL1\\"",
-          "Space (4, 5): \\" \\"",
-          "StatementObject<StrictEqualitySymbol> (5, 8): \\"===\\"",
-          "Space (8, 11): \\"   \\"",
-          "StatementObject<NameInstance> (11, 23): \\"obj.a.b.VAL2\\"",
-          "Space (23, 24): \\" \\"",
-        ]
-      `);
+      expect(cmp.elementList.map((e) => e.toString())).toMatchSnapshot();
     });
 
     it("should parse end parsing comment code", () => {
@@ -141,7 +131,7 @@ describe("DataSource", () => {
 
       const cmp = Base.createElement(new CommentOperator("a", body, 0));
 
-      // expect(cmp).toMatchInlineSnapshot(`Object {}`)
+      // expect(cmp).toMatchSnapshot(`Object {}`)
       expect(cmp.operator.raw.toString()).toEqual("if");
       // console.log(cmp)
     });
@@ -162,32 +152,7 @@ describe("DataSource", () => {
 
       expect(
         b.elementList.map((e) => `${e.constructor.name} <${e.pos}, ${e.end}>`)
-      ).toMatchInlineSnapshot(`
-        Array [
-          "Block <0, 35>",
-          "Variable <0, 8>",
-          "VariableKey <0, 3>",
-          "SymbolEqual <3, 4>",
-          "VariableValue <4, 7>",
-          "CommentOperator <8, 34>",
-          "Space <10, 11>",
-          "VariableKey <11, 13>",
-          "Space <13, 14>",
-          "CommentOperatorStatement <14, 19>",
-          "StatementObject <14, 18>",
-          "Block <19, 34>",
-          "SpaceNewLine <19, 20>",
-          "Variable <20, 28>",
-          "VariableKey <20, 23>",
-          "SymbolEqual <23, 24>",
-          "VariableValue <24, 27>",
-          "SpaceNewLine <28, 29>",
-          "CommentOperator <29, 34>",
-          "Space <31, 32>",
-          "VariableKey <32, 34>",
-          "SpaceNewLine <34, 35>",
-        ]
-      `);
+      ).toMatchSnapshot();
     });
 
     it("should parse comment operator correctly", () => {
@@ -232,7 +197,7 @@ describe("DataSource", () => {
       });
 
       // inspect envuseFileParser
-      expect(inspect(envuseFileParser.elementList)).toMatchInlineSnapshot(`
+      expect(inspect(envuseFileParser.elementList)).toMatchSnapshot(`
         "[
           Block (0, 47): \\"# single ...
             CommentInline (0, 18): \\"# single comment\\\\n\\"
@@ -261,32 +226,7 @@ describe("DataSource", () => {
 
       const envuseParser = DataSource.createDataSource(buff);
 
-      expect(inspect(envuseParser.elementList)).toMatchInlineSnapshot(`
-        "[
-          Block (0, 19): \\"FOO : num...
-            Variable (0, 19): \\"FOO : num...
-              ...,
-          Variable (0, 19): \\"FOO : num...
-            VariableKey (0, 3): \\"FOO\\"
-            Space (3, 4): \\" \\"
-            SymbolColon (4, 5): \\":\\"
-            Space (5, 6): \\" \\"
-            VariableKey (6, 12): \\"number\\"
-            Space (12, 13): \\" \\"
-            SymbolEqual (13, 14): \\"=\\"
-            Space (14, 15): \\" \\"
-            VariableValue (15, 18): \\"123\\",
-          VariableKey (0, 3): \\"FOO\\",
-          Space (3, 4): \\" \\",
-          SymbolColon (4, 5): \\":\\",
-          Space (5, 6): \\" \\",
-          VariableKey (6, 12): \\"number\\",
-          Space (12, 13): \\" \\",
-          SymbolEqual (13, 14): \\"=\\",
-          Space (14, 15): \\" \\",
-          VariableValue (15, 18): \\"123\\"
-        ]"
-      `);
+      expect(inspect(envuseParser.elementList)).toMatchSnapshot();
     });
 
     it("should parse variable with comment", () => {
@@ -294,39 +234,7 @@ describe("DataSource", () => {
 
       const envuseParser = DataSource.createDataSource(buff);
 
-      expect(inspect(envuseParser.elementList)).toMatchInlineSnapshot(`
-        "[
-          Block (0, 30): \\"FOO : num...
-            Variable (0, 30): \\"FOO : num...
-              ...,
-          Variable (0, 30): \\"FOO : num...
-            VariableKey (0, 3): \\"FOO\\"
-            Space (3, 4): \\" \\"
-            SymbolColon (4, 5): \\":\\"
-            Space (5, 6): \\" \\"
-            VariableKey (6, 12): \\"number\\"
-            Space (12, 13): \\" \\"
-            SymbolEqual (13, 14): \\"=\\"
-            Space (14, 15): \\" \\"
-            VariableValue (15, 20): \\"\\\\\\"123\\\\\\"\\"
-            Space (20, 21): \\" \\"
-            CommentInline (21, 30): \\"# comment...
-              ...,
-          VariableKey (0, 3): \\"FOO\\",
-          Space (3, 4): \\" \\",
-          SymbolColon (4, 5): \\":\\",
-          Space (5, 6): \\" \\",
-          VariableKey (6, 12): \\"number\\",
-          Space (12, 13): \\" \\",
-          SymbolEqual (13, 14): \\"=\\",
-          Space (14, 15): \\" \\",
-          VariableValue (15, 20): \\"\\\\\\"123\\\\\\"\\",
-          Space (20, 21): \\" \\",
-          CommentInline (21, 30): \\"# comment...
-            Space (22, 23): \\" \\",
-          Space (22, 23): \\" \\"
-        ]"
-      `);
+      expect(inspect(envuseParser.elementList)).toMatchSnapshot();
     });
 
     it("should parse variable with comment reject by new line", () => {
@@ -340,39 +248,7 @@ describe("DataSource", () => {
 
       const envuseParser = DataSource.createDataSource(buff);
 
-      expect(inspect(envuseParser.elementList)).toMatchInlineSnapshot(`
-        "[
-          Block (0, 31): \\"FOO : num...
-            Variable (0, 31): \\"FOO : num...
-              ...,
-          Variable (0, 31): \\"FOO : num...
-            VariableKey (0, 3): \\"FOO\\"
-            Space (3, 4): \\" \\"
-            SymbolColon (4, 5): \\":\\"
-            Space (5, 6): \\" \\"
-            VariableKey (6, 12): \\"number\\"
-            Space (12, 13): \\" \\"
-            SymbolEqual (13, 14): \\"=\\"
-            Space (14, 15): \\" \\"
-            VariableValue (15, 21): \\"'12#3'\\"
-            Space (21, 22): \\" \\"
-            CommentInline (22, 31): \\"# comment...
-              ...,
-          VariableKey (0, 3): \\"FOO\\",
-          Space (3, 4): \\" \\",
-          SymbolColon (4, 5): \\":\\",
-          Space (5, 6): \\" \\",
-          VariableKey (6, 12): \\"number\\",
-          Space (12, 13): \\" \\",
-          SymbolEqual (13, 14): \\"=\\",
-          Space (14, 15): \\" \\",
-          VariableValue (15, 21): \\"'12#3'\\",
-          Space (21, 22): \\" \\",
-          CommentInline (22, 31): \\"# comment...
-            Space (23, 24): \\" \\",
-          Space (23, 24): \\" \\"
-        ]"
-      `);
+      expect(inspect(envuseParser.elementList)).toMatchSnapshot();
     });
 
     it("should parse variable with comment", () => {
@@ -381,22 +257,7 @@ describe("DataSource", () => {
       const envuseParser = DataSource.createDataSource(buff);
 
       // console.log(inspect(envuseParser.elementList))
-      expect(inspect(envuseParser, { depth: Infinity })).toMatchInlineSnapshot(`
-        "Block (0, 35): \\"FOO : num...
-          Variable (0, 35): \\"FOO : num...
-            VariableKey (0, 3): \\"FOO\\"
-            Space (3, 4): \\" \\"
-            SymbolColon (4, 5): \\":\\"
-            Space (5, 6): \\" \\"
-            VariableKey (6, 12): \\"number\\"
-            Space (12, 13): \\" \\"
-            SymbolEqual (13, 14): \\"=\\"
-            Space (14, 15): \\" \\"
-            VariableValue (15, 22): \\"HOLA HI\\"
-            Space (22, 26): \\"    \\"
-            CommentInline (26, 35): \\"# comment...
-              Space (27, 28): \\" \\""
-      `);
+      expect(inspect(envuseParser, { depth: Infinity })).toMatchSnapshot();
     });
 
     it("should parse variable with comment", () => {
@@ -407,27 +268,7 @@ describe("DataSource", () => {
       const envuseParser = DataSource.createDataSource(buff);
 
       // console.log(inspect(envuseParser.elementList))
-      expect(inspect(envuseParser, { depth: Infinity })).toMatchInlineSnapshot(`
-        "Block (0, 45): \\"FOO : num...
-          Variable (0, 36): \\"FOO : num...
-            VariableKey (0, 3): \\"FOO\\"
-            Space (3, 4): \\" \\"
-            SymbolColon (4, 5): \\":\\"
-            Space (5, 6): \\" \\"
-            VariableKey (6, 12): \\"number\\"
-            Space (12, 13): \\" \\"
-            SymbolEqual (13, 14): \\"=\\"
-            Space (14, 15): \\" \\"
-            VariableValue (15, 22): \\"HOLA HI\\"
-            Space (22, 26): \\"    \\"
-            CommentInline (26, 36): \\"# comment...
-              Space (27, 28): \\" \\"
-          Variable (36, 45): \\"A='B#'#sa...
-            VariableKey (36, 37): \\"A\\"
-            SymbolEqual (37, 38): \\"=\\"
-            VariableValue (38, 42): \\"'B#'\\"
-            CommentInline (42, 45): \\"#sa\\""
-      `);
+      expect(inspect(envuseParser, { depth: Infinity })).toMatchSnapshot();
     });
   });
 
@@ -437,13 +278,7 @@ describe("DataSource", () => {
     const envuseParser = DataSource.createDataSource(buff);
 
     // console.log(inspect(envuseParser.elementList))
-    expect(inspect(envuseParser, { depth: Infinity })).toMatchInlineSnapshot(`
-      "Block (0, 7): \\"A='\\\\\\\\''\\\\n...
-        Variable (0, 7): \\"A='\\\\\\\\''\\\\n...
-          VariableKey (0, 1): \\"A\\"
-          SymbolEqual (1, 2): \\"=\\"
-          VariableValue (2, 6): \\"'\\\\\\\\''\\""
-    `);
+    expect(inspect(envuseParser, { depth: Infinity })).toMatchSnapshot();
   });
 
   it("should parse variable with backslash", () => {
@@ -452,13 +287,7 @@ describe("DataSource", () => {
     const envuseParser = DataSource.createDataSource(buff);
 
     // console.log(inspect(envuseParser.elementList))
-    expect(inspect(envuseParser, { depth: Infinity })).toMatchInlineSnapshot(`
-      "Block (0, 7): \\"A=\\\\\\"\\\\\\\\\\\\\\"\\\\...
-        Variable (0, 7): \\"A=\\\\\\"\\\\\\\\\\\\\\"\\\\...
-          VariableKey (0, 1): \\"A\\"
-          SymbolEqual (1, 2): \\"=\\"
-          VariableValue (2, 6): \\"\\\\\\"\\\\\\\\\\\\\\"\\\\\\"\\""
-    `);
+    expect(inspect(envuseParser, { depth: Infinity })).toMatchSnapshot();
   });
 
   it("should parse data source full demo", () => {
@@ -473,7 +302,7 @@ describe("DataSource", () => {
 
     // console.log(inspect(envuseFileParser.elementList))
 
-    // expect(inspect(envuseFileParser.elementList)).toMatchInlineSnapshot();
+    // expect(inspect(envuseFileParser.elementList)).toMatchSnapshot();
   });
 });
 
@@ -636,32 +465,7 @@ describe("DataSource file stringify", () => {
 
     const str = JSON.stringify(ast, null, 2);
 
-    expect(str).toMatchInlineSnapshot(`
-      "{
-        \\"$type\\": \\"Block\\",
-        \\"pos\\": 0,
-        \\"end\\": 8,
-        \\"children\\": [
-          {
-            \\"$type\\": \\"Variable\\",
-            \\"pos\\": 0,
-            \\"end\\": 8,
-            \\"keyVariable\\": {
-              \\"$type\\": \\"VariableKey\\",
-              \\"pos\\": 0,
-              \\"end\\": 3,
-              \\"value\\": \\"foo\\"
-            },
-            \\"valueVariable\\": {
-              \\"$type\\": \\"VariableValue\\",
-              \\"pos\\": 4,
-              \\"end\\": 7,
-              \\"value\\": \\"bar\\"
-            }
-          }
-        ]
-      }"
-    `);
+    expect(str).toMatchSnapshot();
   });
 
   it("should stringify ast", () => {
@@ -670,58 +474,7 @@ describe("DataSource file stringify", () => {
 
     const str = JSON.stringify(ast, null, 2);
 
-    expect(str).toMatchInlineSnapshot(`
-      "{
-        \\"$type\\": \\"Block\\",
-        \\"pos\\": 0,
-        \\"end\\": 16,
-        \\"children\\": [
-          {
-            \\"$type\\": \\"CommentOperator\\",
-            \\"pos\\": 0,
-            \\"end\\": 16,
-            \\"operator\\": {
-              \\"$type\\": \\"VariableKey\\",
-              \\"pos\\": 3,
-              \\"end\\": 5,
-              \\"value\\": \\"if\\"
-            },
-            \\"statement\\": {
-              \\"$type\\": \\"CommentOperatorStatement\\",
-              \\"pos\\": 6,
-              \\"end\\": 11,
-              \\"statements\\": [
-                {
-                  \\"$type\\": \\"StatementObject\\",
-                  \\"pos\\": 6,
-                  \\"end\\": 10,
-                  \\"type\\": \\"Boolean\\",
-                  \\"value\\": true
-                }
-              ]
-            },
-            \\"block\\": {
-              \\"$type\\": \\"Block\\",
-              \\"pos\\": 11,
-              \\"end\\": 16,
-              \\"children\\": [
-                {
-                  \\"$type\\": \\"CommentOperator\\",
-                  \\"pos\\": 11,
-                  \\"end\\": 16,
-                  \\"operator\\": {
-                    \\"$type\\": \\"VariableKey\\",
-                    \\"pos\\": 14,
-                    \\"end\\": 16,
-                    \\"value\\": \\"fi\\"
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      }"
-    `);
+    expect(str).toMatchSnapshot();
   });
 
   it("should parse envuse file and return definition", () => {
@@ -732,100 +485,7 @@ describe("DataSource file stringify", () => {
       body: buf,
     });
 
-    expect(inspect(a.definitions)).toMatchInlineSnapshot(`
-      "{
-        SHELL_SYSTEM: {
-          type: 'string',
-          valueStr: 'bash',
-          description: null,
-          value: 'bash',
-          elementVariable: Variable (99, 130): \\"SHELL_SYS...
-            ...,
-          elementDescription: null
-        },
-        API_KEY: {
-          type: 'string',
-          valueStr: 'cf7d6f43-bb85-4045-a23f-7fb94bfac745',
-          description: '###\\\\n# Comment descriptive\\\\n###',
-          value: 'cf7d6f43-bb85-4045-a23f-7fb94bfac745',
-          elementVariable: Variable (161, 239): \\"API_KEY  ...
-            ...,
-          elementDescription: BlockComment (131, 160): \\"###\\\\n# Comment descriptive\\\\n###\\"
-        },
-        DB_HOST: {
-          type: 'string',
-          valueStr: '127.7.0.1',
-          description: null,
-          value: '127.7.0.1',
-          elementVariable: Variable (239, 273): \\"DB_HOST  ...
-            ...,
-          elementDescription: null
-        },
-        DB_PORT: {
-          type: 'number',
-          valueStr: '5432',
-          description: null,
-          value: 5432,
-          elementVariable: Variable (273, 318): \\"DB_PORT :...
-            ...,
-          elementDescription: null
-        },
-        DB_USER: {
-          type: 'string',
-          valueStr: 'postgres',
-          description: null,
-          value: 'postgres',
-          elementVariable: Variable (318, 351): \\"DB_USER  ...
-            ...,
-          elementDescription: null
-        },
-        DB_PASSWORD: {
-          type: 'string',
-          valueStr: 'postgres',
-          description: null,
-          value: 'postgres',
-          elementVariable: Variable (351, 384): \\"DB_PASSWO...
-            ...,
-          elementDescription: null
-        },
-        DB_NAME: {
-          type: 'string',
-          valueStr: 'postgres',
-          description: null,
-          value: 'postgres',
-          elementVariable: Variable (384, 417): \\"DB_NAME  ...
-            ...,
-          elementDescription: null
-        },
-        COLOR_TERM: {
-          type: 'boolean',
-          valueStr: 'false',
-          description: null,
-          value: false,
-          elementVariable: Variable (474, 503): \\"COLOR_TER...
-            ...,
-          elementDescription: null
-        },
-        FORCE_URL_SSL: {
-          type: 'boolean',
-          valueStr: 'true',
-          description: null,
-          value: true,
-          elementVariable: Variable (532, 564): \\"FORCE_URL...
-            ...,
-          elementDescription: null
-        },
-        A: {
-          type: 'number',
-          valueStr: '3',
-          description: '###\\\\nNo 123\\\\n###',
-          value: 3,
-          elementVariable: Variable (605, 616): \\"A:number=...
-            ...,
-          elementDescription: BlockComment (590, 604): \\"###\\\\nNo 123\\\\n###\\"
-        }
-      }"
-    `);
+    expect(inspect(a.definitions)).toMatchSnapshot();
   });
 
   it("should compile custom type", () => {
@@ -844,18 +504,6 @@ describe("DataSource file stringify", () => {
       ],
     });
 
-    expect(inspect(a.definitions)).toMatchInlineSnapshot(`
-      "{
-        FOO: {
-          type: 'custom_js',
-          valueStr: \\"{foo: 'bar'}\\",
-          description: null,
-          value: { foo: 'bar' },
-          elementVariable: Variable (1, 31): \\"FOO: cust...
-            ...,
-          elementDescription: null
-        }
-      }"
-    `);
+    expect(inspect(a.definitions)).toMatchSnapshot();
   });
 });

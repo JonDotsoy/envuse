@@ -2,7 +2,6 @@ import { BufferCursor } from "../lib/BufferCursor";
 import { UnexpectedTokenError } from "../tdo/UnexpectedTokenError";
 import { EventEmitter } from "events";
 import util, { inspect, InspectOptions } from "util";
-import { BaseSerializeOption as BaseSerializeOption } from "../tdo/BaseSerializeOption";
 import { TypeNamesList } from "../tdo/TypeNamesList";
 
 export type BaseType = {
@@ -111,13 +110,25 @@ export abstract class Base {
   [util.inspect.custom](depth: number, inspectOptions: InspectOptions) {
     let out = `${printElement(this)}`;
 
+    const oChildren = this.oChildren.filter(c => {
+      if (inspectOptions.showHidden === true) return true;
+
+      // Hidden elements
+      const hiddenElements: TypeNamesList[] = [
+        "Space",
+        "SpaceNewLine",
+      ];
+
+      return !hiddenElements.includes(c.$type);
+    })
+
     if (depth <= 0) {
-      return `${out}${this.oChildren.length ? `\n  ...` : ``}`
+      return `${out}${oChildren.length ? `\n  ...` : ``}`
     }
 
     // console.log(inspectOptions)
-    if (this.oChildren.length) {
-      for (const child of this.oChildren) {
+    if (oChildren.length) {
+      for (const child of oChildren) {
         out += `\n`
         out += inspect(child, { ...inspectOptions, depth: depth - 1 })
           .replace(/(^)/, '  ')

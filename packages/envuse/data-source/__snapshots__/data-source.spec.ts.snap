@@ -1,5 +1,194 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`DataSource file stringify should compile custom type 1`] = `
+"{
+  FOO: {
+    type: 'custom_js',
+    valueStr: \\"{foo: 'bar'}\\",
+    description: null,
+    value: { foo: 'bar' },
+    elementVariable: Variable (1, 31): \\"FOO: cust...
+      ...,
+    elementDescription: null
+  }
+}"
+`;
+
+exports[`DataSource file stringify should parse envuse file and return definition 1`] = `
+"{
+  SHELL_SYSTEM: {
+    type: 'string',
+    valueStr: 'bash',
+    description: null,
+    value: 'bash',
+    elementVariable: Variable (99, 130): \\"SHELL_SYS...
+      ...,
+    elementDescription: null
+  },
+  API_KEY: {
+    type: 'string',
+    valueStr: 'cf7d6f43-bb85-4045-a23f-7fb94bfac745',
+    description: '###\\\\n# Comment descriptive\\\\n###',
+    value: 'cf7d6f43-bb85-4045-a23f-7fb94bfac745',
+    elementVariable: Variable (161, 239): \\"API_KEY  ...
+      ...,
+    elementDescription: BlockComment (131, 160): \\"###\\\\n# Comment descriptive\\\\n###\\"
+  },
+  DB_HOST: {
+    type: 'string',
+    valueStr: '127.7.0.1',
+    description: null,
+    value: '127.7.0.1',
+    elementVariable: Variable (239, 273): \\"DB_HOST  ...
+      ...,
+    elementDescription: null
+  },
+  DB_PORT: {
+    type: 'number',
+    valueStr: '5432',
+    description: null,
+    value: 5432,
+    elementVariable: Variable (273, 318): \\"DB_PORT :...
+      ...,
+    elementDescription: null
+  },
+  DB_USER: {
+    type: 'string',
+    valueStr: 'postgres',
+    description: null,
+    value: 'postgres',
+    elementVariable: Variable (318, 351): \\"DB_USER  ...
+      ...,
+    elementDescription: null
+  },
+  DB_PASSWORD: {
+    type: 'string',
+    valueStr: 'postgres',
+    description: null,
+    value: 'postgres',
+    elementVariable: Variable (351, 384): \\"DB_PASSWO...
+      ...,
+    elementDescription: null
+  },
+  DB_NAME: {
+    type: 'string',
+    valueStr: 'postgres',
+    description: null,
+    value: 'postgres',
+    elementVariable: Variable (384, 417): \\"DB_NAME  ...
+      ...,
+    elementDescription: null
+  },
+  COLOR_TERM: {
+    type: 'boolean',
+    valueStr: 'false',
+    description: null,
+    value: false,
+    elementVariable: Variable (474, 503): \\"COLOR_TER...
+      ...,
+    elementDescription: null
+  },
+  FORCE_URL_SSL: {
+    type: 'boolean',
+    valueStr: 'true',
+    description: null,
+    value: true,
+    elementVariable: Variable (532, 564): \\"FORCE_URL...
+      ...,
+    elementDescription: null
+  },
+  A: {
+    type: 'number',
+    valueStr: '3',
+    description: '###\\\\nNo 123\\\\n###',
+    value: 3,
+    elementVariable: Variable (605, 616): \\"A:number=...
+      ...,
+    elementDescription: BlockComment (590, 604): \\"###\\\\nNo 123\\\\n###\\"
+  }
+}"
+`;
+
+exports[`DataSource file stringify should stringify ast 1`] = `
+"{
+  \\"$type\\": \\"Block\\",
+  \\"pos\\": 0,
+  \\"end\\": 8,
+  \\"children\\": [
+    {
+      \\"$type\\": \\"Variable\\",
+      \\"pos\\": 0,
+      \\"end\\": 8,
+      \\"keyVariable\\": {
+        \\"$type\\": \\"VariableKey\\",
+        \\"pos\\": 0,
+        \\"end\\": 3,
+        \\"value\\": \\"foo\\"
+      },
+      \\"valueVariable\\": {
+        \\"$type\\": \\"VariableValue\\",
+        \\"pos\\": 4,
+        \\"end\\": 7,
+        \\"value\\": \\"bar\\"
+      }
+    }
+  ]
+}"
+`;
+
+exports[`DataSource file stringify should stringify ast 2`] = `
+"{
+  \\"$type\\": \\"Block\\",
+  \\"pos\\": 0,
+  \\"end\\": 16,
+  \\"children\\": [
+    {
+      \\"$type\\": \\"CommentOperator\\",
+      \\"pos\\": 0,
+      \\"end\\": 16,
+      \\"operator\\": {
+        \\"$type\\": \\"VariableKey\\",
+        \\"pos\\": 3,
+        \\"end\\": 5,
+        \\"value\\": \\"if\\"
+      },
+      \\"statement\\": {
+        \\"$type\\": \\"CommentOperatorStatement\\",
+        \\"pos\\": 6,
+        \\"end\\": 11,
+        \\"statements\\": [
+          {
+            \\"$type\\": \\"StatementObject\\",
+            \\"pos\\": 6,
+            \\"end\\": 10,
+            \\"type\\": \\"Boolean\\",
+            \\"value\\": true
+          }
+        ]
+      },
+      \\"block\\": {
+        \\"$type\\": \\"Block\\",
+        \\"pos\\": 11,
+        \\"end\\": 16,
+        \\"children\\": [
+          {
+            \\"$type\\": \\"CommentOperator\\",
+            \\"pos\\": 11,
+            \\"end\\": 16,
+            \\"operator\\": {
+              \\"$type\\": \\"VariableKey\\",
+              \\"pos\\": 14,
+              \\"end\\": 16,
+              \\"value\\": \\"fi\\"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}"
+`;
+
 exports[`DataSource parse statement parse statement operation 1`] = `
 Object {
   "$type": "CommentOperatorStatement",
@@ -33,6 +222,48 @@ Object {
     },
   ],
 }
+`;
+
+exports[`DataSource parse statement should parse block descriptive comment: 
+        "[
+          Block (0, 47): \\"# single ...
+            CommentInline (0, 18): \\"# single comment\\\\n\\"
+            SpaceNewLine (18, 19): \\"\\\\n\\"
+            BlockComment (19, 33): \\"###\\\\nNo 123\\\\n###\\"
+            SpaceNewLine (33, 39): \\"    \\\\n\\\\n\\"
+            Variable (39, 47): \\"FOO=BAR\\\\n...
+              ...,
+          CommentInline (0, 18): \\"# single comment\\\\n\\",
+          SpaceNewLine (18, 19): \\"\\\\n\\",
+          BlockComment (19, 33): \\"###\\\\nNo 123\\\\n###\\",
+          SpaceNewLine (33, 39): \\"    \\\\n\\\\n\\",
+          Variable (39, 47): \\"FOO=BAR\\\\n...
+            VariableKey (39, 42): \\"FOO\\"
+            SymbolEqual (42, 43): \\"=\\"
+            VariableValue (43, 46): \\"BAR\\",
+          VariableKey (39, 42): \\"FOO\\",
+          SymbolEqual (42, 43): \\"=\\",
+          VariableValue (43, 46): \\"BAR\\"
+        ]"
+       1`] = `
+"[
+  Block (0, 47): \\"# single ...
+    CommentInline (0, 18): \\"# single comment\\\\n\\"
+    BlockComment (19, 33): \\"###\\\\nNo 123\\\\n###\\"
+    Variable (39, 47): \\"FOO=BAR\\\\n...
+      ...,
+  CommentInline (0, 18): \\"# single comment\\\\n\\",
+  SpaceNewLine (18, 19): \\"\\\\n\\",
+  BlockComment (19, 33): \\"###\\\\nNo 123\\\\n###\\",
+  SpaceNewLine (33, 39): \\"    \\\\n\\\\n\\",
+  Variable (39, 47): \\"FOO=BAR\\\\n...
+    VariableKey (39, 42): \\"FOO\\"
+    SymbolEqual (42, 43): \\"=\\"
+    VariableValue (43, 46): \\"BAR\\",
+  VariableKey (39, 42): \\"FOO\\",
+  SymbolEqual (42, 43): \\"=\\",
+  VariableValue (43, 46): \\"BAR\\"
+]"
 `;
 
 exports[`DataSource parse statement should parse comment operator correctly 1`] = `
@@ -171,28 +402,165 @@ Object {
 }
 `;
 
+exports[`DataSource parse statement should parse statement with variables 1`] = `
+Array [
+  "CommentOperatorStatement (0, 25): \\"VAL1 === ...",
+  "StatementObject<NameInstance> (0, 4): \\"VAL1\\"",
+  "Space (4, 5): \\" \\"",
+  "StatementObject<StrictEqualitySymbol> (5, 8): \\"===\\"",
+  "Space (8, 11): \\"   \\"",
+  "StatementObject<NameInstance> (11, 23): \\"obj.a.b.VAL2\\"",
+  "Space (23, 24): \\" \\"",
+]
+`;
+
+exports[`DataSource parse statement should parse variable with comment 1`] = `
+"[
+  Block (0, 30): \\"FOO : num...
+    Variable (0, 30): \\"FOO : num...
+      ...,
+  Variable (0, 30): \\"FOO : num...
+    VariableKey (0, 3): \\"FOO\\"
+    SymbolColon (4, 5): \\":\\"
+    VariableKey (6, 12): \\"number\\"
+    SymbolEqual (13, 14): \\"=\\"
+    VariableValue (15, 20): \\"\\\\\\"123\\\\\\"\\"
+    CommentInline (21, 30): \\"# comment...,
+  VariableKey (0, 3): \\"FOO\\",
+  Space (3, 4): \\" \\",
+  SymbolColon (4, 5): \\":\\",
+  Space (5, 6): \\" \\",
+  VariableKey (6, 12): \\"number\\",
+  Space (12, 13): \\" \\",
+  SymbolEqual (13, 14): \\"=\\",
+  Space (14, 15): \\" \\",
+  VariableValue (15, 20): \\"\\\\\\"123\\\\\\"\\",
+  Space (20, 21): \\" \\",
+  CommentInline (21, 30): \\"# comment...,
+  Space (22, 23): \\" \\"
+]"
+`;
+
+exports[`DataSource parse statement should parse variable with comment 2`] = `
+"[
+  Block (0, 31): \\"FOO : num...
+    Variable (0, 31): \\"FOO : num...
+      ...,
+  Variable (0, 31): \\"FOO : num...
+    VariableKey (0, 3): \\"FOO\\"
+    SymbolColon (4, 5): \\":\\"
+    VariableKey (6, 12): \\"number\\"
+    SymbolEqual (13, 14): \\"=\\"
+    VariableValue (15, 21): \\"'12#3'\\"
+    CommentInline (22, 31): \\"# comment...,
+  VariableKey (0, 3): \\"FOO\\",
+  Space (3, 4): \\" \\",
+  SymbolColon (4, 5): \\":\\",
+  Space (5, 6): \\" \\",
+  VariableKey (6, 12): \\"number\\",
+  Space (12, 13): \\" \\",
+  SymbolEqual (13, 14): \\"=\\",
+  Space (14, 15): \\" \\",
+  VariableValue (15, 21): \\"'12#3'\\",
+  Space (21, 22): \\" \\",
+  CommentInline (22, 31): \\"# comment...,
+  Space (23, 24): \\" \\"
+]"
+`;
+
+exports[`DataSource parse statement should parse variable with comment 3`] = `
+"Block (0, 35): \\"FOO : num...
+  Variable (0, 35): \\"FOO : num...
+    VariableKey (0, 3): \\"FOO\\"
+    SymbolColon (4, 5): \\":\\"
+    VariableKey (6, 12): \\"number\\"
+    SymbolEqual (13, 14): \\"=\\"
+    VariableValue (15, 22): \\"HOLA HI\\"
+    CommentInline (26, 35): \\"# comment..."
+`;
+
+exports[`DataSource parse statement should parse variable with comment 4`] = `
+"Block (0, 45): \\"FOO : num...
+  Variable (0, 36): \\"FOO : num...
+    VariableKey (0, 3): \\"FOO\\"
+    SymbolColon (4, 5): \\":\\"
+    VariableKey (6, 12): \\"number\\"
+    SymbolEqual (13, 14): \\"=\\"
+    VariableValue (15, 22): \\"HOLA HI\\"
+    CommentInline (26, 36): \\"# comment...
+  Variable (36, 45): \\"A='B#'#sa...
+    VariableKey (36, 37): \\"A\\"
+    SymbolEqual (37, 38): \\"=\\"
+    VariableValue (38, 42): \\"'B#'\\"
+    CommentInline (42, 45): \\"#sa\\""
+`;
+
+exports[`DataSource parse statement should parse variable with type 1`] = `
+"[
+  Block (0, 19): \\"FOO : num...
+    Variable (0, 19): \\"FOO : num...
+      ...,
+  Variable (0, 19): \\"FOO : num...
+    VariableKey (0, 3): \\"FOO\\"
+    SymbolColon (4, 5): \\":\\"
+    VariableKey (6, 12): \\"number\\"
+    SymbolEqual (13, 14): \\"=\\"
+    VariableValue (15, 18): \\"123\\",
+  VariableKey (0, 3): \\"FOO\\",
+  Space (3, 4): \\" \\",
+  SymbolColon (4, 5): \\":\\",
+  Space (5, 6): \\" \\",
+  VariableKey (6, 12): \\"number\\",
+  Space (12, 13): \\" \\",
+  SymbolEqual (13, 14): \\"=\\",
+  Space (14, 15): \\" \\",
+  VariableValue (15, 18): \\"123\\"
+]"
+`;
+
+exports[`DataSource parse statement should read property list children 1`] = `
+Array [
+  "Block <0, 35>",
+  "Variable <0, 8>",
+  "VariableKey <0, 3>",
+  "SymbolEqual <3, 4>",
+  "VariableValue <4, 7>",
+  "CommentOperator <8, 34>",
+  "Space <10, 11>",
+  "VariableKey <11, 13>",
+  "Space <13, 14>",
+  "CommentOperatorStatement <14, 19>",
+  "StatementObject <14, 18>",
+  "Block <19, 34>",
+  "SpaceNewLine <19, 20>",
+  "Variable <20, 28>",
+  "VariableKey <20, 23>",
+  "SymbolEqual <23, 24>",
+  "VariableValue <24, 27>",
+  "SpaceNewLine <28, 29>",
+  "CommentOperator <29, 34>",
+  "Space <31, 32>",
+  "VariableKey <32, 34>",
+  "SpaceNewLine <34, 35>",
+]
+`;
+
 exports[`DataSource shoud make a ast out 1`] = `
 " Block (0, 60): \\"abc=def #...
   Variable (0, 20): \\"abc=def #...
     VariableKey (0, 3): \\"abc\\"
     SymbolEqual (3, 4): \\"=\\"
     VariableValue (4, 7): \\"def\\"
-    Space (7, 8): \\" \\"
     CommentInline (8, 20): \\"# a comme...
-      Space (9, 10): \\" \\"
   Variable (20, 28): \\"foo=bar\\\\n...
     VariableKey (20, 23): \\"foo\\"
     SymbolEqual (23, 24): \\"=\\"
     VariableValue (24, 27): \\"bar\\"
-  SpaceNewLine (28, 34): \\"\\\\n    \\\\n\\"
   Variable (34, 60): \\"abc    =\\\\...
     VariableKey (34, 37): \\"abc\\"
-    Space (37, 41): \\"    \\"
     SymbolEqual (41, 42): \\"=\\"
     VariableValue (42, 49): \\"\\\\\\"d\\\\\\\\\\\\\\"ef\\\\\\"\\"
-    Space (49, 50): \\" \\"
-    CommentInline (50, 60): \\"# comente...
-      Space (51, 52): \\" \\""
+    CommentInline (50, 60): \\"# comente..."
 `;
 
 exports[`DataSource shoud make a ast with multiple blocks 1`] = `
@@ -203,7 +571,6 @@ exports[`DataSource shoud make a ast with multiple blocks 1`] = `
     VariableValue (2, 3): \\"C\\"
   CommentOperator (4, 42): \\"#;if true...
     VariableKey (6, 8): \\"if\\"
-    Space (8, 9): \\" \\"
     CommentOperatorStatement (9, 14): \\"true\\\\n\\"
       StatementObject<Boolean> (9, 13): \\"true\\"
     Block (14, 42): \\"a=a\\\\n#;if...
@@ -213,7 +580,6 @@ exports[`DataSource shoud make a ast with multiple blocks 1`] = `
         VariableValue (16, 17): \\"a\\"
       CommentOperator (18, 37): \\"#;if fals...
         VariableKey (20, 22): \\"if\\"
-        Space (22, 23): \\" \\"
         CommentOperatorStatement (23, 29): \\"false\\\\n\\"
           StatementObject<Boolean> (23, 28): \\"false\\"
         Block (29, 37): \\"b=b\\\\n#;fi...
@@ -223,10 +589,8 @@ exports[`DataSource shoud make a ast with multiple blocks 1`] = `
             VariableValue (31, 32): \\"b\\"
           CommentOperator (33, 37): \\"#;fi\\"
             VariableKey (35, 37): \\"fi\\"
-      SpaceNewLine (37, 38): \\"\\\\n\\"
       CommentOperator (38, 42): \\"#;fi\\"
-        VariableKey (40, 42): \\"fi\\"
-  SpaceNewLine (42, 43): \\"\\\\n\\""
+        VariableKey (40, 42): \\"fi\\""
 `;
 
 exports[`DataSource shoud make a ast with operators 1`] = `
@@ -236,9 +600,7 @@ exports[`DataSource shoud make a ast with operators 1`] = `
     SymbolEqual (3, 4): \\"=\\"
     VariableValue (4, 7): \\"BAR\\"
   CommentOperator (8, 34): \\"#; if tru...
-    Space (10, 11): \\" \\"
     VariableKey (11, 13): \\"if\\"
-    Space (13, 14): \\" \\"
     CommentOperatorStatement (14, 19): \\"true\\\\n\\"
       StatementObject<Boolean> (14, 18): \\"true\\"
     Block (19, 34): \\"aaa=\\\\\\"bbb...
@@ -247,11 +609,25 @@ exports[`DataSource shoud make a ast with operators 1`] = `
         SymbolEqual (22, 23): \\"=\\"
         VariableValue (23, 28): \\"\\\\\\"bbb\\\\\\"\\"
       CommentOperator (29, 34): \\"#; fi\\"
-        Space (31, 32): \\" \\"
         VariableKey (32, 34): \\"fi\\"
-  SpaceNewLine (34, 36): \\"\\\\n\\\\n\\"
   Variable (36, 44): \\"ccc=ddd\\\\n...
     VariableKey (36, 39): \\"ccc\\"
     SymbolEqual (39, 40): \\"=\\"
     VariableValue (40, 43): \\"ddd\\""
+`;
+
+exports[`DataSource should parse variable with backslash 1`] = `
+"Block (0, 7): \\"A='\\\\\\\\''\\\\n...
+  Variable (0, 7): \\"A='\\\\\\\\''\\\\n...
+    VariableKey (0, 1): \\"A\\"
+    SymbolEqual (1, 2): \\"=\\"
+    VariableValue (2, 6): \\"'\\\\\\\\''\\""
+`;
+
+exports[`DataSource should parse variable with backslash 2`] = `
+"Block (0, 7): \\"A=\\\\\\"\\\\\\\\\\\\\\"\\\\...
+  Variable (0, 7): \\"A=\\\\\\"\\\\\\\\\\\\\\"\\\\...
+    VariableKey (0, 1): \\"A\\"
+    SymbolEqual (1, 2): \\"=\\"
+    VariableValue (2, 6): \\"\\\\\\"\\\\\\\\\\\\\\"\\\\\\"\\""
 `;

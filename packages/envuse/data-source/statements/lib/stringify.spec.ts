@@ -7,37 +7,7 @@ describe("parse ast", () => {
   it("should parse ast variable", () => {
     const body = DataSource.createDataSource(Buffer.concat([b(`a=3\n`)]));
 
-    expect(JSON.stringify(body, null, 2)).toMatchInlineSnapshot(`
-    "{
-      \\"$type\\": \\"Block\\",
-      \\"pos\\": 0,
-      \\"end\\": 4,
-      \\"children\\": [
-        {
-          \\"$type\\": \\"Variable\\",
-          \\"pos\\": 0,
-          \\"end\\": 3,
-          \\"keyVariable\\": {
-            \\"$type\\": \\"VariableKey\\",
-            \\"pos\\": 0,
-            \\"end\\": 1,
-            \\"value\\": \\"a\\"
-          },
-          \\"valueVariable\\": {
-            \\"$type\\": \\"VariableValue\\",
-            \\"pos\\": 2,
-            \\"end\\": 3,
-            \\"value\\": \\"3\\"
-          }
-        },
-        {
-          \\"$type\\": \\"SpaceNewLine\\",
-          \\"pos\\": 3,
-          \\"end\\": 4
-        }
-      ]
-    }"
-    `);
+    expect(JSON.stringify(body, null, 2)).toMatchSnapshot();
   });
 
   it("should parse ast operator", () => {
@@ -45,74 +15,7 @@ describe("parse ast", () => {
       Buffer.concat([b(`#; if true\n`), b(`a=b\n`), b(`#; fi\n`)])
     );
 
-    expect(JSON.stringify(body, null, 2)).toMatchInlineSnapshot(`
-      "{
-        \\"$type\\": \\"Block\\",
-        \\"pos\\": 0,
-        \\"end\\": 21,
-        \\"children\\": [
-          {
-            \\"$type\\": \\"CommentOperator\\",
-            \\"pos\\": 0,
-            \\"end\\": 20,
-            \\"operator\\": {
-              \\"$type\\": \\"VariableKey\\",
-              \\"pos\\": 3,
-              \\"end\\": 5,
-              \\"value\\": \\"if\\"
-            },
-            \\"statement\\": {
-              \\"$type\\": \\"CommentOperatorStatement\\",
-              \\"pos\\": 6,
-              \\"end\\": 11,
-              \\"statements\\": [
-                {
-                  \\"$type\\": \\"StatementObject\\",
-                  \\"pos\\": 6,
-                  \\"end\\": 10,
-                  \\"type\\": \\"Boolean\\",
-                  \\"value\\": true
-                }
-              ]
-            },
-            \\"block\\": {
-              \\"$type\\": \\"Block\\",
-              \\"pos\\": 11,
-              \\"end\\": 20,
-              \\"children\\": [
-                {
-                  \\"$type\\": \\"Variable\\",
-                  \\"pos\\": 11,
-                  \\"end\\": 14,
-                  \\"keyVariable\\": {
-                    \\"$type\\": \\"VariableKey\\",
-                    \\"pos\\": 11,
-                    \\"end\\": 12,
-                    \\"value\\": \\"a\\"
-                  },
-                  \\"valueVariable\\": {
-                    \\"$type\\": \\"VariableValue\\",
-                    \\"pos\\": 13,
-                    \\"end\\": 14,
-                    \\"value\\": \\"b\\"
-                  }
-                },
-                {
-                  \\"$type\\": \\"SpaceNewLine\\",
-                  \\"pos\\": 14,
-                  \\"end\\": 15
-                }
-              ]
-            }
-          },
-          {
-            \\"$type\\": \\"SpaceNewLine\\",
-            \\"pos\\": 20,
-            \\"end\\": 21
-          }
-        ]
-      }"
-    `);
+    expect(JSON.stringify(body, null, 2)).toMatchSnapshot();
   });
 });
 
