@@ -23,11 +23,13 @@
   },
   "homepage": "https://github.com/JonDotsoy/envuse#readme",
   "devDependencies": {
+    "@commitlint/cli": "^13.1.0",
+    "@commitlint/config-conventional": "^13.1.0",
     "husky": "^7.0.1",
     "lint-staged": "^11.0.0",
     "prettier": "^2.3.2"
   },
   "lint-staged": {
-    "*.{js,css,md}": "prettier --write"
+    "*.{ts,md}": "prettier --write"
   }
 }
