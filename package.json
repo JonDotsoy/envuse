@@ -8,8 +8,6 @@
     "packages/envuse-vscode-syntaxes"
   ],
   "scripts": {
-    "vsce-syntax:git-tag-current": "npm run git-tag-current -w packages/envuse-vscode-syntaxes",
-    "envuse:git-tag-current": "npm run git-tag-current -w packages/envuse",
     "env": "env",
     "prepare": "husky install"
   },
