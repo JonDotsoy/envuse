@@ -5,7 +5,7 @@
   "main": "envuse.js",
   "publishConfig": {
     "access": "public",
-    "tag": "beta"
+    "tag": "latest"
   },
   "scripts": {
     "release": "standard-version -t envuse@v --release-as patch",
