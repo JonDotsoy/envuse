@@ -8,22 +8,26 @@ import { StatementObject } from "./statements/comps/StatementObject";
 import fs from "fs";
 import { BlockComment } from "./statements/comps/BlockComment";
 import { CommentInline } from "./statements/comps/CommentInline";
-import { inspect } from "util";
 import { stringify as DataSourceStringify } from "./statements/lib/stringify";
 import { StringifyOptions } from "./statements/lib/StringifyOptions";
 
+// data source
 
 export type CustomType = {
-  type: string
-  parser: (ctx: { valueStr: string, elementVariable: Variable, elementDescription: null | BlockComment }) => any
-}
+  type: string;
+  parser: (ctx: {
+    valueStr: string;
+    elementVariable: Variable;
+    elementDescription: null | BlockComment;
+  }) => any;
+};
 
 const stringType: CustomType = {
   type: "string",
   parser: (ctx) => {
     const valueStr = ctx.valueStr;
-    return valueStr
-  }
+    return valueStr;
+  },
 };
 
 const numberType: CustomType = {
@@ -35,24 +39,24 @@ const numberType: CustomType = {
       ctx.elementVariable.rejectUnexpectedTokenError({
         message: `${valueStr} is not a valid number`,
         position: ctx.elementVariable.valueVariable.pos,
-      });;
+      });
     }
     return v;
-  }
+  },
 };
 
 const booleanType: CustomType = {
   type: "boolean",
   parser: (ctx) => {
     const valueStr = ctx.valueStr;
-    if (['true', 'false'].indexOf(valueStr) === -1) {
+    if (["true", "false"].indexOf(valueStr) === -1) {
       ctx.elementVariable.rejectUnexpectedTokenError({
         message: `${valueStr} is not a valid boolean`,
         position: ctx.elementVariable.valueVariable.pos,
       });
     }
-    return valueStr === 'true';
-  }
+    return valueStr === "true";
+  },
 };
 
 export const defaultCustomTypes: CustomType[] = [
@@ -66,17 +70,16 @@ export type Definition = {
   description: string | null;
   value: any;
   valueStr: string;
-  elementVariable: Variable
-  elementDescription?: BlockComment | null
-}
-
+  elementVariable: Variable;
+  elementDescription?: BlockComment | null;
+};
 
 export type Option =
   | Buffer
   | {
-    filename?: string | null;
-    body: Buffer;
-  };
+      filename?: string | null;
+      body: Buffer;
+    };
 
 export type Values = {
   [k: string]: any;
@@ -84,11 +87,11 @@ export type Values = {
 
 export type CompileOptions = {
   customTypes?: CustomType[];
-}
+};
 
 /** AST Parser */
 export class DataSource {
-  private constructor(private filename: string | null, private body: Buffer) { }
+  private constructor(private filename: string | null, private body: Buffer) {}
 
   toAstBody() {
     try {
@@ -167,9 +170,12 @@ export class DataSource {
         assert: this.makeOperatorEvaluator(operator),
       }));
 
-    const isVariable = (element: Base): element is Variable => element instanceof Variable
-    const isDescriptor = (element: Base): element is BlockComment => element instanceof BlockComment
-    const isComment = (element: Base): element is CommentInline => element instanceof CommentInline
+    const isVariable = (element: Base): element is Variable =>
+      element instanceof Variable;
+    const isDescriptor = (element: Base): element is BlockComment =>
+      element instanceof BlockComment;
+    const isComment = (element: Base): element is CommentInline =>
+      element instanceof CommentInline;
 
     // const variableList = ast.elementList.filter(
     //   (element): element is Variable => element instanceof Variable
@@ -177,22 +183,19 @@ export class DataSource {
 
     let description: BlockComment | null = null;
 
-    const variableList = ast.elementList.reduce(
-      (acum, element) => {
-        if (isDescriptor(element)) {
-          description = element;
-        }
-        if (isComment(element)) {
-          description = null;
-        }
-        if (isVariable(element)) {
-          acum.push([element, description]);
-          description = null;
-        }
-        return acum;
-      },
-      [] as [Variable, BlockComment | null][]
-    );
+    const variableList = ast.elementList.reduce((acum, element) => {
+      if (isDescriptor(element)) {
+        description = element;
+      }
+      if (isComment(element)) {
+        description = null;
+      }
+      if (isVariable(element)) {
+        acum.push([element, description]);
+        description = null;
+      }
+      return acum;
+    }, [] as [Variable, BlockComment | null][]);
 
     const definitions = variableList.reduce((acum, [element, description]) => {
       const operators = operatorsList.filter((operator) =>
@@ -201,10 +204,14 @@ export class DataSource {
 
       if (operators.length) {
         const result = operators.reduce(
-          (v, operator) => v && operator.assert({
-            ...values,
-            ...Object.fromEntries(Object.entries(acum).map(([k, v]) => [k, v.value])),
-          }),
+          (v, operator) =>
+            v &&
+            operator.assert({
+              ...values,
+              ...Object.fromEntries(
+                Object.entries(acum).map(([k, v]) => [k, v.value])
+              ),
+            }),
           true
         );
         if (!result) {
@@ -215,7 +222,10 @@ export class DataSource {
       const type = element.typeVariable?.value ?? "string";
       const valueStr = element.valueVariable.value;
 
-      const customTypes = [...defaultCustomTypes, ...options.customTypes ?? []];
+      const customTypes = [
+        ...defaultCustomTypes,
+        ...(options.customTypes ?? []),
+      ];
 
       const getValue = () => {
         for (const customType of customTypes) {
@@ -229,7 +239,7 @@ export class DataSource {
         }
 
         throw new Error(`Unsupported type ${type}`);
-      }
+      };
 
       return {
         ...acum,
@@ -244,12 +254,19 @@ export class DataSource {
       };
     }, {} as { [k: string]: Definition });
 
-    const parsed = Object.entries(definitions).reduce((acum, [name, def]) => ({ ...acum, [name]: def.valueStr }), {} as { [k: string]: string });
+    const parsed = Object.entries(definitions).reduce(
+      (acum, [name, def]) => ({ ...acum, [name]: def.valueStr }),
+      {} as { [k: string]: string }
+    );
 
     return { definitions, parsed, ast } as const;
   }
 
-  static parseFile(filename: string, values?: { [k: string]: any }, options?: CompileOptions) {
+  static parseFile(
+    filename: string,
+    values?: { [k: string]: any },
+    options?: CompileOptions
+  ) {
     // read file and store buffer
     const buffer = fs.readFileSync(filename);
 
