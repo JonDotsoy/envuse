@@ -3,7 +3,7 @@ name: VSCE Publish Envuse Language Extension
 on:
   push:
     tags:
-      - vsce-envuse/v*
+      - vscode-language@v*
 
 jobs:
   publish:
