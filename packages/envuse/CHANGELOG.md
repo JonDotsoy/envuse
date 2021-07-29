@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.4.2](https://github.com/JonDotsoy/envuse/compare/envuse@v2.4.1...envuse@v2.4.2) (2021-07-29)
+
+### Features
+
+- **envuse:** add folder environment demo on gitignore file ([675b7af](https://github.com/JonDotsoy/envuse/commit/675b7afe836c7c9087b157a7fa2d8ae8323e3b35))
+- **envuse:** add imagen demo to envuse file ([65991b4](https://github.com/JonDotsoy/envuse/commit/65991b41aa261db0e672479f1910adcccc72c6c0))
+- **envuse:** update ([c664fdf](https://github.com/JonDotsoy/envuse/commit/c664fdf1483e9b6511fca46bd601fd82fc5e1195))
+- **envuse:** upgrade sample comment ([6ed67ba](https://github.com/JonDotsoy/envuse/commit/6ed67ba9ce5678f0489b84c73e515d344adab4d8))
+- **envuse:** upgrade tests and rename comment to comment inline ([3ea955b](https://github.com/JonDotsoy/envuse/commit/3ea955b270331cd1591c90723f7a047220bcb2e2))
+- **package:** add commitlint to husky ([23ed444](https://github.com/JonDotsoy/envuse/commit/23ed444ad7c7a33bed3d1270b4396da7ce287897))
+- **package:** upgrade scripts on packages ([c914ff3](https://github.com/JonDotsoy/envuse/commit/c914ff31490875a5ca2a791b6811f9265e33149a))
+
 ### [2.4.1](https://github.com/JonDotsoy/envuse/compare/envuse@v2.4.0...envuse@v2.4.1) (2021-07-28)
 
 ### Features
