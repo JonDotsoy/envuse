@@ -4,7 +4,24 @@
 
 Module to load environment variables from a `.envuse` file into the `process.env`.
 
-![](./assets/sample-syntax-highlighting-for-envuse.png)
+<details>
+  <summary>.envuse sample</summary>
+  <img src="./assets/sample-syntax-highlighting-for-envuse.png"/>
+</details>
+
+**Sample execution:**
+
+```ts
+// run $ npm run -r envuse/register myapp.ts
+import config from "envuse";
+
+const API_KEY = config.API_KEY;
+```
+
+<details>
+  <summary>IDE preview</summary>
+  <img src="./assets/ide-preview.png"/>
+</details>
 
 ## Installation
 
