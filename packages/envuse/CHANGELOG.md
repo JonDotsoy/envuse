@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.4.3](https://github.com/JonDotsoy/envuse/compare/envuse@v2.4.2...envuse@v2.4.3) (2021-07-29)
+
+### Features
+
+- **envuse:** upgrade version as latest ([aa98f1f](https://github.com/JonDotsoy/envuse/commit/aa98f1f835687a8dcdcaf6bfa69bee7e657c380f))
+- **package:** add script release envuse ([c2f01fa](https://github.com/JonDotsoy/envuse/commit/c2f01fa4eed656e4506e7295483aa6195e97184f))
+
 ### [2.4.2](https://github.com/JonDotsoy/envuse/compare/envuse@v2.4.1...envuse@v2.4.2) (2021-07-29)
 
 ### Features
