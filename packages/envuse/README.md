@@ -6,7 +6,7 @@ Module to load environment variables from a `.envuse` file into the `process.env
 
 <details>
   <summary>.envuse sample</summary>
-  <img src="./assets/sample-syntax-highlighting-for-envuse.png"/>
+  <img src="./assets/sample-syntax-highlighting-for-envuse.png" width="550"/>
 </details>
 
 **Sample execution:**
@@ -18,10 +18,10 @@ import config from "envuse";
 const API_KEY = config.API_KEY;
 ```
 
-<details>
-  <summary>IDE preview</summary>
-  <img src="./assets/ide-preview.png"/>
-</details>
+**IDE preview:**
+
+<img src="./assets/ide-preview.png" width="570"/>
+<img src="./assets/ide-preview-2.png" width="700"/>
 
 ## Installation
 
