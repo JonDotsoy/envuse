@@ -5,7 +5,7 @@
   "publisher": "envuse",
   "license": "MIT",
   "description": "Module to load environment variables from a `.envuse` file into the `process.env`.",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "scripts": {
     "release": "standard-version -t vscode-language@v --release-as patch && vsce publish",
     "git-tag-current": "git tag vsce-$npm_package_name@$npm_package_version"

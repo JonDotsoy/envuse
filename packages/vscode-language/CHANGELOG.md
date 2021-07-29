@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.20](https://github.com/JonDotsoy/envuse/compare/vscode-language@v0.1.18...vscode-language@v0.1.20) (2021-07-29)
+
+### Features
+
+- **vscode-language:** configure post release with publish vsce ([e857bae](https://github.com/JonDotsoy/envuse/commit/e857bae0cfacb5789ff499ca4bc034614f9ae11e))
+- **vscode-language:** upgrade script release ([64ee828](https://github.com/JonDotsoy/envuse/commit/64ee8286e1665190b989de7161c3099e27501d1c))
+
 ### [0.1.19](https://github.com/JonDotsoy/envuse/compare/vscode-language@v0.1.18...vscode-language@v0.1.19) (2021-07-29)
 
 ### Features
