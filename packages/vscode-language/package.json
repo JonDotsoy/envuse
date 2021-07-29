@@ -53,5 +53,10 @@
   },
   "devDependencies": {
     "standard-version": "^9.3.1"
+  },
+  "standard-version": {
+    "scripts": {
+      "postrelease": "vsce publish"
+    }
   }
 }
