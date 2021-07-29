@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.4.4](https://github.com/JonDotsoy/envuse/compare/envuse@v2.4.3...envuse@v2.4.4) (2021-07-29)
+
+### Features
+
+- **envuse:** upgrade readme file ([09ffb82](https://github.com/JonDotsoy/envuse/commit/09ffb823e7ead332f068630c80c483fc88afb2a5))
+- **package:** rename package envuse-vscode-syntaxes - ([1c7e1bc](https://github.com/JonDotsoy/envuse/commit/1c7e1bc122277d3e45172cfeb9257e74c9d68bf8))
+- **package:** upgrade name package vsce language ([cfa7ddd](https://github.com/JonDotsoy/envuse/commit/cfa7ddd931151b90dd84e9fd8e502ce2dcb84ee4))
+- **vscode-language:** configure extension icon ([3b1688d](https://github.com/JonDotsoy/envuse/commit/3b1688db84ea8764705e7b8a37fdfb6a425e3de3))
+- **vscode-language:** configure post release with publish vsce ([e857bae](https://github.com/JonDotsoy/envuse/commit/e857bae0cfacb5789ff499ca4bc034614f9ae11e))
+- **vscode-language:** upgrade script release ([64ee828](https://github.com/JonDotsoy/envuse/commit/64ee8286e1665190b989de7161c3099e27501d1c))
+
 ### [2.4.3](https://github.com/JonDotsoy/envuse/compare/envuse@v2.4.2...envuse@v2.4.3) (2021-07-29)
 
 ### Features
