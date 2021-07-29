@@ -4,6 +4,8 @@
 
 Module to load environment variables from a `.envuse` file into the `process.env`.
 
+![](./assets/sample-syntax-highlighting-for-envuse.png)
+
 ## Installation
 
 Install envuse with [npm](https://www.npmjs.com/):
