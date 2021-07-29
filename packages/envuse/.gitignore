@@ -159,5 +159,5 @@ $RECYCLE.BIN/
 !.editorconfig
 *.d.ts
 !.npmignore
-
+.__environment_demo__/
 
