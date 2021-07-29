@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.4.5](https://github.com/JonDotsoy/envuse/compare/envuse@v2.4.4...envuse@v2.4.5) (2021-07-29)
+
+### Features
+
+- **envuse:** upgrade README file ([684897b](https://github.com/JonDotsoy/envuse/commit/684897b4be7c559365cd135e6f1995fa5e27a054))
+
 ### [2.4.4](https://github.com/JonDotsoy/envuse/compare/envuse@v2.4.3...envuse@v2.4.4) (2021-07-29)
 
 ### Features
