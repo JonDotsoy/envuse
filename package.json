@@ -8,6 +8,7 @@
     "packages/envuse-vscode-syntaxes"
   ],
   "scripts": {
+    "release:envuse": "npm run release --workspace packages/envuse",
     "env": "env",
     "prepare": "husky install"
   },
