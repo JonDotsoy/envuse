@@ -5,10 +5,11 @@
   "main": "index.js",
   "workspaces": [
     "packages/envuse",
-    "packages/envuse-vscode-syntaxes"
+    "packages/vscode-language"
   ],
   "scripts": {
     "release:envuse": "npm run release --workspace packages/envuse",
+    "release:vscode-language": "npm run release --workspace packages/vscode-language",
     "env": "env",
     "prepare": "husky install"
   },
