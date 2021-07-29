@@ -17,6 +17,13 @@
     "Programming Languages"
   ],
   "contributes": {
+    "iconThemes": [
+      {
+        "id": "envuse",
+        "label": "Envuse",
+        "path": "./fileicons/envuse-icon-theme.json"
+      }
+    ],
     "languages": [
       {
         "id": "envuse",
@@ -40,7 +47,7 @@
     ]
   },
   "repository": {
-    "directory": "./packages/envuse-vscode-syntaxes",
+    "directory": "./packages/vscode-language",
     "type": "git",
     "url": "https://github.com/JonDotsoy/envuse.git"
   },

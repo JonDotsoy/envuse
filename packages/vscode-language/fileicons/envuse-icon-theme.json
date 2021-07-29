@@ -1,0 +1,15 @@
+{
+  "fileExtensions": {
+    "envuse": "_envuse",
+    "envuse-lock": "_envuse"
+  },
+  "languageIds": {
+    "envuse": "_envuse",
+    "envuse-lock": "_envuse"
+  },
+  "iconDefinitions": {
+    "_envuse": {
+      "iconPath": "./icons/settings.svg"
+    }
+  }
+}
