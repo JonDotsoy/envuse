@@ -22,8 +22,7 @@ export const defaultFilepath =
   file(process.env.ENVUSE_FILE_PATH) ?? file(`${process.cwd()}/.envuse`);
 
 export const defaultLockFilepath =
-  file(process.env.ENVUSE_LOCK_FILE_PATH) ??
-  file(`${process.cwd()}/.envuse-lock`);
+  file(process.env.ENVUSE_LOCK_FILE_PATH) ?? `${process.cwd()}/.envuse-lock`;
 
 /**
  * Load file .envuse or file defined on process.env.ENVUSE_FILE_PATH and put
