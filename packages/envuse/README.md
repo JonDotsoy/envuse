@@ -104,7 +104,7 @@ import "envuse/register";
 
 ## Data Source Name (DSN)
 
-The **Data Source Name** is a location of the envuse file in the file system or remote location.
+The **Data Source Name** is a location of the envuse file in the file system or remote location. The module envuse use the `ENVUSE_DSN` environment variable to define the location of the envuse file.
 
 **Sample DSNs:**
 
