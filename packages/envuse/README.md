@@ -102,32 +102,6 @@ import "envuse/register";
 // ...
 ```
 
-## parse
-
-Use the parse method to parse a buffer with the content envuse format.
-
-```ts
-import { parse } from "envuse";
-
-const buf = Buffer.from("FOO=BAR");
-
-const { parsed } = parse(buf);
-
-console.log(parsed); // { FOO: "BAR" }
-```
-
-## parse file
-
-Similar to the parse method, but read and parse the content into file.
-
-```ts
-import { parseFile } from "envuse";
-
-const { parsed } = parseFile("my_file.envuse");
-
-console.log(parsed); // { FOO: "BAR" }
-```
-
 ## Data Source Name (DSN)
 
 The **Data Source Name** is a location of the envuse file in the file system or remote location.
@@ -153,6 +127,32 @@ The **Data Source Name** is a location of the envuse file in the file system or 
 > envuse:pull-configuration Done download in 0.140s [200]
 > envuse:load Load 20 configurations
 > ```
+
+## parse
+
+Use the parse method to parse a buffer with the content envuse format.
+
+```ts
+import { parse } from "envuse";
+
+const buf = Buffer.from("FOO=BAR");
+
+const { parsed } = parse(buf);
+
+console.log(parsed); // { FOO: "BAR" }
+```
+
+## parse file
+
+Similar to the parse method, but read and parse the content into file.
+
+```ts
+import { parseFile } from "envuse";
+
+const { parsed } = parseFile("my_file.envuse");
+
+console.log(parsed); // { FOO: "BAR" }
+```
 
 ## create data source (AST)
 
