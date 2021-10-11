@@ -1,15 +1,15 @@
-import { Base } from "./statements/comps/Base";
-import { Block, BlockType } from "./statements/comps/Block";
-import { ArrCursor } from "./statements/lib/ArrCursor";
-import { CommentOperator } from "./statements/comps/CommentOperator";
-import { UnexpectedTokenError } from "./statements/tdo/UnexpectedTokenError";
-import { Variable } from "./statements/comps/Variable";
-import { StatementObject } from "./statements/comps/StatementObject";
+import { Base } from "./statements/components/base";
+import { Block, BlockType } from "./statements/components/block";
+import { ArrCursor } from "./statements/lib/arr-cursor";
+import { CommentOperator } from "./statements/components/comment-operator";
+import { UnexpectedTokenError } from "./statements/tdo/unexpected-token-error";
+import { Variable } from "./statements/components/variable";
+import { StatementObject } from "./statements/components/statement-object";
 import fs from "fs";
-import { BlockComment } from "./statements/comps/BlockComment";
-import { CommentInline } from "./statements/comps/CommentInline";
+import { BlockComment } from "./statements/components/block-comment";
+import { CommentInline } from "./statements/components/comment-inline";
 import { stringify as DataSourceStringify } from "./statements/lib/stringify";
-import { StringifyOptions } from "./statements/lib/StringifyOptions";
+import { StringifyOptions } from "./statements/lib/stringify-options";
 
 // data source
 

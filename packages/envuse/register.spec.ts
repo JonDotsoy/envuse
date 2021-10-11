@@ -1,6 +1,6 @@
 import fs from "fs";
 import childProcess from "child_process";
-import { takeDemoFile } from "./data-source/statements/lib/takeDemoFile";
+import { takeDemoFile } from "./data-source/statements/lib/take-demo-file";
 
 // describe test with title "Register env use"
 describe("Register envuse", () => {
@@ -11,14 +11,10 @@ describe("Register envuse", () => {
 
   beforeAll(() => {
     // files to remove
-    const filesToRemove = [
-      fileScriptDemo,
-      fileEnvuse,
-      fileEnvuseLock
-    ];
+    const filesToRemove = [fileScriptDemo, fileEnvuse, fileEnvuseLock];
 
     // remove files
-    filesToRemove.forEach(file => {
+    filesToRemove.forEach((file) => {
       if (fs.existsSync(file)) {
         fs.unlinkSync(file);
       }

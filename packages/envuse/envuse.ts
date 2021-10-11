@@ -1,28 +1,16 @@
 import fs from "fs";
 import { DataSource, Option, Values } from "./data-source/data-source";
-import { BlockType } from "./data-source/statements/comps/Block";
-import { SymbolEqual } from "./data-source/statements/comps/SymbolEqual";
-import { Variable } from "./data-source/statements/comps/Variable";
+import { BlockType } from "./data-source/statements/components/block";
+import { SymbolEqual } from "./data-source/statements/components/symbol-equal";
+import { Variable } from "./data-source/statements/components/variable";
+import { defaultEnvuseFilepath } from "./constants/default-envuse-filepath";
+import { defaultLockEnvuseFilepath } from "./constants/default-lock-envuse-filepath";
 import {
   createTypeScriptDefinition,
   EnvuseDefinition,
 } from "./global-envuse-loaded";
 
 const variableLoader: { [k: string]: any } = {};
-
-// ensure filepath is a file or return null
-const file = (filepath?: string) => {
-  if (filepath && fs.existsSync(filepath) && fs.statSync(filepath).isFile()) {
-    return filepath;
-  }
-  return null;
-};
-
-export const defaultFilepath =
-  file(process.env.ENVUSE_FILE_PATH) ?? file(`${process.cwd()}/.envuse`);
-
-export const defaultLockFilepath =
-  file(process.env.ENVUSE_LOCK_FILE_PATH) ?? `${process.cwd()}/.envuse-lock`;
 
 /**
  * Load file .envuse or file defined on process.env.ENVUSE_FILE_PATH and put
@@ -36,8 +24,8 @@ export const register = (opts?: {
   filepath?: string;
   lockFilepath?: string;
 }) => {
-  const filepath = opts?.filepath ?? defaultFilepath;
-  const lockFilepath = opts?.lockFilepath ?? defaultLockFilepath;
+  const filepath = opts?.filepath ?? defaultEnvuseFilepath;
+  const lockFilepath = opts?.lockFilepath ?? defaultLockEnvuseFilepath;
 
   if (filepath) {
     const r = DataSource.parseFile(filepath, process.env);

@@ -1,6 +1,6 @@
 import { DataSource } from "../../data-source";
 import { diff } from "./diff";
-import { b } from "./toBuffer";
+import { b } from "./to-buffer";
 
 describe("diff", () => {
   it("should diff deleted", () => {

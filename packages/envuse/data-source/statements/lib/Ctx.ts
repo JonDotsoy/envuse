@@ -1,4 +1,4 @@
-import { StringifyOptions } from "./StringifyOptions";
+import { StringifyOptions } from "./stringify-options";
 
 export class Ctx {
   #used: boolean = false;
@@ -14,7 +14,7 @@ export class Ctx {
 
   start(options?: StringifyOptions) {
     this.#options = options;
-    
+
     if (this.#used) {
       throw new Error("Cannot start twice");
     }
