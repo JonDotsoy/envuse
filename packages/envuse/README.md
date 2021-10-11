@@ -4,11 +4,6 @@
 
 Module to load environment variables from a `.envuse` file into the `process.env`.
 
-<details>
-  <summary>.envuse sample</summary>
-  <img src="./assets/sample-syntax-highlighting-for-envuse.png" width="550"/>
-</details>
-
 **Sample execution:**
 
 ```ts
@@ -18,10 +13,16 @@ import config from "envuse";
 const API_KEY = config.API_KEY;
 ```
 
-**IDE preview:**
+<details>
+  <summary><strong><code>.envuse</code> sample</strong></summary>
+  <img src="./assets/sample-syntax-highlighting-for-envuse.png" width="550"/>
+</details>
 
-<img src="./assets/ide-preview.png" width="570"/>
-<img src="./assets/ide-preview-2.png" width="700"/>
+<details>
+  <summary><strong>IDE preview:</strong></summary>
+  <img src="./assets/ide-preview.png" width="570"/>
+  <img src="./assets/ide-preview-2.png" width="700"/>
+</details>
 
 ## Installation
 
@@ -126,6 +127,32 @@ const { parsed } = parseFile("my_file.envuse");
 
 console.log(parsed); // { FOO: "BAR" }
 ```
+
+## Data Source Name (DSN)
+
+The **Data Source Name** is a location of the envuse file in the file system or remote location.
+
+**Sample DSNs:**
+
+- `./.envuse`
+- `https://Dc6RHsGaGdfCtA:3kkvgDtuELeg5ztBewlTAdeH@envuse.jon.soy/87e10b76-4200-4e67-8d2e-4715a695cf06`
+- `https://sample.host/my_configs/my_envuse.envuse`
+
+> **Custom Headers into requests to the DSN:**
+>
+> You can add custom headers into request to the DSN using the environment variable `ENVUSE_HEADER_{HEADER_NAME}`.
+>
+> **Sample:**
+>
+> ```sh
+> $ export ENVUSE_HEADER_FOO="bar"
+> $ DEBUG=envuse:* node -r envuse/register my_app.js
+> envuse:pull-configuration Pull configuration
+> envuse:pull-configuration Download GET https://sample.host/my_configs/my_envuse.envuse
+> envuse:pull-configuration          FOO: "bar"
+> envuse:pull-configuration Done download in 0.140s [200]
+> envuse:load Load 20 configurations
+> ```
 
 ## create data source (AST)
 
