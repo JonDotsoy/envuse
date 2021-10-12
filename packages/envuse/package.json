@@ -26,8 +26,10 @@
   "author": "Jonathan Delgado <hi@jon.soy> (https://jon.soy)",
   "license": "ISC",
   "devDependencies": {
+    "@types/accepts": "^1.3.5",
+    "@types/content-type": "^1.1.5",
     "@types/jest": "^26.0.23",
-    "@types/node": "^12.7.5",
+    "@types/node": "^12.20.28",
     "@types/yaml": "^1.9.7",
     "jest": "^27.0.6",
     "standard-version": "^9.3.1",
@@ -44,5 +46,10 @@
   "bugs": {
     "url": "https://github.com/JonDotsoy/envuse/issues"
   },
-  "homepage": "https://github.com/JonDotsoy/envuse#readme"
+  "homepage": "https://github.com/JonDotsoy/envuse#readme",
+  "dependencies": {
+    "accepts": "^1.3.7",
+    "axios": "^0.22.0",
+    "content-type": "^1.0.4"
+  }
 }
