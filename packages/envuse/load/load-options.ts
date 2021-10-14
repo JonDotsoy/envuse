@@ -13,3 +13,24 @@ export interface LoadOptions {
     [key: string]: string;
   };
 }
+
+export function assertsLoadOptions(v: any): asserts v is LoadOptions {
+  if (typeof v !== "object") {
+    throw new Error(`Expected object, got ${typeof v}`);
+  }
+  if (typeof v.dsn !== "string") {
+    throw new Error(`Expected string, got ${typeof v.dsn}`);
+  }
+  if (
+    typeof v.ignoreTypeValidation !== "undefined" &&
+    typeof v.ignoreTypeValidation !== "boolean"
+  ) {
+    throw new Error(`Expected boolean, got ${typeof v.ignoreTypeValidation}`);
+  }
+  if (
+    typeof v.dsnHttpHeaders !== "undefined" &&
+    typeof v.dsnHttpHeaders !== "object"
+  ) {
+    throw new Error(`Expected object, got ${typeof v.dsnHttpHeaders}`);
+  }
+}

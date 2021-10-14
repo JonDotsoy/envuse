@@ -4,13 +4,25 @@ import path from "path";
 import { loadResult } from "./load-result";
 import { LoadOptions } from "./load-options";
 import { fsReadFile } from "./load";
+import debug from "debug";
+
+const log = debug("envuse:load:load-dsn-file-url");
 
 export async function loadDsnFileUrl(
   dsn: URL,
   options: LoadOptions
 ): Promise<loadResult> {
   const ignoreTypeValidation = options.ignoreTypeValidation || false;
+
+  log(`Pull configuration`);
+  const l = (v: string) => v.padStart(15, " ");
+  log(`${l(`Download DSN`)}: ${dsn.href}`);
+
+  const downloadStart = Date.now();
   const buff = await fsReadFile(dsn);
+  const downloadEnd = Date.now();
+  const downloadDurationSec = ((downloadEnd - downloadStart) / 1000).toFixed(3);
+  log(`Done downloading in ${downloadDurationSec}s`);
 
   if (!ignoreTypeValidation) {
     const extname = path.extname(dsn.pathname).toLowerCase();
@@ -28,6 +40,6 @@ export async function loadDsnFileUrl(
 
   return {
     dsn: dsn.href,
-    ...DataSource.parse(buff),
+    data: buff,
   };
 }

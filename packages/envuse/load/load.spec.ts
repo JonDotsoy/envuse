@@ -1,75 +1,26 @@
-import { createServer, Server, RequestListener } from "http";
-import { AddressInfo } from "net";
 import { URL } from "url";
-import { promisify } from "util";
 import { load } from "./load";
 import fs from "fs";
-
-jest.mock("fs");
-
-const isAddressInfo = (val: any): val is AddressInfo =>
-  typeof val === "object" && val !== null && "port" in val;
+import path from "path";
+import url from "url";
+import { useMockServerWorker } from "../libs/mock-server-worker/use-mock-server-worker";
+import { tmpdir } from "os";
+import { randomUUID } from "crypto";
 
 describe("Load", () => {
   describe("load DSN http", () => {
-    const writeRes = jest.fn((): string[] => []);
-    const headerAuthorization = jest.fn((headerAuthorization?: string) => {});
-    let server: Server;
-    let urlServer: string;
-
-    beforeEach(() => {
-      writeRes.mockReset();
-      headerAuthorization.mockReset();
-    });
-
-    beforeAll(async () => {
-      const listener: RequestListener = (req, res) => {
-        headerAuthorization(req.headers.authorization);
-        if (req.url === "/file.envuse") {
-          res.writeHead(200, {
-            "Content-Type": "application/envuse; encode=UTF-8",
-          });
-
-          writeRes().map((r) => res.write(`${r}\n`));
-          res.end();
-
-          return;
-        }
-
-        res.statusCode = 404;
-        res.write("Not Found");
-        res.end();
-      };
-
-      server = createServer(listener);
-
-      await promisify((cb) => {
-        server.listen(() => {
-          const address = server.address();
-
-          if (isAddressInfo(address)) {
-            urlServer = `http://localhost:${address.port}`;
-          } else if (typeof address === "string") {
-            urlServer = `http://${address}`;
-          } else {
-            throw new Error("Invalid address");
-          }
-
-          cb(null, null);
-        });
-      })();
-    });
-
-    afterAll(async () => {
-      await promisify((cb) => {
-        server.close((err) => cb(err ?? null, null));
-      })();
-    });
+    const { srvWorker, getUrlServer, callRequest } = useMockServerWorker();
 
     it("should load DSN http", async () => {
-      writeRes.mockReturnValue(["FOO=bar", "BAR:number=6070"]);
+      srvWorker.addUseRequest({
+        method: "GET",
+        statusCode: 200,
+        headers: [["Content-Type", "application/envuse"]],
+        path: "/1/file.envuse",
+        body: ["FOO=bar", "BAR:number=6070"].join("\n"),
+      });
 
-      const uri = new URL(`${urlServer}/file.envuse`);
+      const uri = new URL(`${getUrlServer()}/1/file.envuse`);
 
       const res = await load({ dsn: uri.href });
 
@@ -83,16 +34,26 @@ describe("Load", () => {
     });
 
     it("should load DSN http with authorization", async () => {
-      writeRes.mockReturnValue(["FOO=bar", "BAR:number=6070"]);
+      srvWorker.addUseRequest({
+        method: "GET",
+        statusCode: 200,
+        headers: [
+          ["Content-Type", "application/envuse"],
+          ["Authorization", `Basic dXNlcjpwYXNz`],
+        ],
+        path: "/2/file.envuse",
+        body: ["FOO=bar", "BAR:number=6070"].join("\n"),
+      });
 
-      const uri = new URL(`${urlServer}/file.envuse`);
+      const uri = new URL(`${getUrlServer()}/2/file.envuse`);
 
       uri.username = "user";
       uri.password = "pass";
 
       await load({ dsn: uri.href });
 
-      const hAuthorization = headerAuthorization.mock.calls[0][0];
+      const hAuthorization =
+        callRequest.mock.calls?.[0]?.[0]?.headers?.authorization;
 
       expect(hAuthorization).toMatchInlineSnapshot(`"Basic dXNlcjpwYXNz"`);
 
@@ -106,28 +67,15 @@ describe("Load", () => {
   });
 
   describe("load DSN fileUrl", () => {
-    afterAll(() => {
-      jest.restoreAllMocks();
-    });
-    beforeAll(() => {
-      jest.spyOn(fs, "readFile").mockImplementation((path, cb) => {
-        if (path instanceof URL) {
-          if (path.pathname === "/a/b/.envuse") {
-            cb(
-              null,
-              Buffer.concat([
-                Buffer.from("FOO=bar\n"),
-                Buffer.from("BAR:number=6070\n"),
-              ])
-            );
-          }
-        }
-        throw new Error("Invalid path");
-      });
-    });
+    let filepath = useTempFilepath(() =>
+      Buffer.concat([
+        Buffer.from("FOO=bar\n"),
+        Buffer.from("BAR:number=6070\n"),
+      ])
+    );
 
     it("should load DSN file url", async () => {
-      const res = await load({ dsn: "file:///a/b/.envuse" });
+      const res = await load({ dsn: url.pathToFileURL(filepath).href });
 
       expect(res).toHaveProperty("dsn");
       expect(res).toHaveProperty("definitions");
@@ -137,43 +85,15 @@ describe("Load", () => {
   });
 
   describe("load DSN filepath", () => {
-    afterAll(() => {
-      jest.restoreAllMocks();
-    });
-    beforeAll(() => {
-      jest.spyOn(fs, "existsSync").mockImplementation((path) => {
-        if (path === "/a/b/.envuse") {
-          return true;
-        }
-        throw new Error("Invalid path");
-      });
-
-      jest.spyOn(fs, "statSync").mockImplementation((path) => {
-        if (path === "/a/b/.envuse") {
-          return {
-            isFile: () => true,
-          } as fs.Stats;
-        }
-        throw new Error("Invalid path");
-      });
-
-      jest.spyOn(fs, "readFile").mockImplementation((path, cb) => {
-        if (typeof path === "string") {
-          if (path === "/a/b/.envuse") {
-            cb(
-              null,
-              Buffer.concat([
-                Buffer.from("FOO=bar\n"),
-                Buffer.from("BAR:number=6070\n"),
-              ])
-            );
-          }
-        }
-      });
-    });
+    let filepath = useTempFilepath(() =>
+      Buffer.concat([
+        Buffer.from("FOO=bar\n"),
+        Buffer.from("BAR:number=6070\n"),
+      ])
+    );
 
     it("should load DSN file path", async () => {
-      const res = await load({ dsn: "/a/b/.envuse" });
+      const res = await load({ dsn: filepath });
 
       expect(res).toHaveProperty("dsn");
       expect(res).toHaveProperty("definitions");
@@ -182,3 +102,19 @@ describe("Load", () => {
     });
   });
 });
+
+function useTempFilepath(
+  getBuff: (filepath: string) => Buffer | Promise<Buffer>
+) {
+  let filepath = `${tmpdir()}/${randomUUID()}/.envuse`;
+
+  beforeAll(async () => {
+    fs.mkdirSync(path.dirname(filepath), { recursive: true });
+    fs.writeFileSync(filepath, await getBuff(filepath));
+  });
+
+  afterAll(() => {
+    fs.unlinkSync(filepath);
+  });
+  return filepath;
+}
