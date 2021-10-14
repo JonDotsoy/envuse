@@ -1,7 +1,7 @@
 import { PathOrFileDescriptor, WriteFileOptions, writeFileSync } from "fs";
 import { jsonReplacer, jsonStringify } from "./json-replacer";
 import { loadData } from "./load";
-import { assertsLoadOptions } from "./load-options";
+import { assertsLoadOptions } from "./types/load-options";
 import debug from "debug";
 import path from "path";
 import fs from "fs";

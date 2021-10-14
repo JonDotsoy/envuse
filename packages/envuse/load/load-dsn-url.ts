@@ -3,7 +3,7 @@ import axios from "axios";
 import contentType from "content-type";
 import { DataSource } from "../data-source/data-source";
 import { loadResult } from "./load-result";
-import { LoadOptions } from "./load-options";
+import { LoadOptions } from "./types/load-options";
 import debug from "debug";
 
 const log = debug("envuse:load:load-dsn-url");

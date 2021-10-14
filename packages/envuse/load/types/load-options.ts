@@ -12,6 +12,11 @@ export interface LoadOptions {
   dsnHttpHeaders?: {
     [key: string]: string;
   };
+  cache?: {
+    enable?: boolean;
+    filePath?: string;
+    ttl?: number;
+  };
 }
 
 export function assertsLoadOptions(v: any): asserts v is LoadOptions {

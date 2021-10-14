@@ -1,6 +1,6 @@
 import { tmpdir } from "os";
 import { spawnSync } from "child_process";
-import { LoadOptions } from "./load-options";
+import { LoadOptions } from "./types/load-options";
 import fs from "fs";
 import { randomUUID } from "crypto";
 import path from "path";

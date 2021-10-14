@@ -2,7 +2,7 @@ import { DataSource } from "../data-source/data-source";
 import fs from "fs";
 import path from "path";
 import { loadResult } from "./load-result";
-import { LoadOptions } from "./load-options";
+import { LoadOptions } from "./types/load-options";
 import { fsReadFile } from "./load";
 import debug from "debug";
 
