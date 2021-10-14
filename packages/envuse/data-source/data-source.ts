@@ -15,6 +15,9 @@ import { deprecate } from "util";
 
 const log = debug("envuse:data-source");
 
+const deprecateDataSourceParseBuffer = deprecate(() => {},
+"Function DataSource.parse(options:Buffer) is deprecated. Use DataSource.parse(options:{filename?: string | null;body: Buffer }) instead.");
+
 // data source
 
 export type CustomType = {
@@ -298,8 +301,14 @@ export class DataSource {
 
   static createDataSource(options: Option) {
     if (options instanceof Buffer) {
+      deprecateDataSourceParseBuffer();
+      log("CreateDataSource buffer %d bytes", options.length);
       return new DataSource(null, options).toAstBody();
     }
+    if (options.filename) {
+      log("CreateDataSource file %s", options.filename);
+    }
+    log("CreateDataSource buffer %d bytes", options.body.length);
     return new DataSource(options.filename ?? null, options.body).toAstBody();
   }
 
