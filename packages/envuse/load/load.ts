@@ -14,6 +14,7 @@ import { createHash } from "crypto";
 import { jsonStringify } from "./json-replacer";
 import { jsonParse } from "./json-reviver";
 import { assert } from "console";
+import { cacheLoadData } from "./cache-load-data";
 
 const log = debug("envuse:load");
 
@@ -51,52 +52,7 @@ function loadFactory(options: LoadOptions): Promise<loadResult> {
  * Loads the envuse file and returns the data source.
  */
 export async function loadData(options: LoadOptions) {
-  const cacheEnabled = options.cache?.enable ?? true;
-  const cacheKeyLocation =
-    options.cache?.filePath ??
-    `${tmpdir()}/.envuse-cache-reports/${createHash("md5")
-      .update(options.dsn)
-      .digest("hex")}.json`;
-  const time10minutes = 600000;
-  const cacheTtl = options.cache?.ttl ?? time10minutes;
-
-  if (cacheEnabled) {
-    try {
-      const cachedData = await fsReadFile(cacheKeyLocation, "utf8");
-      const data = jsonParse(cachedData);
-      log(`Loaded data from cache: ${cacheKeyLocation}`);
-      if (typeof data !== "object") {
-        throw new Error(`Invalid cache data: ${cachedData}`);
-      }
-      if (typeof data.timestamp !== "number") {
-        throw new Error(`Invalid cache data: ${cachedData}`);
-      }
-      if (typeof data.res !== "object") {
-        throw new Error(`Invalid cache data: ${cachedData}`);
-      }
-      if (data.timestamp + cacheTtl > Date.now()) {
-        const res = data.res;
-        assertLoadResult(res);
-        return res;
-      }
-    } catch (error) {
-      log(`Cache not found: ${cacheKeyLocation}`);
-    }
-  }
-
-  const res = await loadFactory(options);
-
-  if (cacheEnabled) {
-    fs.mkdirSync(dirname(cacheKeyLocation), { recursive: true });
-    const buff = jsonStringify({
-      timestamp: Date.now(),
-      res,
-    });
-    log(`Caching data: ${cacheKeyLocation} [${buff.length}]`);
-    fs.writeFileSync(cacheKeyLocation, buff);
-  }
-
-  return res;
+  return await cacheLoadData(options, () => loadFactory(options));
 }
 
 /**

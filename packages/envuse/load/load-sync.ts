@@ -7,11 +7,12 @@ import path from "path";
 import { assertLoadResult } from "./load-result";
 import { jsonParse, jsonReviver } from "./json-reviver";
 import { DataSource } from "../data-source/data-source";
+import { cacheLoadData } from "./cache-load-data";
 
 const workPathTs = `${__dirname}/load-sync-work.ts`;
 const workPathJs = `${__dirname}/load-sync-work.js`;
 
-export function loadDataSync(options: LoadOptions) {
+export function loadFactorySync(options: LoadOptions) {
   const isTs = path.extname(__filename) === ".ts";
   const ERROR_DIR = `${tmpdir()}/${randomUUID()}`;
   const LOAD_REPORT_PATH = `${ERROR_DIR}/load-report.json`;
@@ -60,6 +61,10 @@ export function loadDataSync(options: LoadOptions) {
   assertLoadResult(report);
 
   return report;
+}
+
+export function loadDataSync(options: LoadOptions) {
+  return cacheLoadData(options, () => loadFactorySync(options));
 }
 
 export function loadSync(options: LoadOptions) {
