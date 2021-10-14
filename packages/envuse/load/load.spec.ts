@@ -33,18 +33,20 @@ describe("Load", () => {
       expect(res.definitions.BAR?.value).toEqual(6070);
     });
 
-    it("should load DSN http with authorization", async () => {
+    beforeAll(() => {
       srvWorker.addUseRequest({
         method: "GET",
         statusCode: 200,
         headers: [
           ["Content-Type", "application/envuse"],
-          ["Authorization", `Basic dXNlcjpwYXNz`],
+          // ["Authorization", `Basic dXNlcjpwYXNz`],
         ],
         path: "/2/file.envuse",
         body: ["FOO=bar", "BAR:number=6070"].join("\n"),
       });
+    });
 
+    it("should load DSN http with authorization", async () => {
       const uri = new URL(`${getUrlServer()}/2/file.envuse`);
 
       uri.username = "user";
