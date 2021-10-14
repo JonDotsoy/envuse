@@ -25,7 +25,7 @@ export function register() {
     ? ENVUSE_CACHE_TTL_str
     : undefined;
 
-  loadSync({
+  const res = loadSync({
     dsn: ENVUSE_DSN,
     dsnHttpHeaders: Object.fromEntries(getEnvEnvuseHeaders()),
     cache: {
@@ -34,6 +34,8 @@ export function register() {
     },
     values: process.env,
   });
+
+  console.log(res.parsed);
 }
 
 export const parse = deprecate((option: Option, values?: Values) => {

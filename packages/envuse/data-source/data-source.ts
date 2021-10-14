@@ -11,6 +11,7 @@ import { CommentInline } from "./statements/components/comment-inline";
 import { stringify as DataSourceStringify } from "./statements/lib/stringify";
 import { StringifyOptions } from "./statements/lib/stringify-options";
 import debug from "debug";
+import { deprecate } from "util";
 
 const log = debug("envuse:data-source");
 
@@ -270,7 +271,18 @@ export class DataSource {
       {} as { [k: string]: string }
     );
 
-    return { definitions, parsed, ast } as const;
+    const getParsed = deprecate(
+      () => parsed,
+      "Use dataSource.parsed is deprecated. Use dataSource.definitions instead"
+    );
+
+    return {
+      definitions,
+      get parsed() {
+        return getParsed();
+      },
+      ast,
+    } as const;
   }
 
   static parseFile(
