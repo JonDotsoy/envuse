@@ -264,11 +264,11 @@ export class DataSource {
           elementDescription: description,
         },
       };
-    }, {} as { [k: string]: Definition });
+    }, {} as { [k: string]: Definition | undefined });
 
     const parsed = Object.entries(definitions).reduce(
-      (acum, [name, def]) => ({ ...acum, [name]: def.valueStr }),
-      {} as { [k: string]: string }
+      (acum, [name, def]) => ({ ...acum, [name]: def?.valueStr }),
+      {} as { [k: string]: string | undefined }
     );
 
     const getParsed = deprecate(

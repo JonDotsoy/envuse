@@ -2,9 +2,37 @@ export { load, loadData } from "./load/load";
 export { loadSync, loadDataSync } from "./load/load-sync";
 export { DataSource } from "./data-source/data-source";
 import { deprecate } from "util";
-import { DataSource, Option, Values } from "./data-source/data-source";
+import {
+  DataSource,
+  Definition,
+  Option,
+  Values,
+} from "./data-source/data-source";
 import { BlockType } from "./data-source/statements/components/block";
 import { loadSync } from "./load/load-sync";
+import { LoadOptions } from "./load/types/load-options";
+
+type Definitions = {
+  [k: string]: Definition | undefined;
+};
+
+let globalDefinitionsRequired: Definitions | undefined;
+
+const Config = () =>
+  new Proxy<{ [key: string]: any }>(
+    {},
+    {
+      get(_target, key, _receiver) {
+        if (typeof key === "string") {
+          return globalDefinitionsRequired?.[key]?.value ?? undefined;
+        }
+        return undefined;
+      },
+    }
+  );
+
+const defaultConfig = Config();
+export default defaultConfig;
 
 function getEnvEnvuseHeaders() {
   return Object.entries(process.env)
@@ -17,7 +45,7 @@ function getEnvEnvuseHeaders() {
     );
 }
 
-export function register() {
+export function register(options?: Partial<LoadOptions>) {
   const ENVUSE_DSN = process.env.ENVUSE_DSN ?? `${process.cwd()}/.envuse`;
   const ENVUSE_CACHE = (process.env.ENVUSE_CACHE ?? "true") === "true";
   const ENVUSE_CACHE_TTL_str = Number(process.env.ENVUSE_CACHE_TTL);
@@ -26,16 +54,26 @@ export function register() {
     : undefined;
 
   const res = loadSync({
-    dsn: ENVUSE_DSN,
-    dsnHttpHeaders: Object.fromEntries(getEnvEnvuseHeaders()),
-    cache: {
-      enable: ENVUSE_CACHE,
-      ttl: ENVUSE_CACHE_TTL,
+    ...options,
+    dsn: options?.dsn ?? ENVUSE_DSN,
+    dsnHttpHeaders: {
+      ...Object.fromEntries(getEnvEnvuseHeaders()),
+      ...options?.dsnHttpHeaders,
     },
-    values: process.env,
+    cache: {
+      ...options?.cache,
+      enable: options?.cache?.enable ?? ENVUSE_CACHE,
+      ttl: options?.cache?.ttl ?? ENVUSE_CACHE_TTL,
+    },
+    values: {
+      ...process.env,
+      ...options?.values,
+    },
   });
 
-  console.log(res.parsed);
+  globalDefinitionsRequired = res.definitions;
+
+  return res;
 }
 
 export const parse = deprecate((option: Option, values?: Values) => {
