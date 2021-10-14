@@ -6,6 +6,7 @@ import { randomUUID } from "crypto";
 import path from "path";
 import { assertLoadResult } from "./load-result";
 import { jsonParse, jsonReviver } from "./json-reviver";
+import { DataSource } from "../data-source/data-source";
 
 const workPathTs = `${__dirname}/load-sync-work.ts`;
 const workPathJs = `${__dirname}/load-sync-work.js`;
@@ -59,4 +60,14 @@ export function loadDataSync(options: LoadOptions) {
   assertLoadResult(report);
 
   return report;
+}
+
+export function loadSync(options: LoadOptions) {
+  const res = loadDataSync(options);
+
+  return {
+    dsn: res.dsn,
+    data: res.data,
+    ...DataSource.parse(res.data),
+  };
 }

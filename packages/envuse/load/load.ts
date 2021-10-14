@@ -52,7 +52,7 @@ export async function loadData(options: LoadOptions) {
  * Loads the envuse file and returns the data source.
  */
 export async function load(options: LoadOptions) {
-  const res = await loadFactory(options);
+  const res = await loadData(options);
 
   return {
     dsn: res.dsn,
