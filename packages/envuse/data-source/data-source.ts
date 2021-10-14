@@ -221,7 +221,7 @@ export class DataSource {
             operator.assert({
               ...values,
               ...Object.fromEntries(
-                Object.entries(acum).map(([k, v]) => [k, v.value])
+                Object.entries(acum).map(([k, v]) => [k, v?.value])
               ),
             }),
           true

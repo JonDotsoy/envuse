@@ -29,8 +29,8 @@ describe("Load", () => {
       expect(res).toHaveProperty("parsed");
       expect(res).toHaveProperty("ast");
 
-      expect(res.definitions.FOO.value).toEqual("bar");
-      expect(res.definitions.BAR.value).toEqual(6070);
+      expect(res.definitions.FOO?.value).toEqual("bar");
+      expect(res.definitions.BAR?.value).toEqual(6070);
     });
 
     it("should load DSN http with authorization", async () => {
