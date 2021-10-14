@@ -52,6 +52,7 @@ function loadFactory(options: LoadOptions): Promise<loadResult> {
  * Loads the envuse file and returns the data source.
  */
 export async function loadData(options: LoadOptions) {
+  log("Load Data Options: %o", options);
   return await cacheLoadData(options, () => loadFactory(options));
 }
 

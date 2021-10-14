@@ -20,13 +20,19 @@ function getEnvEnvuseHeaders() {
 export function register() {
   const ENVUSE_DSN = process.env.ENVUSE_DSN ?? `${process.cwd()}/.envuse`;
   const ENVUSE_CACHE = (process.env.ENVUSE_CACHE ?? "true") === "true";
+  const ENVUSE_CACHE_TTL_str = Number(process.env.ENVUSE_CACHE_TTL);
+  const ENVUSE_CACHE_TTL = !Number.isNaN(ENVUSE_CACHE_TTL_str)
+    ? ENVUSE_CACHE_TTL_str
+    : undefined;
 
   loadSync({
     dsn: ENVUSE_DSN,
     dsnHttpHeaders: Object.fromEntries(getEnvEnvuseHeaders()),
     cache: {
       enable: ENVUSE_CACHE,
+      ttl: ENVUSE_CACHE_TTL,
     },
+    values: process.env,
   });
 }
 

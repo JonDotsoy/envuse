@@ -10,6 +10,9 @@ import { BlockComment } from "./statements/components/block-comment";
 import { CommentInline } from "./statements/components/comment-inline";
 import { stringify as DataSourceStringify } from "./statements/lib/stringify";
 import { StringifyOptions } from "./statements/lib/stringify-options";
+import debug from "debug";
+
+const log = debug("envuse:data-source");
 
 // data source
 
@@ -158,6 +161,14 @@ export class DataSource {
   }
 
   static parse(options: Option & CompileOptions, values?: Values) {
+    if (options instanceof Buffer) {
+      log("Parse buffer %d bytes", options.length);
+    } else {
+      if (options.filename) {
+        log("Parse file %s", options.filename);
+      }
+      log("Parse buffer %d bytes", options.body.length);
+    }
     const ast = this.createDataSource(options);
 
     const operatorsList = ast.elementList

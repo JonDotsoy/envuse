@@ -18,7 +18,7 @@ export interface LoadOptions {
     ttl?: number;
   };
   values?: {
-    [key: string]: string;
+    [key: string]: string | undefined;
   };
 }
 
@@ -40,5 +40,15 @@ export function assertsLoadOptions(v: any): asserts v is LoadOptions {
     typeof v.dsnHttpHeaders !== "object"
   ) {
     throw new Error(`Expected object, got ${typeof v.dsnHttpHeaders}`);
+  }
+  if (typeof v.cache !== "undefined" && typeof v.cache !== "object") {
+    throw new Error(`Expected object, got ${typeof v.cache}`);
+  }
+  if (
+    typeof v.cache !== "undefined" &&
+    typeof v.cache.enable !== "undefined" &&
+    typeof v.cache.enable !== "boolean"
+  ) {
+    throw new Error(`Expected boolean, got ${typeof v.cache.enable}`);
   }
 }

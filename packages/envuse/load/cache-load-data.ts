@@ -81,18 +81,20 @@ export function cacheLoadData<R extends Promise<loadResult> | loadResult>(
   const cacheTtl = options.cache?.ttl ?? time10minutes;
 
   if (cacheEnabled) {
-    const cachedData = readFileSync(cacheKeyLocation, "utf8");
-    log(`Read cache file ${cacheKeyLocation}`);
-    const parsed = parseCacheResult(cachedData);
-    if (!parsed) {
-      log(`Cache file ${cacheKeyLocation} is invalid`);
-    } else {
-      const { timestamp, loadResult } = parsed;
-      if (Date.now() - timestamp < cacheTtl) {
-        log(`Cache hit!`);
-        return loadResult as R;
+    if (fs.existsSync(cacheKeyLocation)) {
+      const cachedData = readFileSync(cacheKeyLocation, "utf8");
+      log(`Read cache file ${cacheKeyLocation} [%d bytes]`, cachedData.length);
+      const parsed = parseCacheResult(cachedData);
+      if (!parsed) {
+        log(`Cache file ${cacheKeyLocation} is invalid`);
       } else {
-        log(`Cache expired!`);
+        const { timestamp, loadResult } = parsed;
+        if (Date.now() - timestamp < cacheTtl) {
+          log(`Cache hit!`);
+          return loadResult as R;
+        } else {
+          log(`Cache expired!`);
+        }
       }
     }
   }

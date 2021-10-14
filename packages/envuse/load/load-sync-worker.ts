@@ -6,7 +6,7 @@ import debug from "debug";
 import path from "path";
 import fs from "fs";
 
-const log = debug("envuse:load:load-sync-work");
+const log = debug("envuse:load:load-sync-worker");
 
 const __LOAD_REPORT_PATH = process.env.__LOAD_REPORT_PATH;
 const __ERROR_REPORT_PATH = process.env.__ERROR_REPORT_PATH;
@@ -30,13 +30,14 @@ const writeJsonFile = (file: string, data: any, options?: WriteFileOptions) => {
 };
 
 const main = async () => {
-  log(`__LOAD_REPORT_PATH = %s`, __LOAD_REPORT_PATH);
-  log(`__ERROR_REPORT_PATH = %s`, __ERROR_REPORT_PATH);
-  log(`__OPTIONS = %s`, __OPTIONS);
+  log("Start load-sync-worker");
+  log(`  __LOAD_REPORT_PATH = %s`, __LOAD_REPORT_PATH);
+  log(`  __ERROR_REPORT_PATH = %s`, __ERROR_REPORT_PATH);
+  log(`  __OPTIONS = %s`, __OPTIONS);
 
   const options = JSON.parse(__OPTIONS);
   assertsLoadOptions(options);
-  const res = await loadData(options);
+  const res = await loadData({ ...options, cache: { enable: false } });
   await writeJsonFile(__LOAD_REPORT_PATH, res);
 };
 

@@ -8,9 +8,12 @@ import { assertLoadResult } from "./load-result";
 import { jsonParse, jsonReviver } from "./json-reviver";
 import { DataSource } from "../data-source/data-source";
 import { cacheLoadData } from "./cache-load-data";
+import debug from "debug";
 
-const workPathTs = `${__dirname}/load-sync-work.ts`;
-const workPathJs = `${__dirname}/load-sync-work.js`;
+const log = debug("envuse:load:load-sync");
+
+const workPathTs = `${__dirname}/load-sync-worker.ts`;
+const workPathJs = `${__dirname}/load-sync-worker.js`;
 
 export function loadFactorySync(options: LoadOptions) {
   const isTs = path.extname(__filename) === ".ts";
@@ -24,9 +27,14 @@ export function loadFactorySync(options: LoadOptions) {
     if (fs.existsSync(ERROR_DIR)) fs.rmdirSync(ERROR_DIR);
   };
 
+  log(`spawn load-sync-worker`);
+  log(`  Using register ${isTs ? "typescript" : "javascript"}`);
   const b = spawnSync(
-    isTs ? "ts-node" : "node",
-    [isTs ? workPathTs : workPathJs],
+    "node",
+    [
+      ...(isTs ? ["-r", "ts-node/register"] : []),
+      isTs ? workPathTs : workPathJs,
+    ],
     {
       stdio: "inherit",
       cwd: process.cwd(),
@@ -39,6 +47,7 @@ export function loadFactorySync(options: LoadOptions) {
       timeout: 20_000,
     }
   );
+  log(`spawn load-sync-worker exit code: ${b.status}`);
 
   if (b.error) {
     throw b.error;
@@ -64,6 +73,7 @@ export function loadFactorySync(options: LoadOptions) {
 }
 
 export function loadDataSync(options: LoadOptions) {
+  log("Load Data Options: %o", options);
   return cacheLoadData(options, () => loadFactorySync(options));
 }
 
