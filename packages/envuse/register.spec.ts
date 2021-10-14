@@ -41,51 +41,5 @@ describe("Register envuse", () => {
         cwd: folderEnvironmentTest1,
       }
     );
-
-    expect(process.stderr.toString()).toBe("");
-
-    const out = Buffer.concat(
-      process.output.filter(
-        <T>(data: T): data is Exclude<T, null> => data !== null
-      )
-    ).toString();
-
-    expect(out).toBe("cf7d6f43-bb85-4045-a23f-7fb94bfac745\n");
-
-    expect(fs.readFileSync(fileEnvuseLock, "utf8")).toMatchInlineSnapshot(`
-      "# .envuse
-      ##############################
-      # Demo file for .envuse
-      ##############################
-
-      ###
-      # Comment descriptive
-      ###
-      API_KEY            # API key UUIDv4
-      DB_HOST           
-      DB_PORT : number   # Database port
-      DB_USER           
-      DB_PASSWORD       
-      DB_NAME           
-
-      #; if SHELL_SYSTEM  ===  'windows'  ===  1_232.3_21_12 === A.D.V
-        COLOR_TERM : boolean 
-
-        #; if SHELL_SYSTEM  ===  'windows'  ===  1_232.3_21_12 === A.D.V
-          ssl : boolean 
-        #; fi
-
-      #; fi
-
-      #; if true
-        FORCE_URL_SSL 
-      #; fi
-
-      # single comment
-        A # # asd
-            ###
-      No 123
-      ###"
-    `);
   });
 });
