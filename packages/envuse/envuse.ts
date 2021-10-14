@@ -1,5 +1,7 @@
 export { load, loadData } from "./load/load";
 export { loadSync, loadDataSync } from "./load/load-sync";
+export { DataSource } from "./data-source/data-source";
+import { deprecate } from "util";
 import { DataSource, Option, Values } from "./data-source/data-source";
 import { BlockType } from "./data-source/statements/components/block";
 import { loadSync } from "./load/load-sync";
@@ -28,18 +30,18 @@ export function register() {
   });
 }
 
-export const parse = (option: Option, values?: Values) => {
+export const parse = deprecate((option: Option, values?: Values) => {
   return DataSource.parse(option, values);
-};
+}, "envuse.parse is deprecated. Use envuse.load instead.");
 
-export const parseFile = (filepath: string, values: Values) => {
+export const parseFile = deprecate((filepath: string, values: Values) => {
   return DataSource.parseFile(filepath, values);
-};
+}, "envuse.parseFile is deprecated. Use envuse.load instead.");
 
-export const createDataSource = (option: Option) => {
+export const createDataSource = deprecate((option: Option) => {
   return DataSource.createDataSource(option);
-};
+}, "envuse.createDataSource is deprecated. Use envuse.DataSource.createDataSource instead.");
 
-export const stringify = (comp: BlockType) => {
+export const stringify = deprecate((comp: BlockType) => {
   return DataSource.stringify(comp);
-};
+}, "envuse.stringify is deprecated. Use envuse.DataSource.stringify instead.");
