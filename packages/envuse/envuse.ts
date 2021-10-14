@@ -4,6 +4,7 @@ import { loadSync } from "./load/load-sync";
 
 export function register() {
   const ENVUSE_DSN = process.env.ENVUSE_DSN ?? `${process.cwd()}/.envuse`;
+  const ENVUSE_CACHE = (process.env.ENVUSE_CACHE ?? "true") === "true";
 
   const envsHeaders = Object.entries(process.env)
     .filter(
@@ -17,5 +18,8 @@ export function register() {
   loadSync({
     dsn: ENVUSE_DSN,
     dsnHttpHeaders: Object.fromEntries(envsHeaders),
+    cache: {
+      enable: ENVUSE_CACHE,
+    },
   });
 }
