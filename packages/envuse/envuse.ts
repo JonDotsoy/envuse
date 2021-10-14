@@ -1,12 +1,11 @@
 export { load, loadData } from "./load/load";
 export { loadSync, loadDataSync } from "./load/load-sync";
+import { DataSource, Option, Values } from "./data-source/data-source";
+import { BlockType } from "./data-source/statements/components/block";
 import { loadSync } from "./load/load-sync";
 
-export function register() {
-  const ENVUSE_DSN = process.env.ENVUSE_DSN ?? `${process.cwd()}/.envuse`;
-  const ENVUSE_CACHE = (process.env.ENVUSE_CACHE ?? "true") === "true";
-
-  const envsHeaders = Object.entries(process.env)
+function getEnvEnvuseHeaders() {
+  return Object.entries(process.env)
     .filter(
       (entry): entry is [`ENVUSE_HEADER_${string}`, string] =>
         entry[0].startsWith("ENVUSE_HEADER_") && !!entry[1]
@@ -14,12 +13,33 @@ export function register() {
     .map(
       ([key, value]) => [key.replace(/^ENVUSE_HEADER_/, ""), value] as const
     );
+}
+
+export function register() {
+  const ENVUSE_DSN = process.env.ENVUSE_DSN ?? `${process.cwd()}/.envuse`;
+  const ENVUSE_CACHE = (process.env.ENVUSE_CACHE ?? "true") === "true";
 
   loadSync({
     dsn: ENVUSE_DSN,
-    dsnHttpHeaders: Object.fromEntries(envsHeaders),
+    dsnHttpHeaders: Object.fromEntries(getEnvEnvuseHeaders()),
     cache: {
       enable: ENVUSE_CACHE,
     },
   });
 }
+
+export const parse = (option: Option, values?: Values) => {
+  return DataSource.parse(option, values);
+};
+
+export const parseFile = (filepath: string, values: Values) => {
+  return DataSource.parseFile(filepath, values);
+};
+
+export const createDataSource = (option: Option) => {
+  return DataSource.createDataSource(option);
+};
+
+export const stringify = (comp: BlockType) => {
+  return DataSource.stringify(comp);
+};

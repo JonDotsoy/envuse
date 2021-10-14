@@ -45,15 +45,9 @@ describe("Register envuse", () => {
     expect(process.stderr.toString()).toBe("");
 
     const out = Buffer.concat(
-      process.output
-        .filter((data): data is string => data !== null)
-        .map((data: any) => {
-          if (data instanceof Buffer) {
-            return data;
-          } else {
-            return Buffer.from(data);
-          }
-        })
+      process.output.filter(
+        <T>(data: T): data is Exclude<T, null> => data !== null
+      )
     ).toString();
 
     expect(out).toBe("cf7d6f43-bb85-4045-a23f-7fb94bfac745\n");

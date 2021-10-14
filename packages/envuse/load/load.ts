@@ -64,6 +64,6 @@ export async function load(options: LoadOptions) {
   return {
     dsn: res.dsn,
     data: res.data,
-    ...DataSource.parse(res.data),
+    ...DataSource.parse(res.data, options.values),
   };
 }

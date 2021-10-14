@@ -73,6 +73,6 @@ export function loadSync(options: LoadOptions) {
   return {
     dsn: res.dsn,
     data: res.data,
-    ...DataSource.parse(res.data),
+    ...DataSource.parse(res.data, options.values),
   };
 }

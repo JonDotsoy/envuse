@@ -17,6 +17,9 @@ export interface LoadOptions {
     filePath?: string;
     ttl?: number;
   };
+  values?: {
+    [key: string]: string;
+  };
 }
 
 export function assertsLoadOptions(v: any): asserts v is LoadOptions {
