@@ -13,7 +13,7 @@
     "build": "tsc",
     "build:watch": "tsc --watch",
     "dev": "tsc -w",
-    "prepare": "tsc && node ./scripts/initialize_envuse-definition_file.js",
+    "prepare": "tsc && node --enable-source-maps ./scripts/initialize_envuse-definition_file.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "git-tag-current": "git tag $npm_package_name@v$npm_package_version"
