@@ -1,96 +1,194 @@
-import fs from "fs";
-import { DataSource, Option, Values } from "./data-source/data-source";
-import { BlockType } from "./data-source/statements/comps/Block";
-import { SymbolEqual } from "./data-source/statements/comps/SymbolEqual";
-import { Variable } from "./data-source/statements/comps/Variable";
+export { load, loadData } from "./load/load";
+export { loadSync, loadDataSync } from "./load/load-sync";
+export { DataSource } from "./data-source/data-source";
+import { deprecate } from "util";
 import {
-  createTypeScriptDefinition,
-  EnvuseDefinition,
-} from "./global-envuse-loaded";
+  DataSource,
+  Definition,
+  Option,
+  Values,
+} from "./data-source/data-source";
+import { BlockType } from "./data-source/statements/components/block";
+import { loadSync } from "./load/load-sync";
+import { LoadOptions } from "./load/types/load-options";
+import fs, { accessSync } from "fs";
+import path, { relative } from "path";
+import debug from "debug";
+import { cwd } from "process";
 
-const variableLoader: { [k: string]: any } = {};
+const log = debug("envuse:register");
 
-// ensure filepath is a file or return null
-const file = (filepath?: string) => {
-  if (filepath && fs.existsSync(filepath) && fs.statSync(filepath).isFile()) {
-    return filepath;
-  }
-  return null;
+type Definitions = {
+  [k: string]: Definition | undefined;
 };
 
-export const defaultFilepath =
-  file(process.env.ENVUSE_FILE_PATH) ?? file(`${process.cwd()}/.envuse`);
+let globalDefinitionsRequired: Definitions | undefined;
 
-export const defaultLockFilepath =
-  file(process.env.ENVUSE_LOCK_FILE_PATH) ??
-  file(`${process.cwd()}/.envuse-lock`);
-
-/**
- * Load file .envuse or file defined on process.env.ENVUSE_FILE_PATH and put
- * values in to process.env
- *
- * Make a lock file with the sample file and definition of .envuse file.
- *
- * @hidden
- */
-export const register = (opts?: {
-  filepath?: string;
-  lockFilepath?: string;
-}) => {
-  const filepath = opts?.filepath ?? defaultFilepath;
-  const lockFilepath = opts?.lockFilepath ?? defaultLockFilepath;
-
-  if (filepath) {
-    const r = DataSource.parseFile(filepath, process.env);
-    const { definitions, parsed, ast } = r;
-
-    global.envuseDataSourceParsed = r;
-
-    for (const [key, { value }] of Object.entries(definitions)) {
-      variableLoader[key] = value;
-    }
-
-    createTypeScriptDefinition(r);
-
-    // Check if not there is a lock file
-    if (!fs.existsSync(lockFilepath)) {
-      const bodyLock: number[] = [...ast.body];
-      ast.elementList.map((el) => {
-        if (el instanceof Variable) {
-          const pos =
-            el.elementList.find((el) => el instanceof SymbolEqual)?.pos ??
-            el.valueVariable.pos;
-          bodyLock.fill(0, pos, el.valueVariable.end);
+const Config = () =>
+  new Proxy<{ [key: string]: any }>(
+    {},
+    {
+      get(_target, key, _receiver) {
+        if (typeof key === "string") {
+          return globalDefinitionsRequired?.[key]?.value ?? undefined;
         }
-      });
-      fs.writeFileSync(
-        lockFilepath,
-        Buffer.from(bodyLock.filter((e) => e !== 0))
-      );
+        return undefined;
+      },
     }
+  );
 
-    for (const key in parsed) {
-      if (parsed.hasOwnProperty(key)) {
-        process.env[key] = parsed[key];
-      }
-    }
+const defaultConfig = Config();
+export default defaultConfig;
+
+function validateAccessFile(stat: fs.Stats, filePath: string) {
+  // log warn file with error permision use `chmod 300 .envuse-selector.json` in console.
+  if ((stat.mode & 0o777).toString(8).padStart(4, "0") !== "0600") {
+    console.warn(`${filePath} has error permission. Use chmod 600 to fix.`);
+    return null;
   }
-};
+}
 
-export const parse = (option: Option, values?: Values) => {
+function getEnvEnvuseHeaders() {
+  return Object.entries(process.env)
+    .filter(
+      (entry): entry is [`ENVUSE_HEADER_${string}`, string] =>
+        entry[0].startsWith("ENVUSE_HEADER_") && !!entry[1]
+    )
+    .map(
+      ([key, value]) => [key.replace(/^ENVUSE_HEADER_/, ""), value] as const
+    );
+}
+
+interface EnvuseSelector {
+  dsn?: string;
+  other_dsn?: {
+    [key: string]: string;
+  };
+}
+
+function validateEnvuseSelector(
+  relativePath: string,
+  value: any
+): asserts value is EnvuseSelector {
+  try {
+    if (typeof value !== "object" || value === null)
+      throw new Error(
+        `${relativePath}: . Expected object, got ${typeof value}`
+      );
+    if (value.dsn && typeof value.dsn !== "string")
+      throw new Error(
+        `${relativePath}: .dsn Expected string, got ${typeof value.dsn}`
+      );
+    if (value.other_dsn) {
+      if (typeof value.other_dsn !== "object")
+        throw new Error(
+          `${relativePath}: .other_dsn Expected object, got ${typeof value.other_dsn}`
+        );
+      Object.entries(value.other_dsn ?? {}).forEach(([key, value]) => {
+        if (typeof value !== "string")
+          throw new Error(
+            `${relativePath}: .other_dsn.${key}: Expected string, got ${typeof value}`
+          );
+      });
+    }
+  } catch (ex) {
+    if (ex instanceof Error) {
+      Error.captureStackTrace(ex, validateEnvuseSelector);
+    }
+    throw ex;
+  }
+}
+
+function loadEnvuseSelector(envuseSelectorFilePath: string) {
+  const envuseSelectorFilePathRelative = relative(
+    cwd(),
+    envuseSelectorFilePath
+  );
+  if (fs.existsSync(envuseSelectorFilePath)) {
+    const stat = fs.statSync(envuseSelectorFilePath);
+
+    validateAccessFile(stat, envuseSelectorFilePathRelative);
+
+    const envuseSelector = require(envuseSelectorFilePath);
+    validateEnvuseSelector(envuseSelectorFilePathRelative, envuseSelector);
+
+    log(
+      `Loaded envuse selector from %s`,
+      relative(cwd(), envuseSelectorFilePathRelative)
+    );
+
+    return {
+      dsn: envuseSelector.dsn,
+    };
+  }
+
+  return null;
+}
+
+export function register(options?: Partial<LoadOptions>) {
+  const ENVUSE_SELECTOR = `${process.cwd()}/.envuse-selector.json`;
+
+  const envuseSelector = loadEnvuseSelector(ENVUSE_SELECTOR);
+
+  const localEnvuseFile = `${process.cwd()}/.envuse` as const;
+
+  const ENVUSE_DSN =
+    envuseSelector?.dsn ?? process.env.ENVUSE_DSN ?? localEnvuseFile;
+  const ENVUSE_CACHE = (process.env.ENVUSE_CACHE ?? "true") === "true";
+  const ENVUSE_CACHE_TTL_str = Number(process.env.ENVUSE_CACHE_TTL);
+  const ENVUSE_CACHE_TTL = !Number.isNaN(ENVUSE_CACHE_TTL_str)
+    ? ENVUSE_CACHE_TTL_str
+    : undefined;
+
+  if (ENVUSE_DSN === localEnvuseFile) {
+    if (!fs.existsSync(localEnvuseFile)) {
+      log(
+        "Ignore loading local envuse file %s",
+        relative(cwd(), localEnvuseFile)
+      );
+      return;
+    }
+    validateAccessFile(
+      fs.statSync(localEnvuseFile),
+      relative(cwd(), localEnvuseFile)
+    );
+  }
+
+  const res = loadSync({
+    ...options,
+    dsn: options?.dsn ?? ENVUSE_DSN,
+    dsnHttpHeaders: {
+      ...Object.fromEntries(getEnvEnvuseHeaders()),
+      ...options?.dsnHttpHeaders,
+    },
+    cache: {
+      ...options?.cache,
+      enable: options?.cache?.enable ?? ENVUSE_CACHE,
+      ttl: options?.cache?.ttl ?? ENVUSE_CACHE_TTL,
+    },
+    values: {
+      ...process.env,
+      ...options?.values,
+    },
+  });
+
+  globalDefinitionsRequired = res.definitions;
+
+  return res;
+}
+
+export const parse = deprecate((option: Option, values?: Values) => {
   return DataSource.parse(option, values);
-};
+}, "envuse.parse is deprecated. Use envuse.load instead.");
 
-export const parseFile = (filepath: string, values: Values) => {
+export const parseFile = deprecate((filepath: string, values: Values) => {
   return DataSource.parseFile(filepath, values);
-};
+}, "envuse.parseFile is deprecated. Use envuse.load instead.");
 
-export const createDataSource = (option: Option) => {
+export const createDataSource = deprecate((option: Option) => {
   return DataSource.createDataSource(option);
-};
+}, "envuse.createDataSource is deprecated. Use envuse.DataSource.createDataSource instead.");
 
-export const stringify = (comp: BlockType) => {
+export const stringify = deprecate((comp: BlockType) => {
   return DataSource.stringify(comp);
-};
-
-export default variableLoader as EnvuseDefinition;
+}, "envuse.stringify is deprecated. Use envuse.DataSource.stringify instead.");

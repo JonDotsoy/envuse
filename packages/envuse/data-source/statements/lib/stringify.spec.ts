@@ -1,7 +1,7 @@
 import { stringify } from "./stringify";
-import { b } from "./toBuffer";
+import { b } from "./to-buffer";
 import { DataSource } from "../../data-source";
-import { BlockType } from "../comps/Block";
+import { BlockType } from "../components/block";
 
 describe("parse ast", () => {
   it("should parse ast variable", () => {

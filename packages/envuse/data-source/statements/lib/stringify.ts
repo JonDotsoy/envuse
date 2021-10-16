@@ -1,7 +1,7 @@
-import { BlockType } from "../comps/Block";
-import * as comps from "../comps/_compsList";
-import { stringifyCtx } from "./stringifyCtx";
-import { StringifyOptions } from "./StringifyOptions";
+import { BlockType } from "../components/block";
+import * as comps from "../components/_comps-list";
+import { stringifyCtx } from "./stringify-ctx";
+import { StringifyOptions } from "./stringify-options";
 
 const serialize_comp = (comp: BlockType) => {
   switch (comp.$type) {

@@ -1,7 +1,7 @@
-import { Base } from "../comps/Base";
-import { Block } from "../comps/Block";
-import { CommentOperator } from "../comps/CommentOperator";
-import { Variable } from "../comps/Variable";
+import { Base } from "../components/base";
+import { Block } from "../components/block";
+import { CommentOperator } from "../components/comment-operator";
+import { Variable } from "../components/variable";
 import util from "util";
 
 class TableOfDiff {

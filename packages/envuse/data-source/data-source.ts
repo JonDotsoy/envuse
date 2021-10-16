@@ -1,15 +1,22 @@
-import { Base } from "./statements/comps/Base";
-import { Block, BlockType } from "./statements/comps/Block";
-import { ArrCursor } from "./statements/lib/ArrCursor";
-import { CommentOperator } from "./statements/comps/CommentOperator";
-import { UnexpectedTokenError } from "./statements/tdo/UnexpectedTokenError";
-import { Variable } from "./statements/comps/Variable";
-import { StatementObject } from "./statements/comps/StatementObject";
+import { Base } from "./statements/components/base";
+import { Block, BlockType } from "./statements/components/block";
+import { ArrCursor } from "./statements/lib/arr-cursor";
+import { CommentOperator } from "./statements/components/comment-operator";
+import { UnexpectedTokenError } from "./statements/tdo/unexpected-token-error";
+import { Variable } from "./statements/components/variable";
+import { StatementObject } from "./statements/components/statement-object";
 import fs from "fs";
-import { BlockComment } from "./statements/comps/BlockComment";
-import { CommentInline } from "./statements/comps/CommentInline";
+import { BlockComment } from "./statements/components/block-comment";
+import { CommentInline } from "./statements/components/comment-inline";
 import { stringify as DataSourceStringify } from "./statements/lib/stringify";
-import { StringifyOptions } from "./statements/lib/StringifyOptions";
+import { StringifyOptions } from "./statements/lib/stringify-options";
+import debug from "debug";
+import { deprecate } from "util";
+
+const log = debug("envuse:data-source");
+
+const deprecateDataSourceParseBuffer = deprecate(() => {},
+"Function DataSource.parse(options:Buffer) is deprecated. Use DataSource.parse(options:{filename?: string | null;body: Buffer }) instead.");
 
 // data source
 
@@ -158,6 +165,14 @@ export class DataSource {
   }
 
   static parse(options: Option & CompileOptions, values?: Values) {
+    if (options instanceof Buffer) {
+      log("Parse buffer %d bytes", options.length);
+    } else {
+      if (options.filename) {
+        log("Parse file %s", options.filename);
+      }
+      log("Parse buffer %d bytes", options.body.length);
+    }
     const ast = this.createDataSource(options);
 
     const operatorsList = ast.elementList
@@ -209,7 +224,7 @@ export class DataSource {
             operator.assert({
               ...values,
               ...Object.fromEntries(
-                Object.entries(acum).map(([k, v]) => [k, v.value])
+                Object.entries(acum).map(([k, v]) => [k, v?.value])
               ),
             }),
           true
@@ -252,14 +267,26 @@ export class DataSource {
           elementDescription: description,
         },
       };
-    }, {} as { [k: string]: Definition });
+    }, {} as { [k: string]: Definition | undefined });
 
     const parsed = Object.entries(definitions).reduce(
-      (acum, [name, def]) => ({ ...acum, [name]: def.valueStr }),
-      {} as { [k: string]: string }
+      (acum, [name, def]) => ({ ...acum, [name]: def?.valueStr }),
+      {} as { [k: string]: string | undefined }
     );
 
-    return { definitions, parsed, ast } as const;
+    const getParsed = deprecate(
+      () => parsed,
+      "Use dataSource.parsed is deprecated. Use dataSource.definitions instead"
+    );
+
+    return {
+      definitions,
+      /** @deprecated */
+      get parsed() {
+        return getParsed();
+      },
+      ast,
+    } as const;
   }
 
   static parseFile(
@@ -275,8 +302,14 @@ export class DataSource {
 
   static createDataSource(options: Option) {
     if (options instanceof Buffer) {
+      deprecateDataSourceParseBuffer();
+      log("CreateDataSource buffer %d bytes", options.length);
       return new DataSource(null, options).toAstBody();
     }
+    if (options.filename) {
+      log("CreateDataSource file %s", options.filename);
+    }
+    log("CreateDataSource buffer %d bytes", options.body.length);
     return new DataSource(options.filename ?? null, options.body).toAstBody();
   }
 

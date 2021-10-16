@@ -1,11 +1,11 @@
 import { DataSource } from "./data-source";
-import { takeDemoFile } from "./statements/lib/takeDemoFile";
+import { takeDemoFile } from "./statements/lib/take-demo-file";
 import util, { inspect } from "util";
-import { CommentOperator } from "./statements/comps/CommentOperator";
-import { CommentOperatorStatement } from "./statements/comps/CommentOperatorStatement";
-import { StatementObject } from "./statements/comps/StatementObject";
-import { Base } from "./statements/comps/Base";
-import { b } from "./statements/lib/toBuffer";
+import { CommentOperator } from "./statements/components/comment-operator";
+import { CommentOperatorStatement } from "./statements/components/comment-operator-statement";
+import { StatementObject } from "./statements/components/statement-object";
+import { Base } from "./statements/components/base";
+import { b } from "./statements/lib/to-buffer";
 import { Console } from "console";
 
 describe("DataSource", () => {
