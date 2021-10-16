@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.1](https://github.com/JonDotsoy/envuse/compare/envuse@v3.0.0...envuse@v3.0.1) (2021-10-16)
+
+### Bug Fixes
+
+- **envuse:** correction imports ([dde3c9f](https://github.com/JonDotsoy/envuse/commit/dde3c9f3060d7c3440a507032883c361c2ce2521))
+
 ## [3.0.0](https://github.com/JonDotsoy/envuse/compare/envuse@v2.4.5...envuse@v3.0.0) (2021-10-16)
 
 ### ⚠ BREAKING CHANGES
