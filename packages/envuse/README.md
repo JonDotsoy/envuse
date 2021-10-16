@@ -70,17 +70,17 @@ You can use the `-r` in the nodejs command line to preload the `.envuse` file in
 $ node -r envuse/register your-app.js
 ```
 
-Define the location of the `.envuse` file with the environment variable `ENVUSE_FILE_PATH`:
+Define the location of the `.envuse` file with the environment variable `ENVUSE_DSN`:
 
 ```sh
-$ export ENVUSE_FILE_PATH=path/to/your/envuse/file
+$ export ENVUSE_DSN=path/to/your/envuse/file
 $ node -r envuse/register your-app.js
 ```
 
 or
 
 ```sh
-$ ENVUSE_FILE_PATH=path/to/your/envuse/file node -r envuse/register your-app.js
+$ ENVUSE_DSN=path/to/your/envuse/file node -r envuse/register your-app.js
 ```
 
 ### Configure in the app script
