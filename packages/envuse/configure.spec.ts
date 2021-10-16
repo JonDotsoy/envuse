@@ -1,4 +1,4 @@
-import {} from "./configure-load";
+import {} from "./configure";
 
 describe("configureLoad", () => {
   it("should return a function", () => {
