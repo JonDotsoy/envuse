@@ -80,9 +80,15 @@ export function loadDataSync(options: LoadOptions) {
 export function loadSync(options: LoadOptions) {
   const res = loadDataSync(options);
 
+  const parsed = DataSource.parse(
+    { filename: res.dsn, body: res.data },
+    options.values
+  );
   return {
     dsn: res.dsn,
     data: res.data,
-    ...DataSource.parse(res.data, options.values),
+    ast: parsed.ast,
+    definitions: parsed.definitions,
+    // ...parsed,
   };
 }

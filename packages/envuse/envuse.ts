@@ -40,6 +40,14 @@ const Config = () =>
 const defaultConfig = Config();
 export default defaultConfig;
 
+function validateAccessFile(stat: fs.Stats, filePath: string) {
+  // log warn file with error permision use `chmod 300 .envuse-selector.json` in console.
+  if ((stat.mode & 0o777).toString(8).padStart(4, "0") !== "0600") {
+    console.warn(`${filePath} has error permission. Use chmod 600 to fix.`);
+    return null;
+  }
+}
+
 function getEnvEnvuseHeaders() {
   return Object.entries(process.env)
     .filter(
@@ -99,13 +107,7 @@ function loadEnvuseSelector(envuseSelectorFilePath: string) {
   if (fs.existsSync(envuseSelectorFilePath)) {
     const stat = fs.statSync(envuseSelectorFilePath);
 
-    // log warn file with error permision use `chmod 300 .envuse-selector.json` in console.
-    if ((stat.mode & 0o777).toString(8).padStart(4, "0") !== "0600") {
-      console.warn(
-        `${envuseSelectorFilePathRelative} has error permission. Use chmod 600 to fix.`
-      );
-      return null;
-    }
+    validateAccessFile(stat, envuseSelectorFilePathRelative);
 
     const envuseSelector = require(envuseSelectorFilePath);
     validateEnvuseSelector(envuseSelectorFilePathRelative, envuseSelector);
@@ -146,6 +148,10 @@ export function register(options?: Partial<LoadOptions>) {
       );
       return;
     }
+    validateAccessFile(
+      fs.statSync(localEnvuseFile),
+      relative(cwd(), localEnvuseFile)
+    );
   }
 
   const res = loadSync({

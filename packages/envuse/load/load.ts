@@ -62,9 +62,15 @@ export async function loadData(options: LoadOptions) {
 export async function load(options: LoadOptions) {
   const res = await loadData(options);
 
+  const parsed = DataSource.parse(
+    { filename: res.dsn, body: res.data },
+    options.values
+  );
   return {
     dsn: res.dsn,
     data: res.data,
-    ...DataSource.parse(res.data, options.values),
+    ast: parsed.ast,
+    definitions: parsed.definitions,
+    // ...parsed,
   };
 }

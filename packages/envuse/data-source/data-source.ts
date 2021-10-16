@@ -281,6 +281,7 @@ export class DataSource {
 
     return {
       definitions,
+      /** @deprecated */
       get parsed() {
         return getParsed();
       },
