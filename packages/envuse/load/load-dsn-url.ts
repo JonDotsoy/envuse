@@ -1,7 +1,6 @@
 import { URL } from "url";
 import axios from "axios";
 import contentType from "content-type";
-import { DataSource } from "../data-source/data-source";
 import { loadResult } from "./load-result";
 import { LoadOptions } from "./types/load-options";
 import debug from "debug";
