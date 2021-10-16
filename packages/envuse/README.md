@@ -128,6 +128,22 @@ The **Data Source Name** is a location of the envuse file in the file system or 
 > envuse:load Load 20 configurations
 > ```
 
+## Envuse Selector
+
+This is a file `.envuse-selector.json` to configure the DSN to use in local development.
+
+**Sample:**
+
+```json
+{
+  "dsn": "https://a:b@srv.com/file.envuse",
+  "other_dsn": {
+    "dev": "https://a:b@srv.com/dev.envuse",
+    "prod": "https://a:b@srv.com/prod.envuse"
+  }
+}
+```
+
 ## parse
 
 Use the parse method to parse a buffer with the content envuse format.
