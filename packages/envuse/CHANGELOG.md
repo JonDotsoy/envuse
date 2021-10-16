@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.2](https://github.com/JonDotsoy/envuse/compare/envuse@v3.0.0...envuse@v3.0.2) (2021-10-16)
+
+### Bug Fixes
+
+- **envuse:** correction imports ([dde3c9f](https://github.com/JonDotsoy/envuse/commit/dde3c9f3060d7c3440a507032883c361c2ce2521))
+- **envuse:** fix name module ctx ([8d83a1a](https://github.com/JonDotsoy/envuse/commit/8d83a1a06730cb85c2e1e08fe22d908b78e5f26e))
+
 ### [3.0.1](https://github.com/JonDotsoy/envuse/compare/envuse@v3.0.0...envuse@v3.0.1) (2021-10-16)
 
 ### Bug Fixes
