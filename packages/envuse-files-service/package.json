@@ -1,0 +1,23 @@
+{
+  "name": "@envuse/files-service",
+  "publishConfig": {
+    "access": "public",
+    "tag": "latest"
+  },
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "release": "standard-version -t @envuse/files-service@v",
+    "build": "tsc",
+    "prepare": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^16.11.1",
+    "standard-version": "^9.3.2",
+    "typescript": "^4.4.4"
+  }
+}

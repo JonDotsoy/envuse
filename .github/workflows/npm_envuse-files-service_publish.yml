@@ -1,0 +1,24 @@
+name: Publish package @envuse/files-service
+
+on:
+  workflow_dispatch: {}
+  push:
+    tags:
+      - "@envuse/files-service@v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "12.x"
+          registry-url: "https://registry.npmjs.org"
+      - run: npm install
+        working-directory: packages/envuse-files-service
+      - run: npm publish
+        working-directory: packages/envuse-files-service
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
