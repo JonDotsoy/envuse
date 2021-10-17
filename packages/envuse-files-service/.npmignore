@@ -2,3 +2,9 @@
 !*.d.ts
 tsconfig.json
 *.tgz
+*.spec.ts
+*.spec.ts.map
+*.spec.d.ts
+*.spec.d.ts.map
+*.spec.js
+*.spec.js.map
