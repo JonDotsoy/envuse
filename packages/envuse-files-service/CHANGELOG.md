@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1](https://github.com/JonDotsoy/envuse/compare/@envuse/files-service@v0.1.0...@envuse/files-service@v0.1.1) (2021-10-17)
+
+### Bug Fixes
+
+- add dep @types/jest ([7dd4fb6](https://github.com/JonDotsoy/envuse/commit/7dd4fb6bc255fc1a28a715cce7990e225c4cebbe))
+
 ## 0.1.0 (2021-10-17)
 
 ### ⚠ BREAKING CHANGES
