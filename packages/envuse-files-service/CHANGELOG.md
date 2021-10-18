@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5](https://github.com/JonDotsoy/envuse/compare/@envuse/files-service@v0.1.4...@envuse/files-service@v0.1.5) (2021-10-18)
+
+### Features
+
+- configure function delete file ([753461e](https://github.com/JonDotsoy/envuse/commit/753461e7c2bb1617dddfd27a9751235cb4b663d5))
+
 ### [0.1.4](https://github.com/JonDotsoy/envuse/compare/@envuse/files-service@v0.1.3...@envuse/files-service@v0.1.4) (2021-10-18)
 
 ### Bug Fixes
