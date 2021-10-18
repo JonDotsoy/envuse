@@ -1,5 +1,7 @@
+import { ResourceId } from "./resource-id.type";
+
 export interface Resource {
-  id: string;
+  id: ResourceId;
   salt: Buffer;
   body: Buffer;
   contentType: string;

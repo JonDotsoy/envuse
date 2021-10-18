@@ -5,6 +5,8 @@ import { LocalFileSystemProvider } from "../provider/local-file-system.provider"
 import { validateObjectResource } from "./validation/validate-object-resource";
 import { Resource } from "./types/resource";
 import { FileServiceError } from "../errors/file-service-error";
+import { ResourceId } from "./types/resource-id.type";
+import { ResourcePath } from "./types/resource-path.type";
 
 interface FilesServiceOptions {
   fileSystemProvider?: Provider;
@@ -18,7 +20,7 @@ export class FilesService {
       options?.fileSystemProvider ?? new LocalFileSystemProvider();
   }
 
-  async readResource(resourcePath: string) {
+  async readResource(resourcePath: ResourcePath) {
     const body = await this.fileSystemProvider.readFile(resourcePath);
 
     if (!body) return null;
@@ -35,7 +37,7 @@ export class FilesService {
     validateObjectResource(bodyParsed);
 
     const resource: Resource = {
-      id: bodyParsed.id,
+      id: ResourceId.from(bodyParsed.id),
       salt: Buffer.from(bodyParsed.salt, "base64"),
       body: Buffer.from(bodyParsed.body, "base64"),
       contentType: bodyParsed.contentType,
@@ -44,12 +46,12 @@ export class FilesService {
     return resource;
   }
 
-  async writeResource(resourcePath: string, resource: Resource) {
+  async writeResource(resourcePath: ResourcePath, resource: Resource) {
     await this.fileSystemProvider.writeFile(
       resourcePath,
       Buffer.from(
         JSON.stringify({
-          id: resource.id,
+          id: resource.id.resourceId,
           salt: resource.salt.toString("base64"),
           body: resource.body.toString("base64"),
           contentType: resource.contentType,
@@ -58,18 +60,18 @@ export class FilesService {
     );
   }
 
-  async deleteResource(resourceId: string) {
+  async deleteResource(resourceId: ResourcePath | ResourceId) {
     const resourcePath = this.fileSystemProvider.idToPath(resourceId);
     await this.fileSystemProvider.deleteFile(resourcePath);
   }
 
   async createResource(body: Buffer, contentType: string) {
-    const id = crypto.randomUUID();
+    const id = ResourceId.from(crypto.randomUUID());
     const resourcePath = this.fileSystemProvider.idToPath(id);
     const key = createKey(60);
 
     const resource: Resource = {
-      id,
+      id: id,
       salt: key.salt,
       body: await key.encrypt(body),
       contentType,
@@ -83,7 +85,7 @@ export class FilesService {
     };
   }
 
-  async getResource(resourceId: string, key: string) {
+  async getResource(resourceId: ResourcePath | ResourceId, key: string) {
     const resourcePath = this.fileSystemProvider.idToPath(resourceId);
     const resource = await this.readResource(resourcePath);
 
@@ -98,7 +100,11 @@ export class FilesService {
     };
   }
 
-  async updateResource(resourceId: string, body: Buffer, contentType: string) {
+  async updateResource(
+    resourceId: ResourcePath | ResourceId,
+    body: Buffer,
+    contentType: string
+  ) {
     const resourcePath = this.fileSystemProvider.idToPath(resourceId);
     const resource = await this.readResource(resourcePath);
     if (!resource) return null;

@@ -1,9 +1,12 @@
+import { ResourceId } from "../files/types/resource-id.type";
+import { ResourcePath } from "../files/types/resource-path.type";
+
 export abstract class Provider {
   abstract typeName: string;
 
-  abstract idToPath(id: string): string;
+  abstract idToPath(id: ResourcePath | ResourceId): ResourcePath;
 
-  abstract writeFile(filePath: string, body: Buffer): Promise<void>;
-  abstract deleteFile(filePath: string): Promise<void>;
-  abstract readFile(filePath: string): Promise<Buffer | null>;
+  abstract writeFile(resourcePath: ResourcePath, body: Buffer): Promise<void>;
+  abstract deleteFile(resourcePath: ResourcePath): Promise<void>;
+  abstract readFile(resourcePath: ResourcePath): Promise<Buffer | null>;
 }

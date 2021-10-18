@@ -2,6 +2,8 @@ import { Provider } from "./provider";
 import path from "path";
 import fs from "fs/promises";
 import { cwd } from "process";
+import { ResourceId } from "../files/types/resource-id.type";
+import { ResourcePath } from "../files/types/resource-path.type";
 
 interface LocalFileSystemProviderOptions {
   baseDirStore?: string;
@@ -17,26 +19,31 @@ export class LocalFileSystemProvider extends Provider {
       options?.baseDirStore ?? path.normalize(`${cwd()}/store/files`);
   }
 
-  idToPath(id: string): string {
-    return path.normalize(`${this.baseDirStore}/${id}.json`);
+  idToPath(id: ResourcePath | ResourceId) {
+    if (id instanceof ResourcePath) return id;
+    return ResourcePath.from(
+      path.normalize(`${this.baseDirStore}/${id.resourceId}.json`)
+    );
   }
 
-  async writeFile(filePath: string, body: Buffer) {
-    await fs.mkdir(path.dirname(filePath), { recursive: true });
-    await fs.writeFile(filePath, body, { mode: 0o600 });
+  async writeFile(resourcePath: ResourcePath, body: Buffer) {
+    await fs.mkdir(path.dirname(resourcePath.resourcePath), {
+      recursive: true,
+    });
+    await fs.writeFile(resourcePath.resourcePath, body, { mode: 0o600 });
   }
 
-  async readFile(filePath: string) {
-    const stat = await fs.stat(filePath);
+  async readFile(resourcePath: ResourcePath) {
+    const stat = await fs.stat(resourcePath.resourcePath);
 
     if (!stat.isFile()) {
       return null;
     }
 
-    return await fs.readFile(filePath);
+    return await fs.readFile(resourcePath.resourcePath);
   }
 
-  async deleteFile(filePath: string) {
-    await fs.unlink(filePath);
+  async deleteFile(resourcePath: ResourcePath) {
+    await fs.unlink(resourcePath.resourcePath);
   }
 }
