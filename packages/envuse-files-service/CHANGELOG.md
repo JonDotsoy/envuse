@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/JonDotsoy/envuse/compare/@envuse/files-service@v0.1.3...@envuse/files-service@v0.1.4) (2021-10-18)
+
+### Bug Fixes
+
+- add options configurable ([94b98cd](https://github.com/JonDotsoy/envuse/commit/94b98cd5dc4bd5f06408d442bc0bd0928bbcf757))
+
 ### [0.1.3](https://github.com/JonDotsoy/envuse/compare/@envuse/files-service@v0.1.2...@envuse/files-service@v0.1.3) (2021-10-18)
 
 ### Bug Fixes
