@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/JonDotsoy/envuse/compare/@envuse/files-service@v0.1.2...@envuse/files-service@v0.1.3) (2021-10-18)
+
+### Bug Fixes
+
+- update validation type ObjectResource ([7912541](https://github.com/JonDotsoy/envuse/commit/791254197cc66e12d07d091d7759fbb612f6819d))
+
 ### [0.1.2](https://github.com/JonDotsoy/envuse/compare/@envuse/files-service@v0.1.1...@envuse/files-service@v0.1.2) (2021-10-17)
 
 ### Bug Fixes
