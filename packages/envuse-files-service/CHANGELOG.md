@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/JonDotsoy/envuse/compare/@envuse/files-service@v0.1.6...@envuse/files-service@v0.1.7) (2021-10-18)
+
+### Features
+
+- **file-service:** declare require resource id ([baf084c](https://github.com/JonDotsoy/envuse/commit/baf084c8fb896ee93a4c916ab46a8da56d8148c9))
+
 ### [0.1.6](https://github.com/JonDotsoy/envuse/compare/@envuse/files-service@v0.1.5...@envuse/files-service@v0.1.6) (2021-10-18)
 
 ### Features
