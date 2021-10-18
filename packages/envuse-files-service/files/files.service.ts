@@ -20,14 +20,15 @@ interface ObjectResource {
   contentType: string;
 }
 
-function validateObjectResource(
+export function validateObjectResource(
   payload: unknown
 ): asserts payload is ObjectResource {
   type Obj = {
     [prop: string | symbol]: unknown;
   };
 
-  const isObject = (obj: unknown): obj is Obj => typeof payload !== "object";
+  const isObject = (obj: unknown): obj is Obj | null =>
+    typeof payload === "object";
   const isNull = (obj: unknown): obj is null => payload === null;
   const propIsString = <T extends string>(
     obj: Obj,
@@ -35,27 +36,17 @@ function validateObjectResource(
   ): obj is typeof obj & { [k in T]: string } => typeof obj[prop] === "string";
 
   if (!isObject(payload))
-    throw new Error(
-      `"payload" is expected to be object, got ${typeof payload}`
-    );
+    throw new TypeError(`"payload" is expected to be object`);
   if (isNull(payload))
-    throw new Error(`"payload" is expected to be object,, got null`);
+    throw new TypeError(`"payload" is expected to be object`);
   if (!propIsString(payload, "id"))
-    throw new Error(
-      `"payload.id" is expected to be string, got ${typeof payload.id}`
-    );
+    throw new TypeError(`"payload.id" is expected to be string`);
   if (!propIsString(payload, "body"))
-    throw new Error(
-      `"payload.body" is expected to be string, got ${typeof payload.body}`
-    );
+    throw new TypeError(`"payload.body" is expected to be string`);
   if (!propIsString(payload, "salt"))
-    throw new Error(
-      `"payload.salt" is expected to be string, got ${typeof payload.salt}`
-    );
+    throw new TypeError(`"payload.salt" is expected to be string`);
   if (!propIsString(payload, "contentType"))
-    throw new Error(
-      `"payload.contentType" is expected to be string, got ${typeof payload.contentType}`
-    );
+    throw new TypeError(`"payload.contentType" is expected to be string`);
 }
 
 export class FilesService {

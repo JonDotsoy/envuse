@@ -10,6 +10,7 @@
   "scripts": {
     "release": "standard-version -t @envuse/files-service@v",
     "build": "tsc",
+    "build:watch": "tsc --watch",
     "prepare": "tsc"
   },
   "keywords": [],
