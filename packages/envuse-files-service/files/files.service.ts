@@ -49,9 +49,20 @@ export function validateObjectResource(
     throw new TypeError(`"payload.contentType" is expected to be string`);
 }
 
+interface FilesServiceOptions {
+  baseDirStore?: string;
+}
+
 export class FilesService {
+  private readonly baseDirStore: string;
+
+  constructor(options?: FilesServiceOptions) {
+    this.baseDirStore =
+      options?.baseDirStore ?? path.normalize(`${cwd()}/store/files`);
+  }
+
   idToFilePath(pathFile: string) {
-    return path.normalize(`${cwd()}/store/files/${pathFile}.json`);
+    return path.normalize(`${this.baseDirStore}/${pathFile}.json`);
   }
 
   async writeFile(filePath: string, body: Buffer) {
