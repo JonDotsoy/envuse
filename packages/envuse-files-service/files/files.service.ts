@@ -4,6 +4,8 @@ import fs from "fs/promises";
 import { cwd } from "process";
 import crypto from "crypto";
 import { createKey } from "./util/create-key";
+import { Provider } from "../provider/provider";
+import { LocalFileSystemProvider } from "../provider/local-file-system.provider";
 
 interface Resource {
   id: string;
@@ -50,38 +52,19 @@ export function validateObjectResource(
 }
 
 interface FilesServiceOptions {
-  baseDirStore?: string;
+  fileSystemProvider?: Provider;
 }
 
 export class FilesService {
-  private readonly baseDirStore: string;
+  fileSystemProvider: Provider;
 
   constructor(options?: FilesServiceOptions) {
-    this.baseDirStore =
-      options?.baseDirStore ?? path.normalize(`${cwd()}/store/files`);
-  }
-
-  idToFilePath(pathFile: string) {
-    return path.normalize(`${this.baseDirStore}/${pathFile}.json`);
-  }
-
-  async writeFile(filePath: string, body: Buffer) {
-    await fs.mkdir(path.dirname(filePath), { recursive: true });
-    await fs.writeFile(filePath, body, { mode: 0o600 });
-  }
-
-  async readFile(filePath: string) {
-    const stat = await fs.stat(filePath);
-
-    if (!stat.isFile()) {
-      return null;
-    }
-
-    return await fs.readFile(filePath);
+    this.fileSystemProvider =
+      options?.fileSystemProvider ?? new LocalFileSystemProvider();
   }
 
   async readResource(filePath: string) {
-    const body = await this.readFile(filePath);
+    const body = await this.fileSystemProvider.readFile(filePath);
 
     if (!body) return null;
 
@@ -105,7 +88,7 @@ export class FilesService {
   }
 
   async writeResource(filePath: string, resource: Resource) {
-    await this.writeFile(
+    await this.fileSystemProvider.writeFile(
       filePath,
       Buffer.from(
         JSON.stringify({
@@ -118,9 +101,13 @@ export class FilesService {
     );
   }
 
+  async deleteResource(filePath: string) {
+    await this.fileSystemProvider.deleteFile(filePath);
+  }
+
   async createResource(body: Buffer, contentType: string) {
     const id = crypto.randomUUID();
-    const storeFilePath = this.idToFilePath(id);
+    const storeFilePath = this.fileSystemProvider.idToPath(id);
     const key = createKey(60);
 
     const resource: Resource = {
@@ -139,7 +126,7 @@ export class FilesService {
   }
 
   async getResource(id: string, key: string) {
-    const resourceFilePath = this.idToFilePath(id);
+    const resourceFilePath = this.fileSystemProvider.idToPath(id);
     const resource = await this.readResource(resourceFilePath);
 
     if (!resource) return null;
@@ -154,7 +141,7 @@ export class FilesService {
   }
 
   async updateResource(id: string, body: Buffer, contentType: string) {
-    const resourceFilePath = this.idToFilePath(id);
+    const resourceFilePath = this.fileSystemProvider.idToPath(id);
     const resource = await this.readResource(resourceFilePath);
     if (!resource) return null;
 
@@ -164,7 +151,7 @@ export class FilesService {
       contentType,
     };
 
-    const filePath = this.idToFilePath(id);
+    const filePath = this.fileSystemProvider.idToPath(id);
     await this.writeResource(filePath, nextResource);
 
     return nextResource;
