@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6](https://github.com/JonDotsoy/envuse/compare/@envuse/files-service@v0.1.5...@envuse/files-service@v0.1.6) (2021-10-18)
+
+### Features
+
+- configure error class ([e2e6952](https://github.com/JonDotsoy/envuse/commit/e2e6952312cc1f00da4a9285e3a3ae5420795599))
+- export provider ([6a5cfb6](https://github.com/JonDotsoy/envuse/commit/6a5cfb630cac0233475a1f6c15188863c1968246))
+
 ### [0.1.5](https://github.com/JonDotsoy/envuse/compare/@envuse/files-service@v0.1.4...@envuse/files-service@v0.1.5) (2021-10-18)
 
 ### Features
