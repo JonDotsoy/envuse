@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import { logEvent } from "../components/firebase/analytics"
 import { UserProvider } from "../components/firebase/user"
 import { MyEnvsProvider } from "../components/my-envs/my-envs"
-import { btnConfirmationSelectable } from "./btnConfirmationSelectable"
+import { btnConfirmationSelectableHook } from "../components/btn-confirmation-selectable.hook"
 
 
 const App = ({ Component, pageProps }: AppProps) => {
@@ -17,13 +17,13 @@ const App = ({ Component, pageProps }: AppProps) => {
     firebase_screen_class: Component.name,
   })
 
-  return <btnConfirmationSelectable.Provider>
+  return <btnConfirmationSelectableHook.Provider>
     <UserProvider>
       <MyEnvsProvider>
         <Component {...pageProps} />
       </MyEnvsProvider>
     </UserProvider>
-  </btnConfirmationSelectable.Provider>
+  </btnConfirmationSelectableHook.Provider>
 }
 
 export default App;

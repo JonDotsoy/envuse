@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 
-export const buttonConfirmationGlobalStore = new class {
+export const buttonConfirmationGlobalStore = new (class {
   subs: Function[] = [];
   state: string | null = null;
   subscribe = (sub: Function) => {
     this.subs.push(sub);
     return () => {
-      this.subs = this.subs.filter(s => s !== sub);
+      this.subs = this.subs.filter((s) => s !== sub);
     };
   };
   setState = (state: string | null) => {
     this.state = state;
-    this.subs.forEach(s => s(state));
+    this.subs.forEach((s) => s(state));
   };
   getState = () => this.state;
   useHook = (id?: string) => {
@@ -41,4 +41,4 @@ export const buttonConfirmationGlobalStore = new class {
       setSelected: wrapSetSelected,
     };
   };
-};
+})();

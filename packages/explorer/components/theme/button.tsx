@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from "react";
 import classNames from 'classnames';
-import { SpinIcon } from '../../components/core/SpinIcon';
-import { ButtonOptions } from "./button-options";
-import { usePositionGroupButton } from "./use-position-group-button";
+import { SpinIcon } from '../core/SpinIcon';
+import { ButtonOptions } from "./types/button-options";
+import { usePositionGroupButton } from "./context/use-position-group-button";
 
 export const Button: FC<ButtonOptions> = ({ children, onChangeLoading, size: sizeIn, typeStyle, disabled: disabledIn, loading: loadingIn, className, onClick, ...others }) => {
   const [secureClickLoading, setSecureClickLoading] = useState(false);

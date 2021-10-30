@@ -1,9 +1,9 @@
 import React, { FC, useMemo, useState } from "react";
 import classNames from 'classnames';
-import { buttonConfirmationGlobalStore } from "./buttonConfirmationGlobalStore";
+import { buttonConfirmationGlobalStore } from "./store/button-confirmation-global.store";
 import { Button } from "./button";
-import { GroupButton } from "./GroupButton";
-import { ButtonOptions } from "./button-options";
+import { GroupButton } from "./group-button";
+import { ButtonOptions } from "./types/button-options";
 
 let n = 0;
 

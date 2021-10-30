@@ -15,6 +15,13 @@ import {
   DocumentSnapshot,
 } from "firebase/firestore";
 import { db } from "../firebase/firestore";
+import { storage } from "../firebase/storage";
+import {
+  uploadBytes,
+  ref,
+  updateMetadata,
+  deleteObject,
+} from "firebase/storage";
 
 const useMyEnvsHook = () => {
   const [nFetched, setNFetched] = useState(0);
@@ -58,6 +65,19 @@ const useMyEnvsHook = () => {
         myEnvs: 3,
         createdAt: new Date(),
       });
+
+      await uploadBytes(
+        ref(storage, `envs/${user.uid}/${res.id}`),
+        Buffer.from("ok"),
+        {
+          contentType: "application/envuse",
+          contentEncoding: "utf8",
+          customMetadata: {
+            userId: user.uid,
+          },
+        }
+      );
+
       const reg = await getDoc(doc(db, res.path));
 
       setCreatingLoading(false);
@@ -69,6 +89,7 @@ const useMyEnvsHook = () => {
   const deleteEnv = async (envId: string) => {
     if (user) {
       const c = doc(db, "envs", user.uid, "envs", envId);
+      await deleteObject(ref(storage, `envs/${user.uid}/${envId}`));
       const res = await deleteDoc(c);
       setSnapDocs((snapDocs) => snapDocs.filter((doc) => doc.id !== envId));
       console.log(res);

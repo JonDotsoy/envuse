@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { GroupButtonContext } from "./GroupButtonContext";
+import { GroupButtonContext } from "./context/group-button.context";
 
 
 export const GroupButton: FC = ({ children }) => {

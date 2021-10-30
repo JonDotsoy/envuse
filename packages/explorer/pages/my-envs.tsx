@@ -1,14 +1,13 @@
-import React, { FC, useMemo } from "react";
+import React, { FC } from "react";
 import { Layout } from "../components/core/layout";
 import { useMyEnvs } from "../components/my-envs/my-envs";
 import { RequireLogin } from "../components/require-login";
 import { SpinLoading } from '../components/spin-loading';
-import { Button } from "./theme/button";
 import { CardEnv } from './card-env';
-import { ButtonConfirmation } from "./theme/button-confirmation";
+import { ButtonConfirmation } from "../components/theme/button-confirmation";
 
 const MyEnvs: FC = () => {
-  const { createNewEnv: createEnv, snapDocs, loading, load, creatingLoading } = useMyEnvs();
+  const { createNewEnv: createEnv, snapDocs, loading, load } = useMyEnvs();
   load();
 
   return <Layout>
