@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0-beta.0](https://github.com/JonDotsoy/envuse/compare/envuse@v3.2.0...envuse@v3.3.0-beta.0) (2021-12-12)
+
+### Features
+
+- **envuse:** initialize envuse cli ([d79a603](https://github.com/JonDotsoy/envuse/commit/d79a603164e9725a96df5ff20da7a5a21dcae461))
+- **envuse:** preapre publish beta ([f67d3eb](https://github.com/JonDotsoy/envuse/commit/f67d3eb6fa13f93ee9ac3eedfd229e41521c25a4))
+- **vscode-language:** remove icon themes ([332720a](https://github.com/JonDotsoy/envuse/commit/332720adecaae00e6f8cbbc3d570d7891a534789))
+- **vscode-language:** upgrade description package ([2d60c02](https://github.com/JonDotsoy/envuse/commit/2d60c02b446088f699a1c4b2da2a42380908d039))
+
 ## [3.2.0](https://github.com/JonDotsoy/envuse/compare/envuse@v3.1.0...envuse@v3.2.0) (2021-12-12)
 
 ### Features
