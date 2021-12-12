@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.22](https://github.com/JonDotsoy/envuse/compare/vscode-language@v0.1.21...vscode-language@v0.1.22) (2021-12-12)
+
+### Features
+
+- **vscode-language:** upgrade description package ([2d60c02](https://github.com/JonDotsoy/envuse/commit/2d60c02b446088f699a1c4b2da2a42380908d039))
+
 ### [0.1.21](https://github.com/JonDotsoy/envuse/compare/vscode-language@v0.1.20...vscode-language@v0.1.21) (2021-12-12)
 
 ### ⚠ BREAKING CHANGES
