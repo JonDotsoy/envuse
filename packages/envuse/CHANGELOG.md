@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/JonDotsoy/envuse/compare/envuse@v3.1.0...envuse@v3.2.0) (2021-12-12)
+
+### Features
+
+- **envuse:** update test package envuse ([d0f3da7](https://github.com/JonDotsoy/envuse/commit/d0f3da7ff78cb0706a9e6fe8f010f14d3a5b9aa7))
+
 ## [3.1.0](https://github.com/JonDotsoy/envuse/compare/envuse@v3.0.2...envuse@v3.1.0) (2021-12-12)
 
 ### Features
