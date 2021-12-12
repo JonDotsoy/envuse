@@ -1,19 +1,23 @@
 import { isAddressInfo } from "./is-address-info";
 import { MockServerWorker } from "./mock-server-worker";
 import { RequestMessage } from "./types/request-message";
+import once from "lodash/once";
+
+// Global SrcWorker
+const srvWorker = new MockServerWorker();
+
+const onceSrvWorkerListen = once(() => srvWorker.listen());
 
 export function useMockServerWorker() {
   let urlServer: string;
-  const srvWorker = new MockServerWorker();
   const callRequest = jest.fn((request: RequestMessage) => {});
-  let unsubscribeRequest: (() => void) | undefined;
 
   beforeEach(() => {
     callRequest.mockReset();
   });
 
   beforeAll(async () => {
-    await srvWorker.listen();
+    await onceSrvWorkerListen();
 
     srvWorker.subscribeRequests(callRequest);
 
@@ -41,7 +45,6 @@ export function useMockServerWorker() {
   });
 
   afterAll(async () => {
-    unsubscribeRequest?.();
     await srvWorker.close();
   });
 

@@ -26,7 +26,6 @@ describe("Load", () => {
 
       expect(res).toHaveProperty("dsn");
       expect(res).toHaveProperty("definitions");
-      expect(res).toHaveProperty("parsed");
       expect(res).toHaveProperty("ast");
 
       expect(res.definitions.FOO?.value).toEqual("bar");
@@ -81,7 +80,6 @@ describe("Load", () => {
 
       expect(res).toHaveProperty("dsn");
       expect(res).toHaveProperty("definitions");
-      expect(res).toHaveProperty("parsed");
       expect(res).toHaveProperty("ast");
     });
   });
@@ -99,16 +97,28 @@ describe("Load", () => {
 
       expect(res).toHaveProperty("dsn");
       expect(res).toHaveProperty("definitions");
-      expect(res).toHaveProperty("parsed");
       expect(res).toHaveProperty("ast");
     });
   });
 });
 
+/**
+ * Helper function to create a temporary filepath
+ * @example
+ * describe("load DSN filepath", () => {
+ *   let filepath = useTempFilepath(() => Buffer.from("Hi 👌\n"), 'file-name.txt');
+ *
+ *   it('shell exec', () => {
+ *     expect(filepath).toEqual('/tmp/17567de3-ed29-432c-bf7e-1fcf7e21bd66/file-name.txt');
+ *     expect(execSync(`cat ${filepath}`).toString()).toEqual("Hi 👌\n");
+ *   })
+ * });
+ */
 function useTempFilepath(
-  getBuff: (filepath: string) => Buffer | Promise<Buffer>
+  getBuff: (filepath: string) => Buffer | Promise<Buffer>,
+  fileName: string = ".envuse"
 ) {
-  let filepath = `${tmpdir()}/${randomUUID()}/.envuse`;
+  let filepath = `${tmpdir()}/${randomUUID()}/${fileName}`;
 
   beforeAll(async () => {
     fs.mkdirSync(path.dirname(filepath), { recursive: true });

@@ -3,6 +3,7 @@ import { useMockServerWorker } from "../libs/mock-server-worker/use-mock-server-
 import { loadDataSync } from "./load-sync";
 
 describe("load sync", () => {
+  jest.setTimeout(20_000);
   const { getUrlServer, srvWorker } = useMockServerWorker();
 
   beforeAll(() => {

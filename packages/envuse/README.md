@@ -2,15 +2,22 @@
 
 ![](./assets/brand/brand@250w.png)
 
-Module to load environment variables from a `.envuse` file into the `process.env`.
+Module to load environment variables and transform types from a `.envuse` file into the `process.env`.
 
 **Sample execution:**
+
+```envuse
+## .envuse
+API_KEY             = "12345"
+SERVER_PORT: number = 3000
+```
 
 ```ts
 // run $ npm run -r envuse/register myapp.ts
 import config from "envuse";
 
-const API_KEY = config.API_KEY;
+const API_KEY = config.API_KEY; // => "12345"
+const SERVER_PORT = config.SERVER_PORT; // => 3000
 ```
 
 <details>
