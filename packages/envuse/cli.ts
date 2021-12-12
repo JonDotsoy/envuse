@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 import child_process from "child_process";
-import envuse from ".";
+import { register } from "./envuse";
 
 const main = async () => {
-  envuse.register();
+  register();
 
   const [command, ...args] = process.argv.splice(2);
 
