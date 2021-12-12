@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import child_process from "child_process";
 import envuse from ".";
 
