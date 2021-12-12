@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0-beta.4](https://github.com/JonDotsoy/envuse/compare/envuse@v3.3.0-beta.3...envuse@v3.3.0-beta.4) (2021-12-12)
+
+### Features
+
+- **envuse:** configure register ([a62ebb2](https://github.com/JonDotsoy/envuse/commit/a62ebb2340d48ebd4447ff384f536435eda53575))
+
 ## [3.3.0-beta.3](https://github.com/JonDotsoy/envuse/compare/envuse@v3.3.0-beta.2...envuse@v3.3.0-beta.3) (2021-12-12)
 
 ### Features
