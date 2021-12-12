@@ -1,5 +1,5 @@
 import child_process from "child_process";
-import envuse from "envuse";
+import envuse from ".";
 
 const main = async () => {
   envuse.register();
