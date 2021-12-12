@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0-beta.2](https://github.com/JonDotsoy/envuse/compare/envuse@v3.3.0-beta.1...envuse@v3.3.0-beta.2) (2021-12-12)
+
+### Features
+
+- **envuse:** configure cli ([67802ae](https://github.com/JonDotsoy/envuse/commit/67802ae60db3d9526016e15a12ecb8a09bf16aed))
+
 ## [3.3.0-beta.1](https://github.com/JonDotsoy/envuse/compare/envuse@v3.3.0-beta.0...envuse@v3.3.0-beta.1) (2021-12-12)
 
 ### Bug Fixes
