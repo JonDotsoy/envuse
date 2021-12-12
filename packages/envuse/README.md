@@ -69,6 +69,14 @@ COLOR_TERM:boolean=false
 #; fi
 ```
 
+## Usage cli `envuse`
+
+Install globally with npm and use the `envuse` cli:
+
+```bash
+npm install -g envuse
+```
+
 ## Preload
 
 You can use the `-r` in the nodejs command line to preload the `.envuse` file into the `process.env` object. Look at the example below:
