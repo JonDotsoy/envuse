@@ -1,6 +1,6 @@
 {
   "name": "envuse",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "description": "Load environment variables from a `.envuse` file into the `process.env`",
   "main": "envuse.js",
   "publishConfig": {
@@ -14,7 +14,7 @@
     "build:watch": "tsc --watch",
     "dev": "tsc -w",
     "prepare": "tsc && node --enable-source-maps ./scripts/initialize_envuse-definition_file.js",
-    "test": "jest",
+    "test": "jest --forceExit",
     "test:watch": "jest --watch",
     "git-tag-current": "git tag $npm_package_name@v$npm_package_version"
   },
@@ -30,9 +30,11 @@
     "@types/content-type": "^1.1.5",
     "@types/debug": "^4.1.7",
     "@types/jest": "^26.0.23",
+    "@types/lodash": "^4.14.178",
     "@types/node": "^16.10.3",
     "@types/yaml": "^1.9.7",
     "jest": "^27.0.6",
+    "lodash": "^4.17.21",
     "standard-version": "^9.3.1",
     "ts-jest": "^27.0.3",
     "ts-node": "^10.0.0",

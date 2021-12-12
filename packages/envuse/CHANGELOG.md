@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/JonDotsoy/envuse/compare/envuse@v3.0.2...envuse@v3.1.0) (2021-12-12)
+
+### Features
+
+- configure error class ([e2e6952](https://github.com/JonDotsoy/envuse/commit/e2e6952312cc1f00da4a9285e3a3ae5420795599))
+- configure function delete file ([753461e](https://github.com/JonDotsoy/envuse/commit/753461e7c2bb1617dddfd27a9751235cb4b663d5))
+- export provider ([6a5cfb6](https://github.com/JonDotsoy/envuse/commit/6a5cfb630cac0233475a1f6c15188863c1968246))
+- **file-service:** declare require resource id ([baf084c](https://github.com/JonDotsoy/envuse/commit/baf084c8fb896ee93a4c916ab46a8da56d8148c9))
+- public @envuse/files-service ([d5e8c6f](https://github.com/JonDotsoy/envuse/commit/d5e8c6ff3b06f85fdc2904e2409eb0fc6d658d30))
+
+### Bug Fixes
+
+- add dep @types/jest ([7dd4fb6](https://github.com/JonDotsoy/envuse/commit/7dd4fb6bc255fc1a28a715cce7990e225c4cebbe))
+- add options configurable ([94b98cd](https://github.com/JonDotsoy/envuse/commit/94b98cd5dc4bd5f06408d442bc0bd0928bbcf757))
+- add spec files to npm ignore ([b2264f7](https://github.com/JonDotsoy/envuse/commit/b2264f7b900d2282cb9780fcc25eb1905ac206a1))
+- update validation type ObjectResource ([7912541](https://github.com/JonDotsoy/envuse/commit/791254197cc66e12d07d091d7759fbb612f6819d))
+
 ### [3.0.2](https://github.com/JonDotsoy/envuse/compare/envuse@v3.0.0...envuse@v3.0.2) (2021-10-16)
 
 ### Bug Fixes
