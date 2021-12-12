@@ -4,7 +4,7 @@
   "displayName": "Envuse Language Support",
   "publisher": "envuse",
   "license": "MIT",
-  "description": "Module to load environment variables from a `.envuse` file into the `process.env`.",
+  "description": "Module to load environment variables and transform types from a `.envuse` file into the `process.env`.",
   "version": "0.1.21",
   "scripts": {
     "release": "standard-version -t vscode-language@v --release-as patch && vsce publish",
