@@ -5,7 +5,7 @@
   "main": "envuse.js",
   "publishConfig": {
     "access": "public",
-    "tag": "latest"
+    "tag": "beta"
   },
   "bin":"cli.js",
   "scripts": {
