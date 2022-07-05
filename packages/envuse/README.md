@@ -69,12 +69,18 @@ COLOR_TERM:boolean=false
 #; fi
 ```
 
-## Usage cli `envuse`
+## Use the envuse command line
+
+The command line is used to load any command line application with the envuse module.
 
 Install globally with npm and use the `envuse` cli:
 
 ```bash
 npm install -g envuse
+```
+
+```bash
+envuse python myapp.py
 ```
 
 ## Preload

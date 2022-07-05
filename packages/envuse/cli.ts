@@ -1,26 +1,8 @@
 #!/usr/bin/env node
 
-import child_process from "child_process";
-import { register } from "./envuse";
+import { Cli } from "./libs/cli";
+import { RunCmd } from "./libs/cli_cmds/run.cmd";
 
-const main = async () => {
-  register();
+const cli = new Cli();
 
-  const [command, ...args] = process.argv.splice(2);
-
-  if (!command) {
-    throw new Error("No command specified");
-  }
-
-  child_process.spawnSync(command, args, {
-    cwd: process.cwd(),
-    env: process.env,
-    stdio: "inherit",
-    shell: true,
-  });
-};
-
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+cli.use(new RunCmd());
