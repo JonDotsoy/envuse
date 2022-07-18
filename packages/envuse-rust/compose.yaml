@@ -1,0 +1,21 @@
+services:
+    test:
+        build:
+            context: .
+            dockerfile: Dockerfile.test
+        command: |
+            cargo-watch -- cargo test --package envuse-rust --test parser_test -- parser_tests::should_parser_variable_value --exact --nocapture
+        stop_grace_period: 0s
+        labels:
+            - com.host.description=label
+        volumes:
+            - ./src:/app/src
+            - ./tests:/app/tests
+            - ./Cargo.toml:/app/Cargo.toml
+        deploy:
+            replicas: 1
+            resources:
+                limits:
+                    cpus: "0.5"
+                    memory: "50MB"
+
