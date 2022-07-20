@@ -4,7 +4,7 @@ services:
             context: .
             dockerfile: Dockerfile.test
         command: |
-            cargo-watch -- cargo test --package envuse-rust --test parser_test -- parser_tests::should_parser_variable_value --exact --nocapture
+            cargo-watch -- cargo test --package envuse-rust --test parser_test -- parser_tests::should_parser_variable_value_with_variable_ref --exact --nocapture
         stop_grace_period: 0s
         labels:
             - com.host.description=label

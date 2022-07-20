@@ -6,7 +6,7 @@ use super::super::node::Node;
 use super::super::node_parser::NodeParser;
 use super::super::token::PointerContext;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct InlineComment {
     pub source: Vec<u8>,
 }

@@ -1,12 +1,15 @@
-use super::nodes::{inline_comment::InlineComment, variable_value::VariableValue};
+use super::nodes::inline_comment::InlineComment;
+use super::nodes::variable_value::VariableValue;
+use super::nodes::variable_link::VariableLink;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum NodeKind {
     Fragment,
     Document,
-    VariableValue(VariableValue),
     FragmentNamed(String),
+    VariableValue(VariableValue),
     InlineComment(InlineComment),
+    VariableLink(VariableLink),
 }
 
 impl NodeKind {
@@ -32,6 +35,14 @@ impl NodeKind {
         } else {
             Err(self)
         }
+    }
+
+    /// Returns `true` if the node kind is [`VariableValue`].
+    ///
+    /// [`VariableValue`]: NodeKind::VariableValue
+    #[must_use]
+    pub fn is_variable_value(&self) -> bool {
+        matches!(self, Self::VariableValue(..))
     }
 }
 

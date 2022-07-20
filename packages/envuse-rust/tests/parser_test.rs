@@ -8,6 +8,8 @@ mod parser_tests {
     use envuse_rust::parser::node_parser::NodeParser;
     use envuse_rust::parser::nodes::inline_comment::InlineComment;
     use envuse_rust::parser::nodes::inline_comment::InlineCommentParser;
+    use envuse_rust::parser::nodes::variable_link::VariableLink;
+    use envuse_rust::parser::nodes::variable_link::VariableLinkParser;
     use envuse_rust::parser::nodes::variable_value::VariableValue;
     use envuse_rust::parser::nodes::variable_value::VariableValueParser;
     use envuse_rust::parser::token::Point;
@@ -97,9 +99,131 @@ mod parser_tests {
     }
 
     #[test]
+    fn should_parser_variable_value_with_quotes() {
+        let value_string_inline_with_quotes = b"\"ab\nc\"";
+
+        let variable_value_parser = VariableValueParser;
+        let ok_value_string_inline_with_quotes = variable_value_parser.parse(
+            value_string_inline_with_quotes,
+            &mut PointerContext::start_zero(),
+        );
+
+        assert!(matches!(
+            ok_value_string_inline_with_quotes,
+            Ok(Node(
+                Token {
+                    span: Span {
+                        range: Range { start: 0, end: 6 },
+                        start: Point { line: 1, column: 1 },
+                        end: Point { line: 2, column: 3 },
+                    }
+                },
+                NodeKind::VariableValue(VariableValue { .. })
+            ))
+        ));
+
+        let variable_value = ok_value_string_inline_with_quotes
+            .unwrap()
+            .to_node_kind()
+            .try_into_variable_value()
+            .unwrap();
+
+        assert_eq!(variable_value.source, b"\"ab\nc\"".to_vec());
+    }
+
+    #[test]
+    fn should_parser_variable_value_with_quotes_2() {
+        let value_string_inline_with_quotes = b"\"ab\nc\"break";
+
+        let variable_value_parser = VariableValueParser;
+        let ok_value_string_inline_with_quotes = variable_value_parser.parse(
+            value_string_inline_with_quotes,
+            &mut PointerContext::start_zero(),
+        );
+
+        assert!(matches!(
+            ok_value_string_inline_with_quotes,
+            Ok(Node(
+                Token {
+                    span: Span {
+                        range: Range { start: 0, end: 6 },
+                        start: Point { line: 1, column: 1 },
+                        end: Point { line: 2, column: 3 },
+                    }
+                },
+                NodeKind::VariableValue(VariableValue { .. })
+            ))
+        ));
+
+        let node = ok_value_string_inline_with_quotes.unwrap();
+
+        let variable_value = node
+            .clone()
+            .to_node_kind()
+            .try_into_variable_value()
+            .unwrap();
+
+        assert_eq!(variable_value.source, b"\"ab\nc\"".to_vec());
+        assert_eq!(
+            node.clone()
+                .to_string(value_string_inline_with_quotes)
+                .to_vec(),
+            b"\"ab\nc\"".to_vec()
+        );
+    }
+
+    #[test]
+    fn should_parser_variable_value_with_variable_ref() {
+        let value_string = b"\"a${b}c\"";
+
+        let variable_value_parser = VariableValueParser;
+        let ok_parse = variable_value_parser.parse(value_string, &mut PointerContext::start_zero());
+
+        assert!(matches!(
+            ok_parse,
+            Ok(Node(
+                Token {
+                    span: Span {
+                        range: Range { start: 0, end: 8 },
+                        start: Point { line: 1, column: 1 },
+                        end: Point { line: 1, column: 9 },
+                    }
+                },
+                NodeKind::VariableValue(VariableValue { .. })
+            ))
+        ));
+
+        let node = ok_parse.unwrap();
+        let variable_value = node.to_node_kind().try_into_variable_value().unwrap();
+
+        println!("{:#?}", variable_value);
+
+        assert!(matches!(variable_value, VariableValue { .. }));
+    }
+
+    #[test]
+    fn should_parse_variable_link() {
+        let payload = b"${ABC}";
+
+        let variable_link_parser = VariableLinkParser;
+
+        let parser = variable_link_parser.parse(payload, &mut PointerContext::start_zero());
+
+        println!("{:#?}", payload);
+
+        assert!(matches!(
+            todo!(),
+            VariableLink {
+                name: "ABC".to_string(),
+                options: vec![],
+                ..
+            }
+        ));
+    }
+
+    #[test]
     fn should_parser_variable_value() {
         let value_string_inline = b"abc";
-        let value_string_inline_with_quotes = b"\"ab\nc\"";
         let value_string_inline_with_new_line = b"abc\n";
 
         let variable_value_parser = VariableValueParser;
@@ -155,33 +279,6 @@ mod parser_tests {
             .unwrap();
 
         assert_eq!(variable_value.source, b"abc".to_vec());
-
-        let ok_value_string_inline_with_quotes = variable_value_parser.parse(
-            value_string_inline_with_quotes,
-            &mut PointerContext::start_zero(),
-        );
-
-        assert!(matches!(
-            ok_value_string_inline_with_quotes,
-            Ok(Node(
-                Token {
-                    span: Span {
-                        range: Range { start: 0, end: 6 },
-                        start: Point { line: 1, column: 1 },
-                        end: Point { line: 2, column: 3 },
-                    }
-                },
-                NodeKind::VariableValue(VariableValue { .. })
-            ))
-        ));
-
-        let variable_value = ok_value_string_inline_with_quotes
-            .unwrap()
-            .to_node_kind()
-            .try_into_variable_value()
-            .unwrap();
-
-        assert_eq!(variable_value.source, b"\"abc\"".to_vec());
     }
 
     struct A {}

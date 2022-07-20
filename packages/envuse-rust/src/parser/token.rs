@@ -28,8 +28,24 @@ impl PointerContext {
             },
             start: self.span_end.start.clone(),
             end: Point {
-                line: 1,
+                line: self.span_end.end.line,
                 column: self.span_end.end.column + columns_positions,
+            },
+        };
+
+        self
+    }
+
+    pub fn move_lines(&mut self, lines: usize) -> &mut Self {
+        self.span_end = Span {
+            range: Range {
+                start: 0,
+                end: self.span_end.range.end + lines,
+            },
+            start: self.span_end.start.clone(),
+            end: Point {
+                line: self.span_end.end.line + lines,
+                column: 1,
             },
         };
 
