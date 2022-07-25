@@ -1,3 +1,20 @@
+use std::any::Any;
+use std::borrow::BorrowMut;
+use std::fmt::{Arguments, Debug, Formatter};
+use std::fs::{read, write};
+
+fn snap(path: &str, buff: &dyn Debug, rewrite: bool) {
+    let a = buff;
+    let buff_out = format!("{:#?}", a);
+    if rewrite {
+        write(path, buff_out).unwrap();
+    } else if let Ok(buff_read) = read(path).as_mut() {
+        assert_eq!(buff_out.as_bytes(), buff_read);
+    } else {
+        write(path, buff_out).unwrap();
+    }
+}
+
 #[cfg(test)]
 mod parser_tests {
     use envuse_rust::parser::error_kind::ErrorKind;
@@ -6,17 +23,18 @@ mod parser_tests {
     use envuse_rust::parser::node::Node;
     use envuse_rust::parser::node_kind::NodeKind;
     use envuse_rust::parser::node_parser::NodeParser;
-    use envuse_rust::parser::nodes::inline_comment::InlineComment;
     use envuse_rust::parser::nodes::inline_comment::InlineCommentParser;
+    use envuse_rust::parser::nodes::literal::Literal;
     use envuse_rust::parser::nodes::variable_link::VariableLink;
     use envuse_rust::parser::nodes::variable_link::VariableLinkParser;
-    use envuse_rust::parser::nodes::variable_value::VariableValue;
-    use envuse_rust::parser::nodes::variable_value::VariableValueParser;
-    use envuse_rust::parser::token::Point;
+    use envuse_rust::parser::nodes::variable_literal::VariableTemplate;
+    use envuse_rust::parser::nodes::variable_literal::VariableValueParser;
+    use envuse_rust::parser::nodes::variable_name::VariableName;
+    use envuse_rust::parser::nodes::variable_name::VariableNameParser;
     use envuse_rust::parser::token::PointerContext;
-    use envuse_rust::parser::token::Range;
-    use envuse_rust::parser::token::Span;
     use envuse_rust::parser::token::Token;
+
+    use crate::snap;
 
     #[test]
     fn should_parse_doc() {
@@ -30,6 +48,16 @@ mod parser_tests {
     }
 
     #[test]
+    fn should_parse_comment() {
+        let payload = b"# Iam comment";
+
+        let inline_comment_parser = InlineCommentParser;
+        let result_parse = inline_comment_parser.parse(payload, &mut PointerContext::start_zero());
+
+        snap(".snap/should_parse_comment.1.snap", &result_parse, false);
+    }
+
+    #[test]
     fn should_parse_a_simple_comment() {
         let payload_plain = b"# Iam comment";
         let payload_regular = b"# Iam comment\n";
@@ -40,165 +68,98 @@ mod parser_tests {
         let err_unexpected_token =
             inline_comment_parser.parse(payload_bad, &mut PointerContext::start_zero());
 
-        assert!(matches!(
-            err_unexpected_token,
-            Err(ErrorKind::UnexpectedToken)
-        ));
+        snap(
+            ".snap/should_parse_a_simple_comment.err_unexpected_token.snap",
+            &err_unexpected_token,
+            false,
+        );
 
         let ok_comment_regular =
             inline_comment_parser.parse(payload_regular, &mut PointerContext::start_zero());
 
-        assert!(matches!(
-            ok_comment_regular,
-            Ok(Node(
-                Token {
-                    span: Span {
-                        start: Point { line: 1, column: 1 },
-                        end: Point {
-                            line: 1,
-                            column: 14
-                        },
-                        range: Range { start: 0, end: 13 }
-                    },
-                    ..
-                },
-                NodeKind::InlineComment(InlineComment { .. })
-            ))
-        ));
-
-        assert_eq!(
-            ok_comment_regular
-                .unwrap()
-                .1
-                .try_into_inline_comment()
-                .unwrap()
-                .source,
-            b"# Iam comment".to_vec()
+        snap(
+            ".snap/should_parse_a_simple_comment.ok_comment_regular.snap",
+            &ok_comment_regular,
+            false,
         );
 
         let ok_comment_plain =
             inline_comment_parser.parse(payload_plain, &mut PointerContext::start_zero());
 
-        assert!(matches!(
-            ok_comment_plain,
-            Ok(Node(
-                Token {
-                    span: Span {
-                        start: Point { line: 1, column: 1 },
-                        end: Point {
-                            line: 1,
-                            column: 14
-                        },
-                        range: Range { start: 0, end: 13 }
-                    },
-                    ..
-                },
-                NodeKind::InlineComment(InlineComment { .. })
-            ))
-        ));
+        snap(
+            ".snap/should_parse_a_simple_comment.ok_comment_plain.snap",
+            &ok_comment_plain,
+            false,
+        );
     }
 
     #[test]
-    fn should_parser_variable_value_with_quotes() {
-        let value_string_inline_with_quotes = b"\"ab\nc\"";
+    fn should_parser_variable_value_2() {
+        let value_string = br#"`${b|>c}`"#;
 
         let variable_value_parser = VariableValueParser;
-        let ok_value_string_inline_with_quotes = variable_value_parser.parse(
-            value_string_inline_with_quotes,
-            &mut PointerContext::start_zero(),
-        );
-
-        assert!(matches!(
-            ok_value_string_inline_with_quotes,
-            Ok(Node(
-                Token {
-                    span: Span {
-                        range: Range { start: 0, end: 6 },
-                        start: Point { line: 1, column: 1 },
-                        end: Point { line: 2, column: 3 },
-                    }
-                },
-                NodeKind::VariableValue(VariableValue { .. })
-            ))
-        ));
-
-        let variable_value = ok_value_string_inline_with_quotes
-            .unwrap()
-            .to_node_kind()
-            .try_into_variable_value()
+        let node = variable_value_parser
+            .parse(value_string, &mut PointerContext::start_zero())
             .unwrap();
 
-        assert_eq!(variable_value.source, b"\"ab\nc\"".to_vec());
+        snap(".snap/should_parser_variable_value_2.1.snap", &node, false);
     }
 
     #[test]
-    fn should_parser_variable_value_with_quotes_2() {
-        let value_string_inline_with_quotes = b"\"ab\nc\"break";
+    fn should_parser_variable_value_with_variable_ref() {
+        let value_string = br#"`a${b}c`"#;
 
         let variable_value_parser = VariableValueParser;
-        let ok_value_string_inline_with_quotes = variable_value_parser.parse(
-            value_string_inline_with_quotes,
-            &mut PointerContext::start_zero(),
+        let ok_parse = variable_value_parser.parse(value_string, &mut PointerContext::start_zero());
+
+        snap(
+            ".snap/should_parser_variable_value_with_variable_ref.1.snap",
+            &ok_parse,
+            false,
         );
 
-        assert!(matches!(
-            ok_value_string_inline_with_quotes,
-            Ok(Node(
-                Token {
-                    span: Span {
-                        range: Range { start: 0, end: 6 },
-                        start: Point { line: 1, column: 1 },
-                        end: Point { line: 2, column: 3 },
-                    }
-                },
-                NodeKind::VariableValue(VariableValue { .. })
-            ))
-        ));
-
-        let node = ok_value_string_inline_with_quotes.unwrap();
-
+        let node = ok_parse.unwrap();
         let variable_value = node
             .clone()
             .to_node_kind()
             .try_into_variable_value()
             .unwrap();
 
-        assert_eq!(variable_value.source, b"\"ab\nc\"".to_vec());
-        assert_eq!(
-            node.clone()
-                .to_string(value_string_inline_with_quotes)
-                .to_vec(),
-            b"\"ab\nc\"".to_vec()
+        assert!(matches!(variable_value, VariableTemplate { .. }));
+
+        snap(
+            ".snap/should_parser_variable_value_with_variable_ref.2.snap",
+            &variable_value,
+            false,
         );
-    }
 
-    #[test]
-    fn should_parser_variable_value_with_variable_ref() {
-        let value_string = b"\"a${b}c\"";
+        let chunk_a = if let Node(_, NodeKind::Literal(Literal(chunk))) =
+            variable_value.template.get(0).unwrap()
+        {
+            chunk
+        } else {
+            panic!()
+        };
 
-        let variable_value_parser = VariableValueParser;
-        let ok_parse = variable_value_parser.parse(value_string, &mut PointerContext::start_zero());
+        let chunk_b = if let Node(_, NodeKind::VariableLink(chunk)) =
+            variable_value.template.get(1).unwrap()
+        {
+            chunk.get_variable()
+        } else {
+            panic!()
+        };
 
-        assert!(matches!(
-            ok_parse,
-            Ok(Node(
-                Token {
-                    span: Span {
-                        range: Range { start: 0, end: 8 },
-                        start: Point { line: 1, column: 1 },
-                        end: Point { line: 1, column: 9 },
-                    }
-                },
-                NodeKind::VariableValue(VariableValue { .. })
-            ))
-        ));
+        let chunk_c = if let Node(_, NodeKind::Literal(Literal(chunk))) =
+            variable_value.template.get(2).unwrap()
+        {
+            chunk
+        } else {
+            panic!()
+        };
 
-        let node = ok_parse.unwrap();
-        let variable_value = node.to_node_kind().try_into_variable_value().unwrap();
-
-        println!("{:#?}", variable_value);
-
-        assert!(matches!(variable_value, VariableValue { .. }));
+        assert_eq!(chunk_a, &String::from("a"));
+        assert_eq!(chunk_b.name, String::from("b"));
+        assert_eq!(chunk_c, &String::from("c"));
     }
 
     #[test]
@@ -209,76 +170,56 @@ mod parser_tests {
 
         let parser = variable_link_parser.parse(payload, &mut PointerContext::start_zero());
 
-        println!("{:#?}", payload);
+        let node = parser.unwrap();
+        let node_kind = node.to_node_kind();
+        let variable_link = node_kind.try_into_variable_link().unwrap();
 
-        assert!(matches!(
-            todo!(),
-            VariableLink {
-                name: "ABC".to_string(),
-                options: vec![],
-                ..
-            }
-        ));
+        assert!(matches!(variable_link, VariableLink { .. }));
+        assert_eq!(variable_link.get_variable().name, "ABC".to_string());
+        assert_eq!(variable_link.options.len(), 0);
     }
 
     #[test]
-    fn should_parser_variable_value() {
-        let value_string_inline = b"abc";
-        let value_string_inline_with_new_line = b"abc\n";
+    fn should_parse_variable_name() {
+        let payload = b"name|";
 
-        let variable_value_parser = VariableValueParser;
+        let variable_name_parser = VariableNameParser;
 
-        let ok_parse_value_string_inline =
-            variable_value_parser.parse(value_string_inline, &mut PointerContext::start_zero());
+        let parser = variable_name_parser.parse(payload, &mut PointerContext::start_zero());
 
-        assert!(matches!(
-            ok_parse_value_string_inline,
-            Ok(Node(
-                Token {
-                    span: Span {
-                        range: Range { start: 0, end: 3 },
-                        start: Point { line: 1, column: 1 },
-                        end: Point { line: 1, column: 4 },
-                    }
-                },
-                NodeKind::VariableValue(VariableValue { .. })
-            ))
-        ));
+        let node = parser.unwrap();
+        let node_kind = node.to_node_kind();
+        let variable_name = node_kind.try_into_variable_name().unwrap();
 
-        let variable_value = ok_parse_value_string_inline
-            .unwrap()
-            .to_node_kind()
-            .try_into_variable_value()
-            .unwrap();
+        assert!(matches!(variable_name, VariableName { .. }));
+        assert_eq!(variable_name.name, "name".to_string());
+    }
 
-        assert_eq!(variable_value.source, b"abc".to_vec());
+    #[test]
+    fn should_parse_variable_link_with_options() {
+        let payload = b"${ABC|>json|>upper}";
 
-        let ok_value_string_inline_with_new_line = variable_value_parser.parse(
-            value_string_inline_with_new_line,
-            &mut PointerContext::start_zero(),
+        let variable_link_parser = VariableLinkParser;
+
+        let parser = variable_link_parser.parse(payload, &mut PointerContext::start_zero());
+
+        let node = parser.unwrap();
+        let node_kind = node.clone().to_node_kind();
+        let variable_link = node_kind.try_into_variable_link().unwrap();
+
+        snap(".snap/should_parse_variable_link_with_options.1.snap", &node, false);
+
+        assert!(matches!(variable_link, VariableLink { .. }));
+        assert_eq!(
+            variable_link
+                .variable
+                .to_node_kind()
+                .try_into_variable_name()
+                .unwrap()
+                .name,
+            "ABC".to_string()
         );
-
-        assert!(matches!(
-            ok_value_string_inline_with_new_line,
-            Ok(Node(
-                Token {
-                    span: Span {
-                        range: Range { start: 0, end: 3 },
-                        start: Point { line: 1, column: 1 },
-                        end: Point { line: 1, column: 4 },
-                    }
-                },
-                NodeKind::VariableValue(VariableValue { .. })
-            ))
-        ));
-
-        let variable_value = ok_value_string_inline_with_new_line
-            .unwrap()
-            .to_node_kind()
-            .try_into_variable_value()
-            .unwrap();
-
-        assert_eq!(variable_value.source, b"abc".to_vec());
+        assert_eq!(variable_link.options.len(), 2);
     }
 
     struct A {}
@@ -291,10 +232,11 @@ mod parser_tests {
             payload: &'a [u8],
             pointer_context: &'a mut PointerContext,
         ) -> Result<Node, ErrorKind> {
+            let start = pointer_context.clone();
             match payload {
                 b"1" => Ok(Node(
                     Token {
-                        span: pointer_context.move_columns(1).to_span(),
+                        span: pointer_context.move_columns(1).create_span(start),
                     },
                     NodeKind::FragmentNamed("A::parse".to_string()),
                 )),
@@ -309,10 +251,11 @@ mod parser_tests {
             payload: &'a [u8],
             pointer_context: &'a mut PointerContext,
         ) -> Result<Node, ErrorKind> {
+            let start = pointer_context.clone();
             match payload {
                 b"2" => Ok(Node(
                     Token {
-                        span: pointer_context.move_columns(1).to_span(),
+                        span: pointer_context.move_columns(1).create_span(start),
                     },
                     NodeKind::FragmentNamed("B::parse".to_string()),
                 )),
@@ -336,7 +279,6 @@ mod parser_tests {
         let payload_1 = b"1";
         let payload_2 = b"2";
         let payload_3 = b"3";
-        let mut start_point = PointerContext::start_zero();
 
         let mut parsers = FnParser::new_vec();
 
@@ -344,19 +286,22 @@ mod parser_tests {
         parsers.push(Box::new(B {}));
         parsers.push(Box::new(C {}));
 
-        assert_eq!(
-            "Some(Node(Token { span: Span { start: Point { line: 1, column: 1 }, end: Point { line: 1, column: 2 }, range: Range { start: 0, end: 1 } } }, FragmentNamed(\"A::parse\")))",
-            format!("{:?}", &iter_parsers(payload_1, &mut start_point, &parsers)),
+        snap(
+            ".snap/should_use_tool_iter_parsers.1.snap",
+            &iter_parsers(payload_1, &mut PointerContext::start_zero(), &parsers),
+            false,
         );
 
-        assert_eq!(
-            "Some(Node(Token { span: Span { start: Point { line: 1, column: 1 }, end: Point { line: 1, column: 2 }, range: Range { start: 0, end: 1 } } }, FragmentNamed(\"B::parse\")))",
-            format!("{:?}", &iter_parsers(payload_2, &mut start_point, &parsers)),
+        snap(
+            ".snap/should_use_tool_iter_parsers.2.snap",
+            &iter_parsers(payload_2, &mut PointerContext::start_zero(), &parsers),
+            false,
         );
 
-        assert_eq!(
-            "None",
-            format!("{:?}", &iter_parsers(payload_3, &mut start_point, &parsers)),
+        snap(
+            ".snap/should_use_tool_iter_parsers.3.snap",
+            &iter_parsers(payload_3, &mut PointerContext::start_zero(), &parsers),
+            false,
         );
     }
 }

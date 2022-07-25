@@ -1,15 +1,19 @@
 use super::nodes::inline_comment::InlineComment;
-use super::nodes::variable_value::VariableValue;
+use super::nodes::literal::Literal;
+use super::nodes::variable_literal::VariableTemplate;
 use super::nodes::variable_link::VariableLink;
+use super::nodes::variable_name::VariableName;
 
 #[derive(Debug, Clone)]
 pub enum NodeKind {
     Fragment,
     Document,
     FragmentNamed(String),
-    VariableValue(VariableValue),
+    VariableTemplate(VariableTemplate),
     InlineComment(InlineComment),
     VariableLink(VariableLink),
+    VariableName(VariableName),
+    Literal(Literal),
 }
 
 impl NodeKind {
@@ -29,8 +33,8 @@ impl NodeKind {
         }
     }
 
-    pub fn try_into_variable_value(self) -> Result<VariableValue, Self> {
-        if let Self::VariableValue(v) = self {
+    pub fn try_into_variable_value(self) -> Result<VariableTemplate, Self> {
+        if let Self::VariableTemplate(v) = self {
             Ok(v)
         } else {
             Err(self)
@@ -42,7 +46,23 @@ impl NodeKind {
     /// [`VariableValue`]: NodeKind::VariableValue
     #[must_use]
     pub fn is_variable_value(&self) -> bool {
-        matches!(self, Self::VariableValue(..))
+        matches!(self, Self::VariableTemplate(..))
+    }
+
+    pub fn try_into_variable_link(self) -> Result<VariableLink, Self> {
+        if let Self::VariableLink(v) = self {
+            Ok(v)
+        } else {
+            Err(self)
+        }
+    }
+
+    pub fn try_into_variable_name(self) -> Result<VariableName, Self> {
+        if let Self::VariableName(v) = self {
+            Ok(v)
+        } else {
+            Err(self)
+        }
     }
 }
 

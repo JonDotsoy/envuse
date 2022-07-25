@@ -1,12 +1,21 @@
+use super::super::utils::try_slice::try_slice;
+
 #[derive(Debug, Clone)]
 pub struct PointerContext {
+    pub point: Point,
+    pub location: usize,
+
+    #[deprecated]
     pub span_start: Span,
+    #[deprecated]
     pub span_end: Span,
 }
 
 impl PointerContext {
     pub fn start_zero() -> Self {
         Self {
+            point: Point { line: 1, column: 1 },
+            location: 0,
             span_start: Span {
                 range: Range { start: 0, end: 0 },
                 start: Point { line: 1, column: 1 },
@@ -21,39 +30,45 @@ impl PointerContext {
     }
 
     pub fn move_columns(&mut self, columns_positions: usize) -> &mut Self {
-        self.span_end = Span {
-            range: Range {
-                start: 0,
-                end: self.span_end.range.end + columns_positions,
-            },
-            start: self.span_end.start.clone(),
-            end: Point {
-                line: self.span_end.end.line,
-                column: self.span_end.end.column + columns_positions,
-            },
+        self.point = Point {
+            line: self.point.line,
+            column: self.point.column + columns_positions,
         };
+
+        self.location = self.location + columns_positions;
 
         self
     }
 
     pub fn move_lines(&mut self, lines: usize) -> &mut Self {
-        self.span_end = Span {
-            range: Range {
-                start: 0,
-                end: self.span_end.range.end + lines,
-            },
-            start: self.span_end.start.clone(),
-            end: Point {
-                line: self.span_end.end.line + lines,
-                column: 1,
-            },
+        self.point = Point {
+            line: self.point.line + lines,
+            column: 1,
         };
+
+        self.location = self.location + lines;
 
         self
     }
 
+    #[deprecated]
     pub fn to_span(&self) -> Span {
         self.span_end.clone()
+    }
+
+    pub fn create_span(&self, start_pointer_context: PointerContext) -> Span {
+        Span {
+            start: start_pointer_context.point,
+            end: self.point.clone(),
+            range: Range {
+                start: start_pointer_context.location,
+                end: self.location,
+            },
+        }
+    }
+
+    pub fn current_position(&self) -> usize {
+        self.location
     }
 }
 
@@ -111,6 +126,16 @@ pub struct Token {
 }
 
 impl Token {
+    pub fn slice_for<'a>(&self, payload: &'a [u8]) -> &'a [u8] {
+        try_slice(payload, self.span.range.start, self.span.range.end)
+    }
+
+    pub fn slice_for_string<'a>(&self, payload: &'a [u8]) -> String {
+        String::from_utf8(try_slice(payload, self.span.range.start, self.span.range.end).to_vec())
+            .unwrap()
+    }
+
+    #[deprecated]
     pub fn from_pointer_context(pointer_context: PointerContext) -> Self {
         Self {
             span: pointer_context.to_span(),
