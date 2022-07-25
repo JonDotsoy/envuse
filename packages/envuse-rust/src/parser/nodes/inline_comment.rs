@@ -38,7 +38,7 @@ impl NodeParser for InlineCommentParser {
         pointer_context: &'a mut PointerContext,
     ) -> Result<Node, ErrorKind> {
         let start = pointer_context.clone();
-        let range_start = pointer_context.current_position();
+        let _range_start = pointer_context.current_position();
 
         match try_slice_by_size(payload, pointer_context.current_position(), 1) {
             Some(a) if b"#" == a => (),

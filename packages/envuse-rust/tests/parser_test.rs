@@ -1,6 +1,4 @@
-use std::any::Any;
-use std::borrow::BorrowMut;
-use std::fmt::{Arguments, Debug, Formatter};
+use std::fmt::Debug;
 use std::fs::{read, write};
 
 fn snap(path: &str, buff: &dyn Debug, rewrite: bool) {
@@ -27,10 +25,10 @@ mod parser_tests {
     use envuse_rust::parser::nodes::literal::Literal;
     use envuse_rust::parser::nodes::variable_link::VariableLink;
     use envuse_rust::parser::nodes::variable_link::VariableLinkParser;
-    use envuse_rust::parser::nodes::variable_template::VariableTemplate;
-    use envuse_rust::parser::nodes::variable_template::VariableValueParser;
     use envuse_rust::parser::nodes::variable_name::VariableName;
     use envuse_rust::parser::nodes::variable_name::VariableNameParser;
+    use envuse_rust::parser::nodes::variable_template::VariableTemplate;
+    use envuse_rust::parser::nodes::variable_template::VariableValueParser;
     use envuse_rust::parser::token::PointerContext;
     use envuse_rust::parser::token::Token;
 
@@ -207,7 +205,11 @@ mod parser_tests {
         let node_kind = node.clone().to_node_kind();
         let variable_link = node_kind.try_into_variable_link().unwrap();
 
-        snap(".snap/should_parse_variable_link_with_options.1.snap", &node, false);
+        snap(
+            ".snap/should_parse_variable_link_with_options.1.snap",
+            &node,
+            false,
+        );
 
         assert!(matches!(variable_link, VariableLink { .. }));
         assert_eq!(

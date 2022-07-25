@@ -4,11 +4,6 @@ use super::super::utils::try_slice::try_slice;
 pub struct PointerContext {
     pub point: Point,
     pub location: usize,
-
-    #[deprecated]
-    pub span_start: Span,
-    #[deprecated]
-    pub span_end: Span,
 }
 
 impl PointerContext {
@@ -16,16 +11,6 @@ impl PointerContext {
         Self {
             point: Point { line: 1, column: 1 },
             location: 0,
-            span_start: Span {
-                range: Range { start: 0, end: 0 },
-                start: Point { line: 1, column: 1 },
-                end: Point { line: 1, column: 1 },
-            },
-            span_end: Span {
-                range: Range { start: 0, end: 0 },
-                start: Point { line: 1, column: 1 },
-                end: Point { line: 1, column: 1 },
-            },
         }
     }
 
@@ -51,11 +36,6 @@ impl PointerContext {
         self
     }
 
-    #[deprecated]
-    pub fn to_span(&self) -> Span {
-        self.span_end.clone()
-    }
-
     pub fn create_span(&self, start_pointer_context: PointerContext) -> Span {
         Span {
             start: start_pointer_context.point,
@@ -64,6 +44,12 @@ impl PointerContext {
                 start: start_pointer_context.location,
                 end: self.location,
             },
+        }
+    }
+
+    pub fn create_token(&self, start_pointer_context: PointerContext) -> Token {
+        Token {
+            span: self.create_span(start_pointer_context),
         }
     }
 
@@ -133,12 +119,5 @@ impl Token {
     pub fn slice_for_string<'a>(&self, payload: &'a [u8]) -> String {
         String::from_utf8(try_slice(payload, self.span.range.start, self.span.range.end).to_vec())
             .unwrap()
-    }
-
-    #[deprecated]
-    pub fn from_pointer_context(pointer_context: PointerContext) -> Self {
-        Self {
-            span: pointer_context.to_span(),
-        }
     }
 }

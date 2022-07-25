@@ -1,14 +1,11 @@
 use super::super::node_parser::NodeParser;
-use super::super::payload::Payload;
 use super::literal::Literal;
-use super::variable_link::VariableLink;
 use crate::parser::error_kind::ErrorKind;
 use crate::parser::node::Node;
 use crate::parser::node_kind::NodeKind;
 use crate::parser::nodes::variable_link::VariableLinkParser;
 use crate::parser::token::PointerContext;
 use crate::parser::token::Token;
-use crate::utils::try_slice::try_slice;
 use crate::utils::try_slice::try_slice_by_size;
 
 #[derive(Debug, Clone)]

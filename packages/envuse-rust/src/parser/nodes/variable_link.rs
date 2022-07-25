@@ -5,7 +5,6 @@ use super::super::node_kind::NodeKind;
 use super::super::node_parser::NodeParser;
 use super::super::token::PointerContext;
 use super::super::token::Token;
-use super::variable_name;
 use super::variable_name::VariableName;
 use super::variable_name::VariableNameParser;
 
