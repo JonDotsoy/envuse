@@ -2,5 +2,5 @@
 pub enum ErrorKind {
     UnknownError(Box<&'static str>),
     NotMatchParser,
-    UnexpectedToken,
+    UnexpectedToken_deprecated,
 }

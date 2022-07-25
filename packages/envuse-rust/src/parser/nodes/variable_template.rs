@@ -22,11 +22,6 @@ impl From<VariableTemplate> for NodeKind {
     }
 }
 
-enum EndVariableValue {
-    NewLine,
-    Grave,
-}
-
 pub struct VariableValueParser;
 
 impl NodeParser for VariableValueParser {
@@ -35,14 +30,13 @@ impl NodeParser for VariableValueParser {
         payload: &'static [u8],
         pointer_context: &'a mut PointerContext,
     ) -> Result<Node, ErrorKind> {
-        let start = pointer_context.clone();
         let mut template: Vec<Node> = vec![];
         let start_pointer_context = pointer_context.clone();
 
         {
             let position = pointer_context.current_position();
             if try_slice_by_size(payload, position, 1).unwrap_or(b"") != b"`" {
-                return Err(ErrorKind::UnexpectedToken);
+                return Err(ErrorKind::UnexpectedToken_deprecated);
             }
         };
 

@@ -45,7 +45,7 @@ impl NodeParser for VariableLinkParser {
 
         if &payload[range_start..range_start + 2] != b"${" {
             println!("");
-            return Err(ErrorKind::UnexpectedToken);
+            return Err(ErrorKind::UnexpectedToken_deprecated);
         }
 
         pointer_context.move_columns(2);
@@ -77,7 +77,7 @@ impl NodeParser for VariableLinkParser {
                 break;
             }
 
-            return Err(ErrorKind::UnexpectedToken);
+            return Err(ErrorKind::UnexpectedToken_deprecated);
         }
 
         Ok(Node(

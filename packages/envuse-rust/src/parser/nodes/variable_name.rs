@@ -29,7 +29,7 @@ impl NodeParser for VariableNameParser {
         let variable_range_end: usize;
 
         if !matches!(payload[pointer_context.current_position()], b'a'..=b'z'|b'A'..=b'Z') {
-            return Err(ErrorKind::UnexpectedToken);
+            return Err(ErrorKind::UnexpectedToken_deprecated);
         }
 
         loop {

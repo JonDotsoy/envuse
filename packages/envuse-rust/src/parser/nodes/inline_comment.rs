@@ -43,7 +43,7 @@ impl NodeParser for InlineCommentParser {
         match try_slice_by_size(payload, pointer_context.current_position(), 1) {
             Some(a) if b"#" == a => (),
             _ => {
-                return Err(ErrorKind::UnexpectedToken);
+                return Err(ErrorKind::UnexpectedToken_deprecated);
             }
         }
 

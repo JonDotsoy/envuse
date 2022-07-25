@@ -1,6 +1,6 @@
 use super::nodes::inline_comment::InlineComment;
 use super::nodes::literal::Literal;
-use super::nodes::variable_literal::VariableTemplate;
+use super::nodes::variable_template::VariableTemplate;
 use super::nodes::variable_link::VariableLink;
 use super::nodes::variable_name::VariableName;
 

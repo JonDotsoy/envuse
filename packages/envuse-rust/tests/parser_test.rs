@@ -27,8 +27,8 @@ mod parser_tests {
     use envuse_rust::parser::nodes::literal::Literal;
     use envuse_rust::parser::nodes::variable_link::VariableLink;
     use envuse_rust::parser::nodes::variable_link::VariableLinkParser;
-    use envuse_rust::parser::nodes::variable_literal::VariableTemplate;
-    use envuse_rust::parser::nodes::variable_literal::VariableValueParser;
+    use envuse_rust::parser::nodes::variable_template::VariableTemplate;
+    use envuse_rust::parser::nodes::variable_template::VariableValueParser;
     use envuse_rust::parser::nodes::variable_name::VariableName;
     use envuse_rust::parser::nodes::variable_name::VariableNameParser;
     use envuse_rust::parser::token::PointerContext;
