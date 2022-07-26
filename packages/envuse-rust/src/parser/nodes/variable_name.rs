@@ -36,7 +36,7 @@ impl NodeParser for VariableNameParser {
 
         loop {
             if let Some(char) = payload.get(pointer_context.current_position()) {
-                if matches!(char, b'a'..=b'z' | b'A'..=b'Z' | b'_') {
+                if matches!(char, b'a'..=b'z' | b'A'..=b'Z' | b'0'..=b'9' | b'_') {
                     pointer_context.move_columns(1);
                     continue;
                 }

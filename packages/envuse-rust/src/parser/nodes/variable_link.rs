@@ -1,3 +1,5 @@
+use crate::utils::try_slice::try_slice_by_size;
+
 use super::super::super::utils::try_slice::try_slice;
 use super::super::error_kind::ErrorKind;
 use super::super::node::Node;
@@ -5,6 +7,7 @@ use super::super::node_kind::NodeKind;
 use super::super::node_parser::NodeParser;
 use super::super::token::PointerContext;
 use super::super::token::Token;
+use super::super::utils::trim_spaces::trim_spaces;
 use super::variable_name::VariableName;
 use super::variable_name::VariableNameParser;
 
@@ -49,28 +52,27 @@ impl NodeParser for VariableLinkParser {
 
         pointer_context.move_columns(2);
 
+        trim_spaces(payload, pointer_context);
+
         let variable_name = VariableNameParser.parse(payload, pointer_context)?;
         let variable = Box::new(variable_name);
+        trim_spaces(payload, pointer_context);
 
         loop {
-            if try_slice(
-                payload,
-                pointer_context.current_position(),
-                pointer_context.current_position() + 2,
-            ) == b"|>"
+            if b"|>"
+                == try_slice_by_size(payload, pointer_context.current_position(), 2).unwrap_or(b"")
             {
                 pointer_context.move_columns(2);
+                trim_spaces(payload, pointer_context);
                 let variable_name = VariableNameParser.parse(payload, pointer_context)?;
                 let variable = Box::new(variable_name);
+                trim_spaces(payload, pointer_context);
                 options.push(variable);
                 continue;
             }
 
-            if try_slice(
-                payload,
-                pointer_context.current_position(),
-                pointer_context.current_position() + 1,
-            ) == b"}"
+            if b"}"
+                == try_slice_by_size(payload, pointer_context.current_position(), 1).unwrap_or(b"")
             {
                 pointer_context.move_columns(1);
                 break;

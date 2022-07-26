@@ -3,6 +3,8 @@ use super::nodes::literal::Literal;
 use super::nodes::variable_template::VariableTemplate;
 use super::nodes::variable_link::VariableLink;
 use super::nodes::variable_name::VariableName;
+use super::nodes::variable_type::VariableType;
+use super::nodes::variable::Variable;
 
 #[derive(Debug, Clone)]
 pub enum NodeKind {
@@ -14,6 +16,8 @@ pub enum NodeKind {
     VariableLink(VariableLink),
     VariableName(VariableName),
     Literal(Literal),
+    VariableType(VariableType),
+    Variable(Variable),
 }
 
 impl NodeKind {

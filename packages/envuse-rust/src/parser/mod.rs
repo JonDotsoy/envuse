@@ -12,6 +12,7 @@ pub mod nodes;
 pub mod token;
 pub mod error_kind;
 pub mod payload;
+pub mod utils;
 
 /// Parse source
 pub fn parse(payload: &'static [u8]) -> Result<Node, ErrorKind> {

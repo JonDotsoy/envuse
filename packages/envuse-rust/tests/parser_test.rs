@@ -23,12 +23,14 @@ mod parser_tests {
     use envuse_rust::parser::node_parser::NodeParser;
     use envuse_rust::parser::nodes::inline_comment::InlineCommentParser;
     use envuse_rust::parser::nodes::literal::Literal;
+    use envuse_rust::parser::nodes::variable::VariableParser;
     use envuse_rust::parser::nodes::variable_link::VariableLink;
     use envuse_rust::parser::nodes::variable_link::VariableLinkParser;
     use envuse_rust::parser::nodes::variable_name::VariableName;
     use envuse_rust::parser::nodes::variable_name::VariableNameParser;
     use envuse_rust::parser::nodes::variable_template::VariableTemplate;
     use envuse_rust::parser::nodes::variable_template::VariableValueParser;
+    use envuse_rust::parser::nodes::variable_type::VariableTypeParser;
     use envuse_rust::parser::token::PointerContext;
     use envuse_rust::parser::token::Token;
 
@@ -43,6 +45,72 @@ mod parser_tests {
         // assert!(matches!(node_kind, NodeKind::Document));
         // assert_eq!(token.span.range.start, 0);
         // assert_eq!(token.span.range.end, 14);
+    }
+
+    #[test]
+    fn should_parse_variable() {
+        let payload = br#"abc:string"#;
+
+        let variable_parser = VariableParser;
+
+        let parsed = variable_parser.parse(payload, &mut PointerContext::start_zero());
+
+        snap(".snap/should_parse_variable.1.snap", &parsed, false);
+    }
+
+    #[test]
+    fn should_parse_variable_2() {
+        let payload = br#"abc"#;
+
+        let variable_parser = VariableParser;
+
+        let parsed = variable_parser.parse(payload, &mut PointerContext::start_zero());
+
+        snap(".snap/should_parse_variable_2.1.snap", &parsed, false);
+    }
+
+    #[test]
+    fn should_parse_variable_3() {
+        let payload = br#"abc:number=``"#;
+
+        let variable_parser = VariableParser;
+
+        let parsed = variable_parser.parse(payload, &mut PointerContext::start_zero());
+
+        snap(".snap/should_parse_variable_3.1.snap", &parsed, false);
+    }
+
+    #[test]
+    fn should_parse_variable_4() {
+        let payload = br#"abc    : number = ``"#;
+
+        let variable_parser = VariableParser;
+
+        let parsed = variable_parser.parse(payload, &mut PointerContext::start_zero());
+
+        snap(".snap/should_parse_variable_4.1.snap", &parsed, false);
+    }
+
+    #[test]
+    fn should_parse_variable_5() {
+        let payload = br#"abc    : number = `${ABC  |>   json |> number}`"#;
+
+        let variable_parser = VariableParser;
+
+        let parsed = variable_parser.parse(payload, &mut PointerContext::start_zero());
+
+        snap(".snap/should_parse_variable_5.1.snap", &parsed, false);
+    }
+
+    #[test]
+    fn should_parse_variable_type() {
+        let payload = br#":string"#;
+
+        let variable_type_parser = VariableTypeParser;
+
+        let parsed = variable_type_parser.parse(payload, &mut PointerContext::start_zero());
+
+        snap(".snap/should_parse_variable_type.1.snap", &parsed, false);
     }
 
     #[test]

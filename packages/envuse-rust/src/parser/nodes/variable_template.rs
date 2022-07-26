@@ -7,6 +7,7 @@ use crate::parser::nodes::variable_link::VariableLinkParser;
 use crate::parser::token::PointerContext;
 use crate::parser::token::Token;
 use crate::utils::try_slice::try_slice_by_size;
+use super::super::utils::trim_spaces::trim_spaces;
 
 #[derive(Debug, Clone)]
 pub struct VariableTemplate {
@@ -47,8 +48,7 @@ impl NodeParser for VariableValueParser {
                     .unwrap_or(b"");
 
                 if chunk_str_2 == b"${" {
-                    let span = pointer_context.create_span(part_template_start_pointer_context);
-                    let token = Token { span };
+                    let token = pointer_context.create_token(part_template_start_pointer_context);
                     let v = token.slice_for(payload).to_vec();
                     template.push(Node(
                         token,
@@ -65,8 +65,7 @@ impl NodeParser for VariableValueParser {
                 }
 
                 if b"`" == chunk_str {
-                    let span = pointer_context.create_span(part_template_start_pointer_context);
-                    let token = Token { span };
+                    let token = pointer_context.create_token(part_template_start_pointer_context);
                     let v = token.slice_for(payload).to_vec();
                     template.push(Node(
                         token,
