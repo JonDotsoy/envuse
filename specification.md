@@ -35,3 +35,23 @@ Sample the the a comment.
 ```
 
 ### Variable
+
+The variables declare a configuration with a type. this definition is used to load the configuration from the envuse file or the environment.
+
+Sample of variable line:
+
+```envuse
+foo: string = `var`
+```
+
+### Variable Type
+
+The type definition declares how to deserialize the value.
+
+Primitive types:
+
+- `number`
+- `string`: It's used by default if the variable is not declared.
+- `boolean`
+- `json`
+- `array`
