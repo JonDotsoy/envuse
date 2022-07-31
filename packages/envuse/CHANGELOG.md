@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0-beta.4](https://github.com/JonDotsoy/envuse/compare/envuse@v3.3.0-beta.3...envuse@v3.3.0-beta.4) (2021-12-12)
+
+### Features
+
+- **envuse:** configure register ([a62ebb2](https://github.com/JonDotsoy/envuse/commit/a62ebb2340d48ebd4447ff384f536435eda53575))
+
+## [3.3.0-beta.3](https://github.com/JonDotsoy/envuse/compare/envuse@v3.3.0-beta.2...envuse@v3.3.0-beta.3) (2021-12-12)
+
+### Features
+
+- **envuse:** update script cli ([034f838](https://github.com/JonDotsoy/envuse/commit/034f838300426010e81c79e755f933df926bf8c0))
+
+## [3.3.0-beta.2](https://github.com/JonDotsoy/envuse/compare/envuse@v3.3.0-beta.1...envuse@v3.3.0-beta.2) (2021-12-12)
+
+### Features
+
+- **envuse:** configure cli ([67802ae](https://github.com/JonDotsoy/envuse/commit/67802ae60db3d9526016e15a12ecb8a09bf16aed))
+
+## [3.3.0-beta.1](https://github.com/JonDotsoy/envuse/compare/envuse@v3.3.0-beta.0...envuse@v3.3.0-beta.1) (2021-12-12)
+
+### Bug Fixes
+
+- **envuse:** requires paths ([24e0448](https://github.com/JonDotsoy/envuse/commit/24e0448a2d6b4ea3ffa577b62081aa4582a1c96b))
+
+## [3.3.0-beta.0](https://github.com/JonDotsoy/envuse/compare/envuse@v3.2.0...envuse@v3.3.0-beta.0) (2021-12-12)
+
+### Features
+
+- **envuse:** initialize envuse cli ([d79a603](https://github.com/JonDotsoy/envuse/commit/d79a603164e9725a96df5ff20da7a5a21dcae461))
+- **envuse:** preapre publish beta ([f67d3eb](https://github.com/JonDotsoy/envuse/commit/f67d3eb6fa13f93ee9ac3eedfd229e41521c25a4))
+- **vscode-language:** remove icon themes ([332720a](https://github.com/JonDotsoy/envuse/commit/332720adecaae00e6f8cbbc3d570d7891a534789))
+- **vscode-language:** upgrade description package ([2d60c02](https://github.com/JonDotsoy/envuse/commit/2d60c02b446088f699a1c4b2da2a42380908d039))
+
 ## [3.2.0](https://github.com/JonDotsoy/envuse/compare/envuse@v3.1.0...envuse@v3.2.0) (2021-12-12)
 
 ### Features
