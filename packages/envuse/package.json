@@ -1,12 +1,13 @@
 {
   "name": "envuse",
-  "version": "3.2.0",
+  "version": "3.3.0-beta.4",
   "description": "Load environment variables from a `.envuse` file into the `process.env`",
   "main": "envuse.js",
   "publishConfig": {
     "access": "public",
-    "tag": "latest"
+    "tag": "beta"
   },
+  "bin": "cli.js",
   "scripts": {
     "release": "standard-version -t envuse@v",
     "clean": "tsc --build --clean",
@@ -53,6 +54,7 @@
   "dependencies": {
     "accepts": "^1.3.7",
     "axios": "^0.22.0",
-    "content-type": "^1.0.4"
+    "content-type": "^1.0.4",
+    "debug": "^4.3.3"
   }
 }
