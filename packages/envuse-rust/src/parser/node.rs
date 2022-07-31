@@ -1,7 +1,8 @@
+use serde::Serialize;
 use super::node_kind::NodeKind;
 use super::token::Token;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct Node(pub Token, pub NodeKind);
 
 impl Node {

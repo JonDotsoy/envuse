@@ -1,3 +1,5 @@
+use serde::Serialize;
+
 use super::super::super::utils::try_slice::try_slice_by_size;
 use super::super::error_kind::ErrorKind;
 use super::super::node::Node;
@@ -5,9 +7,9 @@ use super::super::node_kind::NodeKind;
 use super::super::node_parser::NodeParser;
 use super::super::PointerContext;
 use super::variable_name::VariableNameParser;
-use super::super::utils::trim_spaces::trim_spaces;
+use super::super::utils::trim::trim_spaces;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct VariableType {
     pub variable_type: Box<Node>,
 }
@@ -23,7 +25,7 @@ pub struct VariableTypeParser;
 impl NodeParser for VariableTypeParser {
     fn parse<'a>(
         &self,
-        payload: &'static [u8],
+        payload: &'a [u8],
         pointer_context: &'a mut PointerContext,
     ) -> Result<Node, ErrorKind> {
         let start_pointer_context = pointer_context.clone();

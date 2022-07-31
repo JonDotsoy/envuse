@@ -1,8 +1,18 @@
 [package]
-name = "envuse-rust"
-version = "0.1.0"
+name = "envuse-parser"
+version = "0.1.0-beta.3"
 edition = "2021"
+description = "a parser to envuse file"
+license = "MIT"
+authors = ["Jonathan Delgado <hi@jon.soy> (http://jon.soy)"]
+homepage = "https://github.com/JonDotsoy/envuse-rust"
+repository = "https://github.com/JonDotsoy/envuse-rust"
+
+[lib]
+doc = true
+test = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+serde = { version = "1", features = ["derive"] }

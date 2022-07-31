@@ -1,15 +1,18 @@
+use serde::Serialize;
+
+use super::nodes::document::Document;
 use super::nodes::inline_comment::InlineComment;
 use super::nodes::literal::Literal;
-use super::nodes::variable_template::VariableTemplate;
+use super::nodes::variable::Variable;
 use super::nodes::variable_link::VariableLink;
 use super::nodes::variable_name::VariableName;
+use super::nodes::variable_template::VariableTemplate;
 use super::nodes::variable_type::VariableType;
-use super::nodes::variable::Variable;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub enum NodeKind {
     Fragment,
-    Document,
+    Document(Document),
     FragmentNamed(String),
     VariableTemplate(VariableTemplate),
     InlineComment(InlineComment),

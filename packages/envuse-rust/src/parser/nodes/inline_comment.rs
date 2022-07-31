@@ -1,3 +1,5 @@
+use serde::Serialize;
+
 use super::super::error_kind::ErrorKind;
 use super::super::node::Node;
 use super::super::node_parser::NodeParser;
@@ -7,7 +9,7 @@ use crate::parser::node_kind::NodeKind;
 use crate::parser::token::Token;
 use crate::utils::try_slice::try_slice_by_size;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct InlineComment {
     pub ident_number: Box<Node>,
     pub comment: Box<Node>,

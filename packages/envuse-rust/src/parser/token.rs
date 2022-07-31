@@ -1,3 +1,5 @@
+use serde::Serialize;
+
 use super::super::utils::try_slice::try_slice;
 
 #[derive(Debug, Clone)]
@@ -58,7 +60,7 @@ impl PointerContext {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct Point {
     pub line: usize,
     pub column: usize,
@@ -84,7 +86,7 @@ impl Point {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct Range {
     pub start: usize,
     pub end: usize,
@@ -99,14 +101,14 @@ impl Range {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct Span {
     pub start: Point,
     pub end: Point,
     pub range: Range,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct Token {
     pub span: Span,
 }

@@ -15,36 +15,35 @@ fn snap(path: &str, buff: &dyn Debug, rewrite: bool) {
 
 #[cfg(test)]
 mod parser_tests {
-    use envuse_rust::parser::error_kind::ErrorKind;
-    use envuse_rust::parser::iter_parsers::iter_parsers;
-    use envuse_rust::parser::iter_parsers::FnParser;
-    use envuse_rust::parser::node::Node;
-    use envuse_rust::parser::node_kind::NodeKind;
-    use envuse_rust::parser::node_parser::NodeParser;
-    use envuse_rust::parser::nodes::inline_comment::InlineCommentParser;
-    use envuse_rust::parser::nodes::literal::Literal;
-    use envuse_rust::parser::nodes::variable::VariableParser;
-    use envuse_rust::parser::nodes::variable_link::VariableLink;
-    use envuse_rust::parser::nodes::variable_link::VariableLinkParser;
-    use envuse_rust::parser::nodes::variable_name::VariableName;
-    use envuse_rust::parser::nodes::variable_name::VariableNameParser;
-    use envuse_rust::parser::nodes::variable_template::VariableTemplate;
-    use envuse_rust::parser::nodes::variable_template::VariableValueParser;
-    use envuse_rust::parser::nodes::variable_type::VariableTypeParser;
-    use envuse_rust::parser::token::PointerContext;
-    use envuse_rust::parser::token::Token;
+    use envuse_parser::parser::error_kind::ErrorKind;
+    use envuse_parser::parser::iter_parsers::iter_parsers;
+    use envuse_parser::parser::iter_parsers::FnParser;
+    use envuse_parser::parser::node::Node;
+    use envuse_parser::parser::node_kind::NodeKind;
+    use envuse_parser::parser::node_parser::NodeParser;
+    use envuse_parser::parser::nodes::document::DocumentParser;
+    use envuse_parser::parser::nodes::inline_comment::InlineCommentParser;
+    use envuse_parser::parser::nodes::literal::Literal;
+    use envuse_parser::parser::nodes::variable::VariableParser;
+    use envuse_parser::parser::nodes::variable_link::VariableLink;
+    use envuse_parser::parser::nodes::variable_link::VariableLinkParser;
+    use envuse_parser::parser::nodes::variable_name::VariableName;
+    use envuse_parser::parser::nodes::variable_name::VariableNameParser;
+    use envuse_parser::parser::nodes::variable_template::VariableTemplate;
+    use envuse_parser::parser::nodes::variable_template::VariableValueParser;
+    use envuse_parser::parser::nodes::variable_type::VariableTypeParser;
+    use envuse_parser::parser::token::PointerContext;
+    use envuse_parser::parser::token::Token;
 
     use crate::snap;
 
     #[test]
     fn should_parse_doc() {
-        // let payload = b"# Iam comment\n";
+        let payload = b"# Iam comment\nABC:string\n";
 
-        // let Ok(Node(token, node_kind)) = parse(payload);
+        let ref result_parser = (DocumentParser).parse(payload, &mut PointerContext::start_zero());
 
-        // assert!(matches!(node_kind, NodeKind::Document));
-        // assert_eq!(token.span.range.start, 0);
-        // assert_eq!(token.span.range.end, 14);
+        snap(".snap/should_parse_doc.1.snap", result_parser, true);
     }
 
     #[test]

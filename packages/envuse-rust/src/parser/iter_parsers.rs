@@ -12,13 +12,13 @@ impl FnParser {
 }
 
 pub fn iter_parsers<'a>(
-    payload: &'static [u8],
-    start_pointer_context: &'a mut PointerContext,
+    payload: &'a [u8],
+    pointer_context: &'a mut PointerContext,
     parsers: &Vec<Box<dyn NodeParser>>,
 ) -> Option<Node> {
     for box_parser in parsers {
         let parser = box_parser.as_ref();
-        let result_parse = parser.parse(&payload, start_pointer_context);
+        let result_parse = parser.parse(&payload, pointer_context);
         // let r = parser(payload, start_pointer_context);
         if let Err(ErrorKind::NotMatchParser) = result_parse {
             continue;

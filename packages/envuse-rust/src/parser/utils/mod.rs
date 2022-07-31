@@ -1,1 +1,1 @@
-pub mod trim_spaces;
+pub mod trim;

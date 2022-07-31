@@ -21,4 +21,4 @@ Cargo.lock
 
 !.dockerignore
 !compose.yaml
-
+!.snap

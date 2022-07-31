@@ -1,3 +1,5 @@
+use serde::Serialize;
+
 use crate::utils::try_slice::try_slice_by_size;
 
 use super::super::super::utils::try_slice::try_slice;
@@ -7,11 +9,11 @@ use super::super::node_kind::NodeKind;
 use super::super::node_parser::NodeParser;
 use super::super::token::PointerContext;
 use super::super::token::Token;
-use super::super::utils::trim_spaces::trim_spaces;
+use super::super::utils::trim::trim_spaces;
 use super::variable_name::VariableName;
 use super::variable_name::VariableNameParser;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct VariableLink {
     pub variable: Box<Node>,
     pub options: Vec<Box<Node>>,
@@ -38,7 +40,7 @@ pub struct VariableLinkParser;
 impl NodeParser for VariableLinkParser {
     fn parse<'a>(
         &self,
-        payload: &'static [u8],
+        payload: &'a [u8],
         pointer_context: &'a mut PointerContext,
     ) -> Result<Node, ErrorKind> {
         let start = pointer_context.clone();

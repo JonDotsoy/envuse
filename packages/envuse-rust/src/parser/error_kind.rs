@@ -1,7 +1,8 @@
+use serde::Serialize;
 use super::token::Token;
 
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub enum ErrorKind {
     UnknownError(Box<&'static str>),
     NotMatchParser,
