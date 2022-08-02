@@ -61,23 +61,21 @@ t.test("should wrong in evaluate value string and indicate the trace", () => {
     ABC:no_valid_type
     CCC:no_valid_type
   `;
-  // mkdirSync(`${__dirname}/demos`, { recursive: true })
-  // writeFileSync(`${__dirname}/demos/demo01.envuse`, payload)
 
   const doc = parse(payload);
   NodeDocumentSchema.parse(doc);
-  // writeFileSync(`${__dirname}/demos/demo01.envuse.ast`, inspect(doc, { depth: null }))
   const declaration = describeDeclaration(doc);
 
-  const { message } = new FieldCannotConvert({
-    key: "ABC",
-    raw: undefined,
-    type: "string",
-  });
-
-  evaluate(
-    declaration,
-    { AAA: "123" },
-    { location: pathToFileURL(`${__dirname}/demos/demo01.envuse`) }
+  assert.throws(
+    () => {
+      evaluate(
+        declaration,
+        { AAA: "123" },
+        { location: pathToFileURL(`${__dirname}/demos/demo01.envuse`) }
+      );
+    },
+    {
+      stack: /demo01\.envuse\:2\:18/,
+    }
   );
 });
