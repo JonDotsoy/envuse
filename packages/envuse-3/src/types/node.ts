@@ -77,12 +77,7 @@ export type Range = z.infer<typeof RangeSchema>;
 export type Point = z.infer<typeof PointSchema>;
 export type Span = z.infer<typeof SpanSchema>;
 export type Token = z.infer<typeof TokenSchema>;
-// prettier-ignore
-export type Node<T extends z.Schema> = z.infer<
-  ReturnType<
-    typeof NodeSchema
-  >
->;
+export type Node<T extends z.Schema> = z.infer<ReturnType<typeof NodeSchema>>;
 export type Literal = z.infer<typeof LiteralSchema>;
 export type InlineComment = z.infer<typeof InlineCommentSchema>;
 export type VariableName = z.infer<typeof VariableNameSchema>;
