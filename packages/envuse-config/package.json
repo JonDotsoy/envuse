@@ -1,10 +1,16 @@
 {
   "name": "@envuse/config",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
+  "main": "./dist/cjs/src/index.js",
+  "module": "./dist/mjs/src/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/mjs/src/index.js",
+      "require": "./dist/cjs/src/index.js"
+    }
   },
+  "scripts": {},
   "keywords": [],
   "author": "Jonathan Delgado <hi@jon.soy> (https://jon.soy)",
   "license": "ISC",
