@@ -1,7 +1,5 @@
-import { writeFile, writeFileSync } from "fs";
-import { inspect } from "util";
 import { EnvuseDeclaration } from "./types/envuse-declaration";
-import { Node, Document, NodeDocument } from "./types/node";
+import { NodeDocument } from "./types/node";
 
 export const describeDeclaration = (
   document: NodeDocument

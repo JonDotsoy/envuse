@@ -1,5 +1,5 @@
-import { Node, NodeSchema, VariableSchema } from "./node";
-import z, { TypeOf } from "zod";
+import { NodeSchema } from "./node";
+import z from "zod";
 
 export const ValueTemplateSchema = z.object({});
 export type ValueTemplate = z.TypeOf<typeof ValueTemplateSchema>;

@@ -2,12 +2,13 @@
   "name": "@envuse/config",
   "version": "0.0.0",
   "description": "",
-  "main": "./dist/cjs/src/index.js",
-  "module": "./dist/mjs/src/index.js",
+  "type": "module",
+  "main": "./dist/cjs/src/index.cjs",
+  "module": "./dist/mjs/src/index.mjs",
   "exports": {
     ".": {
-      "import": "./dist/mjs/src/index.js",
-      "require": "./dist/cjs/src/index.js"
+      "import": "./dist/mjs/src/index.mjs",
+      "require": "./dist/cjs/src/index.cjs"
     }
   },
   "scripts": {},
