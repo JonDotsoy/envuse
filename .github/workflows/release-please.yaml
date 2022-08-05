@@ -1,0 +1,23 @@
+on:
+  push:
+    branches:
+      - "main"
+name: "Release MAIN"
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - "envuse-config"
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: node
+          package-name: ${{ matrix.package }}
+          path: packages/${{ matrix.package }}
+          repo-url: ${{ env.GITHUB_REPOSITORY }}
+          monorepo-tags: true
