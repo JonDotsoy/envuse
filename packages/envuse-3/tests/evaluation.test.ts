@@ -67,15 +67,30 @@ t.test("should wrong in evaluate value string and indicate the trace", () => {
   const declaration = describeDeclaration(doc);
 
   assert.throws(
-    () => {
+    () =>
       evaluate(
         declaration,
         { AAA: "123" },
         { location: pathToFileURL(`${__dirname}/demos/demo01.envuse`) }
-      );
-    },
+      ),
     {
-      stack: /demo01\.envuse\:2\:18/,
+      stack: /demo01\.envuse\:2\:5/,
     }
   );
+});
+
+t.test("should wrong in evaluate value string and indicate the trace", () => {
+  let payload = lines`
+    AAA:number
+    ABC:no_valid_type
+    CCC:no_valid_type
+  `;
+
+  const doc = parse(payload);
+  NodeDocumentSchema.parse(doc);
+  const declaration = describeDeclaration(doc);
+
+  assert.throws(() => evaluate(declaration, { AAA: "123" }, {}), {
+    stack: /\s\:2\:5/,
+  });
 });

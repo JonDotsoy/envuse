@@ -10,7 +10,7 @@ import {
 } from "./types/envuse-declaration";
 import { NodeSchema, VariableSchema } from "./types/node";
 
-type listConfigTypes = import("../list-config-types").listConfigTypes;
+export type listConfigTypes = import("../list-config-types").listConfigTypes;
 type ConfigDescribe<T, K extends string> = T extends { [k in K]: object }
   ? T[K]
   : Record<string, any>;
@@ -38,11 +38,11 @@ type EvaluateOption = {
   location?: URL;
 };
 
-export const evaluate = <K extends string = "">(
+export const evaluate = <K extends string = "", O = listConfigTypes>(
   declaration: EnvuseDeclaration,
   originConfigs: Record<string, string | undefined | null>,
   options?: EvaluateOption
-): { config: ConfigDescribe<listConfigTypes, K> } => {
+): { config: ConfigDescribe<O, K> } => {
   try {
     const parseValue = ([key, declaration]: [string, VariableDeclaration]): [
       string,

@@ -1,14 +1,1 @@
-////=> {"configTypes":{"xyz":{"variables":{"ABC":{"type":"string","value_template":null,"_node":null}}},"abc":{"variables":{"ABC":{"type":"string","value_template":null,"_node":[{"span":{"start":{"line":1,"column":1},"end":{"line":1,"column":12},"range":{"start":0,"end":11}}},{"Variable":{"variable_name":[{"span":{"start":{"line":1,"column":1},"end":{"line":1,"column":4},"range":{"start":0,"end":3}}},{"VariableName":{"name":"ABC"}}],"variable_type":[{"span":{"start":{"line":1,"column":4},"end":{"line":1,"column":12},"range":{"start":3,"end":11}}},{"VariableType":{"variable_type":[{"span":{"start":{"line":1,"column":6},"end":{"line":1,"column":12},"range":{"start":5,"end":11}}},{"VariableName":{"name":"string"}}]}}],"variable_value":null}}]},"DEF":{"type":"number","value_template":null,"_node":[{"span":{"start":{"line":2,"column":1},"end":{"line":2,"column":12},"range":{"start":12,"end":23}}},{"Variable":{"variable_name":[{"span":{"start":{"line":2,"column":1},"end":{"line":2,"column":4},"range":{"start":12,"end":15}}},{"VariableName":{"name":"DEF"}}],"variable_type":[{"span":{"start":{"line":2,"column":4},"end":{"line":2,"column":12},"range":{"start":15,"end":23}}},{"VariableType":{"variable_type":[{"span":{"start":{"line":2,"column":6},"end":{"line":2,"column":12},"range":{"start":17,"end":23}}},{"VariableName":{"name":"number"}}]}}],"variable_value":null}}]},"GHI":{"type":"boolean","value_template":null,"_node":[{"span":{"start":{"line":3,"column":1},"end":{"line":3,"column":13},"range":{"start":24,"end":36}}},{"Variable":{"variable_name":[{"span":{"start":{"line":3,"column":1},"end":{"line":3,"column":4},"range":{"start":24,"end":27}}},{"VariableName":{"name":"GHI"}}],"variable_type":[{"span":{"start":{"line":3,"column":4},"end":{"line":3,"column":13},"range":{"start":27,"end":36}}},{"VariableType":{"variable_type":[{"span":{"start":{"line":3,"column":6},"end":{"line":3,"column":13},"range":{"start":29,"end":36}}},{"VariableName":{"name":"boolean"}}]}}],"variable_value":null}}]},"JK":{"type":"array","value_template":null,"_node":[{"span":{"start":{"line":4,"column":1},"end":{"line":4,"column":10},"range":{"start":37,"end":46}}},{"Variable":{"variable_name":[{"span":{"start":{"line":4,"column":1},"end":{"line":4,"column":3},"range":{"start":37,"end":39}}},{"VariableName":{"name":"JK"}}],"variable_type":[{"span":{"start":{"line":4,"column":3},"end":{"line":4,"column":10},"range":{"start":39,"end":46}}},{"VariableType":{"variable_type":[{"span":{"start":{"line":4,"column":5},"end":{"line":4,"column":10},"range":{"start":41,"end":46}}},{"VariableName":{"name":"array"}}]}}],"variable_value":null}}]}}}}}
-
-export type listConfigTypes = {
-  xyz: {
-    ABC: string;
-  };
-
-  abc: {
-    ABC: string;
-    DEF: number;
-    GHI: boolean;
-    JK: string[];
-  };
-};
+export type listConfigTypes = {};

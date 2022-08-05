@@ -1,6 +1,6 @@
 import { ConfigTypes, ConfigTypesSchema } from "./types/config-types";
 import { describeDeclarationTs } from "./declaration-ts";
-import { FieldTSD, StructTSD } from "./TSD";
+import { FieldTSD, StructTSD } from "./utils/TSD";
 import { EnvuseDeclaration } from "./types/envuse-declaration";
 
 const parseInitialOptions = (payload: string): ConfigTypes => {

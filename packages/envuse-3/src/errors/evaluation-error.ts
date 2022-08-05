@@ -22,13 +22,13 @@ class A implements NodeJS.CallSite {
     return null;
   }
   getFileName(): string | null {
-    return this.evaluation_error_option?.location?.href ?? null;
+    return this.evaluation_error_option?.location?.href ?? " ";
   }
   getLineNumber(): number | null {
-    return this.evaluation_error_option?.node?.[0].span.end.line ?? null;
+    return this.evaluation_error_option?.node?.[0].span.start.line ?? null;
   }
   getColumnNumber(): number | null {
-    return this.evaluation_error_option?.node?.[0].span.end.column ?? null;
+    return this.evaluation_error_option?.node?.[0].span.start.column ?? null;
   }
   getEvalOrigin(): string | undefined {
     return undefined;
@@ -40,7 +40,7 @@ class A implements NodeJS.CallSite {
     return false;
   }
   isNative(): boolean {
-    return !this.evaluation_error_option?.location?.href;
+    return false;
   }
   isConstructor(): boolean {
     return false;

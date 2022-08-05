@@ -1,4 +1,4 @@
-import { FieldTSD, StructTSD, SymbolTSD, TSD } from "./TSD";
+import { FieldTSD, StructTSD, SymbolTSD, TSD } from "./utils/TSD";
 import { EnvuseDeclaration } from "./types/envuse-declaration";
 
 const map_ts_types: Record<string, string> = {
