@@ -2,16 +2,13 @@
   "name": "@envuse/config",
   "version": "0.0.0",
   "description": "",
-  "type": "module",
-  "main": "./dist/cjs/src/index.cjs",
-  "module": "./dist/mjs/src/index.mjs",
-  "exports": {
-    ".": {
-      "import": "./dist/mjs/src/index.mjs",
-      "require": "./dist/cjs/src/index.cjs"
-    }
+  "main": "./lib/src/index.js",
+  "scripts": {
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build": "npm run build:cjs",
+    "prepare": "npm run build",
+    "test": "node -r ts-node/register --test tests/*.spec.ts"
   },
-  "scripts": {},
   "keywords": [],
   "author": "Jonathan Delgado <hi@jon.soy> (https://jon.soy)",
   "license": "ISC",

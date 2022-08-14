@@ -1,10 +1,4 @@
-import {
-  existsSync,
-  PathOrFileDescriptor,
-  readFileSync,
-  statSync,
-  writeFileSync,
-} from "fs";
+import { readFileSync, writeFileSync } from "fs";
 import { pathToFileURL } from "url";
 import { describeDeclaration } from "./declaration";
 import { describeDeclarationTs } from "./declaration-ts";
@@ -40,7 +34,7 @@ export const configContext = <O = listConfigTypes>(
   const locationTypes =
     ctxOptions?.locationTypes === null
       ? null
-      : ctxOptions?.locationTypes ?? `${__dirname}/../list-config-types.ts`;
+      : ctxOptions?.locationTypes ?? `${__dirname}/../list-config-types.d.ts`;
 
   const config = <K extends string = "">(path: K, opts?: options) => {
     const originConfigs = opts?.originConfigs ?? ctxOptions?.originConfigs;
