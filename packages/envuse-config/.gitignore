@@ -1,0 +1,6 @@
+!.nvmrc
+!.npmignore
+node_modules
+dist
+lib
+*.tgz
