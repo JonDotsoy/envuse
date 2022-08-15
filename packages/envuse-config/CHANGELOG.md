@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/JonDotsoy/envuse/compare/envuse-config-v1.0.0...envuse-config-v1.1.0) (2022-08-15)
+
+
+### Features
+
+* configure initial settings ([3c95532](https://github.com/JonDotsoy/envuse/commit/3c955324d326e9fb17f2cef052e31fbcf3191c34))
+
 ## 1.0.0 (2022-08-15)
 
 
