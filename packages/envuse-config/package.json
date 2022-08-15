@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "./lib/src/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build": "npm run build:cjs",
