@@ -1,4 +1,3 @@
-import { evaluate } from "../evaluation";
 import { Node } from "../types/node";
 
 class A implements NodeJS.CallSite {
@@ -47,7 +46,7 @@ class A implements NodeJS.CallSite {
   }
 }
 
-type EvaluationErrorOption = {
+export type EvaluationErrorOption = {
   functionName?: string;
   location?: URL;
   node?: Node<any> | null;
@@ -55,10 +54,10 @@ type EvaluationErrorOption = {
 
 const o = Error.prepareStackTrace;
 Error.prepareStackTrace = (err, traces) => {
-  if (err instanceof EvaluationError) {
+  if (err instanceof EvaluationError && err.evaluation_error_option) {
     return o?.(err, [new A(err, err.evaluation_error_option), ...traces]);
   }
-  return o?.(err, [...traces]);
+  return o?.(err, traces);
 };
 
 export class EvaluationError extends Error {
@@ -67,10 +66,6 @@ export class EvaluationError extends Error {
     readonly evaluation_error_option?: EvaluationErrorOption
   ) {
     super(message);
-    // if (evaluation_error_option?.node) {
-
-    // Error.prepareStackTrace?.(this, [new A(this, evaluation_error_option)]);
-    // }
   }
 }
 
@@ -87,12 +82,6 @@ export class TypeUnsupported extends EvaluationError {
     );
   }
 }
-
-// export class CannotConvert extends EvaluationError {
-//   constructor(opt: { raw: string | null | undefined, type: string }) {
-//     super(`Cannot convert ${opt.raw} to a \`${opt.type}\``)
-//   }
-// }
 
 export class CannotConvert extends EvaluationError {
   constructor(

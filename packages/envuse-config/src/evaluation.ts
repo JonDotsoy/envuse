@@ -1,6 +1,6 @@
 import {
-  CannotConvert,
   EvaluationError,
+  EvaluationErrorOption,
   FieldCannotConvert,
   TypeUnsupported,
 } from "./errors/evaluation-error";
@@ -8,7 +8,7 @@ import {
   EnvuseDeclaration,
   VariableDeclaration,
 } from "./types/envuse-declaration";
-import { NodeSchema, VariableSchema } from "./types/node";
+import { VariableSchema } from "./types/node";
 
 export type listConfigTypes = import("../list-config-types").listConfigTypes;
 type ConfigDescribe<T, K extends string> = T extends { [k in K]: object }
@@ -48,21 +48,38 @@ export const evaluate = <K extends string = "", O = listConfigTypes>(
       string,
       any
     ] => {
-      const transformRawValue = transformersRawValue[declaration.type];
-      if (!transformRawValue) {
-        const a = VariableSchema.parse(declaration._node?.[1]);
-        // const a = newLocal.success ? newLocal.data : null;
-        throw new TypeUnsupported({
-          type: declaration.type,
-          evaluation_error_option: {
+      try {
+        const transformRawValue = transformersRawValue[declaration.type];
+        if (!transformRawValue) {
+          const variableNode = VariableSchema.parse(declaration._node?.[1]);
+          const evaluation_error_option: EvaluationErrorOption = {
             functionName: "evaluate",
-            node: a?.Variable.variable_type?.[1].VariableType.variable_type,
-            // node: newLocal.success ? (newLocal.data.Variable.variable_type ?? declaration._node) : null,
+            node: variableNode?.Variable.variable_type?.[1].VariableType
+              .variable_type,
             location: options?.location,
-          },
-        });
+          };
+          throw new TypeUnsupported({
+            type: declaration.type,
+            evaluation_error_option,
+          });
+        }
+        return [key, transformRawValue(key, originConfigs[key])];
+      } catch (ex) {
+        if (ex instanceof FieldCannotConvert) {
+          const variableNode = VariableSchema.parse(declaration._node?.[1]);
+          const evaluation_error_option: EvaluationErrorOption = {
+            functionName: "evaluate",
+            node: variableNode?.Variable.variable_type?.[1].VariableType
+              .variable_type,
+            location: options?.location,
+          };
+          throw new FieldCannotConvert({
+            ...ex.opt,
+            evaluation_error_option,
+          });
+        }
+        throw ex;
       }
-      return [key, transformRawValue(key, originConfigs[key])];
     };
 
     const config: any = Object.fromEntries(
