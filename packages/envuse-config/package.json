@@ -1,6 +1,6 @@
 {
   "name": "@envuse/config",
-  "version": "0.0.1-beta.0",
+  "version": "1.0.0",
   "description": "",
   "main": "./lib/src/index.js",
   "scripts": {
