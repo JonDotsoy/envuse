@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/JonDotsoy/envuse/compare/envuse-config-v1.1.0...envuse-config-v1.2.0) (2022-08-23)
+
+
+### Features
+
+* add support to envuse and default load ([acdc262](https://github.com/JonDotsoy/envuse/commit/acdc262b61166d162eb93ded40bc8967c65d969d))
+
 ## [1.1.0](https://github.com/JonDotsoy/envuse/compare/envuse-config-v1.0.0...envuse-config-v1.1.0) (2022-08-15)
 
 
