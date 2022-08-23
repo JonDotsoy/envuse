@@ -1,5 +1,6 @@
 !.nvmrc
 !.npmignore
+*.d.ts
 node_modules
 dist
 lib
