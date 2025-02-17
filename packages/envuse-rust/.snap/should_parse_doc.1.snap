@@ -1,0 +1,187 @@
+Ok(
+    Node(
+        Token {
+            span: Span {
+                start: Point {
+                    line: 1,
+                    column: 1,
+                },
+                end: Point {
+                    line: 3,
+                    column: 1,
+                },
+                range: Range {
+                    start: 0,
+                    end: 25,
+                },
+            },
+        },
+        Document(
+            Document {
+                nodes: [
+                    Node(
+                        Token {
+                            span: Span {
+                                start: Point {
+                                    line: 1,
+                                    column: 1,
+                                },
+                                end: Point {
+                                    line: 1,
+                                    column: 14,
+                                },
+                                range: Range {
+                                    start: 0,
+                                    end: 13,
+                                },
+                            },
+                        },
+                        InlineComment(
+                            InlineComment {
+                                ident_number: Node(
+                                    Token {
+                                        span: Span {
+                                            start: Point {
+                                                line: 1,
+                                                column: 1,
+                                            },
+                                            end: Point {
+                                                line: 1,
+                                                column: 2,
+                                            },
+                                            range: Range {
+                                                start: 0,
+                                                end: 1,
+                                            },
+                                        },
+                                    },
+                                    Literal(
+                                        Literal(
+                                            "#",
+                                        ),
+                                    ),
+                                ),
+                                comment: Node(
+                                    Token {
+                                        span: Span {
+                                            start: Point {
+                                                line: 1,
+                                                column: 2,
+                                            },
+                                            end: Point {
+                                                line: 1,
+                                                column: 14,
+                                            },
+                                            range: Range {
+                                                start: 1,
+                                                end: 13,
+                                            },
+                                        },
+                                    },
+                                    Literal(
+                                        Literal(
+                                            " Iam comment",
+                                        ),
+                                    ),
+                                ),
+                            },
+                        ),
+                    ),
+                    Node(
+                        Token {
+                            span: Span {
+                                start: Point {
+                                    line: 2,
+                                    column: 1,
+                                },
+                                end: Point {
+                                    line: 2,
+                                    column: 11,
+                                },
+                                range: Range {
+                                    start: 14,
+                                    end: 24,
+                                },
+                            },
+                        },
+                        Variable(
+                            Variable {
+                                variable_name: Node(
+                                    Token {
+                                        span: Span {
+                                            start: Point {
+                                                line: 2,
+                                                column: 1,
+                                            },
+                                            end: Point {
+                                                line: 2,
+                                                column: 4,
+                                            },
+                                            range: Range {
+                                                start: 14,
+                                                end: 17,
+                                            },
+                                        },
+                                    },
+                                    VariableName(
+                                        VariableName {
+                                            name: "ABC",
+                                        },
+                                    ),
+                                ),
+                                variable_type: Some(
+                                    Node(
+                                        Token {
+                                            span: Span {
+                                                start: Point {
+                                                    line: 2,
+                                                    column: 4,
+                                                },
+                                                end: Point {
+                                                    line: 2,
+                                                    column: 11,
+                                                },
+                                                range: Range {
+                                                    start: 17,
+                                                    end: 24,
+                                                },
+                                            },
+                                        },
+                                        VariableType(
+                                            VariableType {
+                                                variable_type: Node(
+                                                    Token {
+                                                        span: Span {
+                                                            start: Point {
+                                                                line: 2,
+                                                                column: 5,
+                                                            },
+                                                            end: Point {
+                                                                line: 2,
+                                                                column: 11,
+                                                            },
+                                                            range: Range {
+                                                                start: 18,
+                                                                end: 24,
+                                                            },
+                                                        },
+                                                    },
+                                                    VariableName(
+                                                        VariableName {
+                                                            name: "string",
+                                                        },
+                                                    ),
+                                                ),
+                                            },
+                                        ),
+                                    ),
+                                ),
+                                variable_value: None,
+                            },
+                        ),
+                    ),
+                ],
+            },
+        ),
+    ),
+)

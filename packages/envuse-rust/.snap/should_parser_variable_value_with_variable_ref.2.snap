@@ -1,0 +1,96 @@
+VariableTemplate {
+    template: [
+        Node(
+            Token {
+                span: Span {
+                    start: Point {
+                        line: 1,
+                        column: 2,
+                    },
+                    end: Point {
+                        line: 1,
+                        column: 3,
+                    },
+                    range: Range {
+                        start: 1,
+                        end: 2,
+                    },
+                },
+            },
+            Literal(
+                Literal(
+                    "a",
+                ),
+            ),
+        ),
+        Node(
+            Token {
+                span: Span {
+                    start: Point {
+                        line: 1,
+                        column: 3,
+                    },
+                    end: Point {
+                        line: 1,
+                        column: 7,
+                    },
+                    range: Range {
+                        start: 2,
+                        end: 6,
+                    },
+                },
+            },
+            VariableLink(
+                VariableLink {
+                    variable: Node(
+                        Token {
+                            span: Span {
+                                start: Point {
+                                    line: 1,
+                                    column: 5,
+                                },
+                                end: Point {
+                                    line: 1,
+                                    column: 6,
+                                },
+                                range: Range {
+                                    start: 4,
+                                    end: 5,
+                                },
+                            },
+                        },
+                        VariableName(
+                            VariableName {
+                                name: "b",
+                            },
+                        ),
+                    ),
+                    options: [],
+                },
+            ),
+        ),
+        Node(
+            Token {
+                span: Span {
+                    start: Point {
+                        line: 1,
+                        column: 7,
+                    },
+                    end: Point {
+                        line: 1,
+                        column: 8,
+                    },
+                    range: Range {
+                        start: 6,
+                        end: 7,
+                    },
+                },
+            },
+            Literal(
+                Literal(
+                    "c",
+                ),
+            ),
+        ),
+    ],
+}
